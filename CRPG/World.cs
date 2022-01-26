@@ -36,6 +36,8 @@ namespace CRPG
                     locations[i, j] = new Location();
                 }
             }
+
+            locations[5, 5] = new Location(true);
         }
 
         public static Location GetLocationByPos(int xPos, int yPos)

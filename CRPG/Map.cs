@@ -16,13 +16,6 @@ namespace CRPG
             int xDim = World.MAX_WORLD_X;
             int yDim = World.MAX_WORLD_Y;
 
-            //Get player position
-            int playerXPos = player.xPos;
-            int playerYPos = player.yPos;
-
-            //Set text color
-            Console.ForegroundColor = ConsoleColor.Red;
-
             /*
             //Set what the player can see from current loc
             location[playerXPos, pl].seen = true;
@@ -52,45 +45,51 @@ namespace CRPG
             {
                 for (int x = 0; x < xDim; x++)
                 {
-                    string locIcon = "  ";
-
-                    //Write player loc
-                    if (x == playerXPos && y == playerYPos)
-                    {
-                        locIcon = "XX";
-                    }
-
-                    //Color path tiles
-                    if (!World.locations[x,y].IsWall)
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.Black;
-                    }
-                    //Write out path title
-                    Console.Write(locIcon);
+                    drawPoint(x, y, player);
                 }
                 //Next line
                 Console.WriteLine("");
             }
-            //Print key
+            //Reset
             Console.ResetColor();
-            Console.WriteLine("--Key--");
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.Write("  ");
-            Console.ResetColor();
-            Console.WriteLine(": Currently known passable squares");
+        }
+
+        public static void redrawMapPoint(int xPos, int yPos, Player player)
+        {
+            Console.SetCursorPosition(xPos, yPos);
+            drawPoint(xPos, yPos, player);
+
+            Program.SetupWritingLine();
+        }
+
+        private static void drawPoint(int x, int y, Player player)
+        {
+            //Get player position
+            int playerXPos = player.xPos;
+            int playerYPos = player.yPos;
+
+            //Set text color
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("++");
-            Console.ResetColor();
-            Console.WriteLine(": Locations or enemies");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("XX");
-            Console.ResetColor();
-            Console.WriteLine(": You");
-            Console.WriteLine("");
+
+            string locIcon = "  ";
+
+            //Write player loc
+            if (x == playerXPos && y == playerYPos)
+            {
+                locIcon = "XX";
+            }
+
+            //Color path tiles
+            if (!World.locations[x, y].IsWall)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            //Write out icon
+            Console.Write(locIcon);
         }
     }
 }

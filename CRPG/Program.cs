@@ -11,36 +11,35 @@ namespace CRPG
         static void Main(string[] args)
         {
             GameEngine.Initialize();
+
             _player.Name = "Fred the fearful";
             // _player.MoveTo(World.GetLocationByID(World.LOCATION_ID_HOME));
+
+            Console.WriteLine("Press any Key to begin!");
+            Console.ReadKey();
+            Console.Clear();
+            Map.DrawMap(_player);
+            Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
 
             DateTime lastPressedTime = DateTime.MinValue;
             while (true)
             {
-                ConsoleKey userInput = ConsoleKey.H;
-                while (DateTime.Now < lastPressedTime.AddSeconds(.15))
+                ConsoleKey userInput = ConsoleKey.F4; //Defualt value that I wont use in game
+                while (userInput == ConsoleKey.F4)
                 {
-                    userInput = Console.ReadKey().Key;
+                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.1))
+                    {
+                        ClearKeyBuffer();
+                        userInput = Console.ReadKey().Key;
+                    }
+                    else
+                    {
+                        Console.Write("");
+                    }
                 }
-                Console.Clear();
-                Map.DrawMap(_player);
+                SetupWritingLine();
                 ParseInput(userInput);
                 lastPressedTime = DateTime.Now;
-
-
-                /*
-                if (string.IsNullOrWhiteSpace(userInput))
-                {
-                    continue;
-                }
-                string cleanedInput = userInput.ToLower();
-
-                if (cleanedInput == "exit")
-                {
-                    break;
-                }
-                ParseInput(cleanedInput);
-                */
             }
         }
 
@@ -49,7 +48,7 @@ namespace CRPG
             switch (key)
             {
                 case ConsoleKey.H:
-                    Console.WriteLine("Help is coming later... stay tuned.");
+                    Console.Write("Help is coming later... stay tuned.");
                     break;
 
                 case ConsoleKey.W:
@@ -73,47 +72,24 @@ namespace CRPG
                     break;
 
             }
-            /*
-            if (input.Contains("h"))
-            {
-                Console.WriteLine("Help is coming later... stay tuned.");
-            }
-            else if (input.Contains("look"))
-            {
-                DisplayCurrentLocation();
-            }
-            else if (input.Equals("w")) //Movement start
-            {
-                _player.MoveNorth();
-            }
-            else if (input.Equals("d"))
-            {
-                _player.MoveEast();
-            }
-            else if (input.Equals("s"))
-            {
-                _player.MoveSouth();
-            }
-            else if (input.Equals("a"))
-            {
-                _player.MoveWest();
-            }
-            else
-            {
-                Console.WriteLine("I don't understand. Sorry!");
-            }
-            */
         }
 
-        /*
-        private static void DisplayCurrentLocation()
+        private static void ClearKeyBuffer()
         {
-            Console.WriteLine("You are at: {0}", _player.CurrentLocation.Name);
-            if(_player.CurrentLocation.Description != "")
+            while (Console.KeyAvailable)
             {
-                Console.Write("\t{0}\n", _player.CurrentLocation.Description);
+                Console.ReadKey(false);
             }
         }
-        */
+
+        public static void SetupWritingLine()
+        {
+            Console.ResetColor();
+            Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
+            Console.Write(new string(' ', Console.BufferWidth));
+            Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
+            Console.WriteLine("> ");
+            Console.SetCursorPosition(2, World.MAX_WORLD_Y + 2);
+        }
     }
 }

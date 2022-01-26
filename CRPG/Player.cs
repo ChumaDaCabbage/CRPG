@@ -22,10 +22,12 @@ namespace CRPG
             if (yPos + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(xPos, yPos + 1).IsWall)
             {
                 yPos++;
+                Map.redrawMapPoint(xPos, yPos - 1, this);
+                Map.redrawMapPoint(xPos, yPos, this);
             }
             else
             {
-                Console.WriteLine("You cannot move south");
+                Console.Write("You cannot move south. >");
             }
         }
 
@@ -34,10 +36,12 @@ namespace CRPG
             if (xPos + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(xPos + 1, yPos).IsWall)
             {
                 xPos++;
+                Map.redrawMapPoint(xPos - 1, yPos, this);
+                Map.redrawMapPoint(xPos, yPos, this);
             }
             else
             {
-                Console.WriteLine("You cannot move east");
+                Console.Write("You cannot move east. >");
             }
         }
 
@@ -46,10 +50,12 @@ namespace CRPG
             if (yPos - 1 >= 0 && !World.GetLocationByPos(xPos, yPos - 1).IsWall)
             {
                 yPos--;
+                Map.redrawMapPoint(xPos, yPos + 1, this);
+                Map.redrawMapPoint(xPos, yPos, this);
             }
             else
             {
-                Console.WriteLine("You cannot move north");
+                Console.Write("You cannot move north. >");
             }
         }
 
@@ -58,10 +64,12 @@ namespace CRPG
             if (xPos - 1 >= 0 && !World.GetLocationByPos(xPos - 1, yPos).IsWall)
             {
                 xPos--;
+                Map.redrawMapPoint(xPos + 1, yPos, this);
+                Map.redrawMapPoint(xPos, yPos, this);
             }
             else
             {
-                Console.WriteLine("You cannot move west");
+                Console.Write("You cannot move west. >");
             }
         }
     }

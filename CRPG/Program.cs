@@ -12,12 +12,23 @@ namespace CRPG
         {
             GameEngine.Initialize();
             _player.Name = "Fred the fearful";
-            _player.MoveTo(World.GetLocationByID(World.LOCATION_ID_HOME));
+            // _player.MoveTo(World.GetLocationByID(World.LOCATION_ID_HOME));
 
+            DateTime lastPressedTime = DateTime.MinValue;
             while (true)
             {
-                Console.Write("> ");
-                string userInput = Console.ReadLine();
+                ConsoleKey userInput = ConsoleKey.H;
+                while (DateTime.Now < lastPressedTime.AddSeconds(.15))
+                {
+                    userInput = Console.ReadKey().Key;
+                }
+                Console.Clear();
+                Map.DrawMap(_player);
+                ParseInput(userInput);
+                lastPressedTime = DateTime.Now;
+
+
+                /*
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
                     continue;
@@ -29,32 +40,61 @@ namespace CRPG
                     break;
                 }
                 ParseInput(cleanedInput);
+                */
             }
         }
 
-        public static void ParseInput(string input)
+        public static void ParseInput(ConsoleKey key)
         {
-            if (input.Contains("help"))
+            switch (key)
+            {
+                case ConsoleKey.H:
+                    Console.WriteLine("Help is coming later... stay tuned.");
+                    break;
+
+                case ConsoleKey.W:
+                    _player.MoveNorth();
+                    break;
+
+                case ConsoleKey.D:
+                    _player.MoveEast();
+                    break;
+
+                case ConsoleKey.S:
+                    _player.MoveSouth();
+                    break;
+
+                case ConsoleKey.A:
+                    _player.MoveWest();
+                    break;
+
+                default:
+                    Console.WriteLine("I don't understand. Sorry!");
+                    break;
+
+            }
+            /*
+            if (input.Contains("h"))
             {
                 Console.WriteLine("Help is coming later... stay tuned.");
             }
             else if (input.Contains("look"))
             {
                 DisplayCurrentLocation();
-            } 
-            else if (input.Contains("north")) //Movement start
+            }
+            else if (input.Equals("w")) //Movement start
             {
                 _player.MoveNorth();
             }
-            else if (input.Contains("east"))
+            else if (input.Equals("d"))
             {
                 _player.MoveEast();
             }
-            else if (input.Contains("south"))
+            else if (input.Equals("s"))
             {
                 _player.MoveSouth();
             }
-            else if (input.Contains("west"))
+            else if (input.Equals("a"))
             {
                 _player.MoveWest();
             }
@@ -62,8 +102,10 @@ namespace CRPG
             {
                 Console.WriteLine("I don't understand. Sorry!");
             }
+            */
         }
 
+        /*
         private static void DisplayCurrentLocation()
         {
             Console.WriteLine("You are at: {0}", _player.CurrentLocation.Name);
@@ -72,5 +114,6 @@ namespace CRPG
                 Console.Write("\t{0}\n", _player.CurrentLocation.Description);
             }
         }
+        */
     }
 }

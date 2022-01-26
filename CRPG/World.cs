@@ -7,7 +7,12 @@ namespace CRPG
     public class World
     {
         public static readonly string WorldName = "HelloWorld";
-        public static readonly List<Location> Locations = new List<Location>();
+        //public static readonly List<Location> Locations = new List<Location>();
+        public static Location[,] locations;
+
+        //Setup max world sizes
+        public const int MAX_WORLD_X = 20;
+        public const int MAX_WORLD_Y = 20;
 
         //Start providing IDs for locations
         public const int LOCATION_ID_HOME = 1;
@@ -17,9 +22,28 @@ namespace CRPG
         //Constructor
         static World()
         {
-            PopulateLocations();
+            //PopulateLocations();
+            WorldSetup();
         }
 
+        private static void WorldSetup()
+        {
+            locations = new Location[MAX_WORLD_X, MAX_WORLD_Y];
+            for (int i = 0; i < MAX_WORLD_X; i++)
+            {
+                for (int j = 0; j < MAX_WORLD_Y; j++)
+                {
+                    locations[i, j] = new Location();
+                }
+            }
+        }
+
+        public static Location GetLocationByPos(int xPos, int yPos)
+        {
+            return locations[xPos, yPos];
+        }
+
+        /*
         private static void PopulateLocations()
         {
             //Create location objects
@@ -61,5 +85,6 @@ namespace CRPG
                 Console.WriteLine("\t{0}", loc.Name);
             }
         }
+        */
     }
 }

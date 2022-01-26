@@ -7,42 +7,21 @@ namespace CRPG
     public class Player
     {
         public string Name { set; get; }
-        public Location CurrentLocation { set; get; }
+        public int xPos = 0;
+        public int yPos = 0;
+        //public Location CurrentLocation { set; get; }
 
-        public void MoveTo(Location loc)
+        public void MoveTo(int xpos, int ypos)
         {
-            CurrentLocation = loc;
-        }
-
-        public void MoveNorth()
-        {
-            if (CurrentLocation.LocationToNorth != null)
-            {
-                MoveTo(CurrentLocation.LocationToNorth);
-            }
-            else
-            {
-                Console.WriteLine("You cannot move north");
-            }
-        }
-
-        public void MoveEast()
-        {
-            if (CurrentLocation.LocationToEast != null)
-            {
-                MoveTo(CurrentLocation.LocationToEast);
-            }
-            else
-            {
-                Console.WriteLine("You cannot move east");
-            }
+            xPos = xpos;
+            yPos = ypos;
         }
 
         public void MoveSouth()
         {
-            if (CurrentLocation.LocationToSouth != null)
+            if (yPos + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(xPos, yPos + 1).IsWall)
             {
-                MoveTo(CurrentLocation.LocationToSouth);
+                yPos++;
             }
             else
             {
@@ -50,11 +29,35 @@ namespace CRPG
             }
         }
 
+        public void MoveEast()
+        {
+            if (xPos + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(xPos + 1, yPos).IsWall)
+            {
+                xPos++;
+            }
+            else
+            {
+                Console.WriteLine("You cannot move east");
+            }
+        }
+
+        public void MoveNorth()
+        {
+            if (yPos - 1 >= 0 && !World.GetLocationByPos(xPos, yPos - 1).IsWall)
+            {
+                yPos--;
+            }
+            else
+            {
+                Console.WriteLine("You cannot move north");
+            }
+        }
+
         public void MoveWest()
         {
-            if (CurrentLocation.LocationToWest != null)
+            if (xPos - 1 >= 0 && !World.GetLocationByPos(xPos - 1, yPos).IsWall)
             {
-                MoveTo(CurrentLocation.LocationToWest);
+                xPos--;
             }
             else
             {

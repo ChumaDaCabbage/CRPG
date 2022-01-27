@@ -10,36 +10,39 @@ namespace CRPG
 
         static void Main(string[] args)
         {
+            //Start Game engine
             GameEngine.Initialize();
 
+            //Set up default player info
             _player.Name = "Fred the fearful";
-            // _player.MoveTo(World.GetLocationByID(World.LOCATION_ID_HOME));
+            _player.MoveTo(1, 1);
 
-            Console.WriteLine("Press any Key to begin!");
-            Console.ReadKey();
-            Console.Clear();
+            //Setup default map
             Map.DrawMap(_player);
-            Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
 
-            DateTime lastPressedTime = DateTime.MinValue;
+            //Starts lighting
+            Lighting.lightingUpdate(_player);
+
+            DateTime lastPressedTime = DateTime.MinValue; //Get current time
             while (true)
             {
-                ConsoleKey userInput = ConsoleKey.F4; //Defualt value that I wont use in game
-                while (userInput == ConsoleKey.F4)
+                ConsoleKey userInput = ConsoleKey.H; //Defualt value
+                while (true)
                 {
-                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.1))
+                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.1)) //If time greater than input delay
                     {
-                        ClearKeyBuffer();
-                        userInput = Console.ReadKey().Key;
+                        ClearKeyBuffer(); //Start clearKeyBuffer
+                        userInput = Console.ReadKey().Key; //Get input
+                        break; //Leave loop
                     }
                     else
                     {
                         Console.Write("");
                     }
                 }
-                SetupWritingLine();
-                ParseInput(userInput);
-                lastPressedTime = DateTime.Now;
+                SetupWritingLine(); //Starts setup writing line
+                ParseInput(userInput); //Starts ParseInput and gives it the user input
+                lastPressedTime = DateTime.Now; //Gets current time
             }
         }
 
@@ -47,23 +50,23 @@ namespace CRPG
         {
             switch (key)
             {
-                case ConsoleKey.H:
+                case ConsoleKey.H: //Help
                     Console.Write("Help is coming later... stay tuned.");
                     break;
 
-                case ConsoleKey.W:
+                case ConsoleKey.W: //Move up
                     _player.MoveNorth();
                     break;
 
-                case ConsoleKey.D:
+                case ConsoleKey.D: //Move left
                     _player.MoveEast();
                     break;
 
-                case ConsoleKey.S:
+                case ConsoleKey.S: //Move down
                     _player.MoveSouth();
                     break;
 
-                case ConsoleKey.A:
+                case ConsoleKey.A: //Move right
                     _player.MoveWest();
                     break;
 
@@ -74,6 +77,7 @@ namespace CRPG
             }
         }
 
+        //Clears buffered key inputs
         private static void ClearKeyBuffer()
         {
             while (Console.KeyAvailable)
@@ -82,14 +86,15 @@ namespace CRPG
             }
         }
 
+        //Clears input line and move curser back to input position
         public static void SetupWritingLine()
         {
             Console.ResetColor();
             Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
             Console.Write(new string(' ', Console.BufferWidth));
-            Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
+            Console.SetCursorPosition(40, World.MAX_WORLD_Y + 2);
             Console.WriteLine("> ");
-            Console.SetCursorPosition(2, World.MAX_WORLD_Y + 2);
+            Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
         }
     }
 }

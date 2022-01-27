@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CRPG
 {
     public static class Map
     {
+        #region Virtual Terminal Sequences setup
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleMode(IntPtr handle, out int mode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr GetStdHandle(int handle);
+        #endregion
+
         /// <summary>
         /// Draws map of the world on screen
         /// </summary>
@@ -16,49 +30,28 @@ namespace CRPG
             int xDim = World.MAX_WORLD_X;
             int yDim = World.MAX_WORLD_Y;
 
-            /*
-            //Set what the player can see from current loc
-            location[playerXPos, pl].seen = true;
-            if (playerX < xDim - 1)
-            {
-                location[playerX + 1, playerY].seen = true;
-            }
-
-            if (playerX > 0)
-            {
-                location[playerX - 1, playerY].seen = true;
-            }
-
-            if (playerY < yDim - 1)
-            {
-                location[playerX, playerY + 1].seen = true;
-            }
-
-            if (playerY > 0)
-            {
-                location[playerX, playerY - 1].seen = true;
-            }
-            */
+            //Turn of curser visibility
+            Console.WriteLine("\x1b[?25l  ");
 
             //Go through all locations
             for (int y = 0; y < yDim; y++)
             {
-                for (int x = 0; x < xDim; x++)
+                for (int x = 0; x < xDim; x++ )
                 {
+                    //Calls drawPoint
                     drawPoint(x, y, player);
                 }
                 //Next line
                 Console.WriteLine("");
             }
-            //Reset
-            Console.ResetColor();
         }
 
         public static void redrawMapPoint(int xPos, int yPos, Player player)
         {
-            Console.SetCursorPosition(xPos, yPos);
-            drawPoint(xPos, yPos, player);
+            Console.SetCursorPosition(xPos * 2, yPos); //Moves cursor to wanted position on map
+            drawPoint(xPos, yPos, player); //Calls drawPoint at wanted position
 
+            //Resets cursor
             Program.SetupWritingLine();
         }
 
@@ -68,26 +61,26 @@ namespace CRPG
             int playerXPos = player.xPos;
             int playerYPos = player.yPos;
 
-            //Set text color
-            Console.ForegroundColor = ConsoleColor.Red;
-
+            //Sets up default icon
             string locIcon = "  ";
 
-            //Write player loc
+            //Find wanted color
             if (x == playerXPos && y == playerYPos)
             {
-                locIcon = "XX";
+                //Leather brown for player
+                locIcon = "\x1b[48;2;149;87;33m  ";
             }
-
-            //Color path tiles
-            if (!World.locations[x, y].IsWall)
+            else if (!World.locations[x, y].IsWall)
             {
-                Console.BackgroundColor = ConsoleColor.White;
+                //Do darkest if not wall
+                locIcon = "\x1b[48;2;0;0;0m  ";
             }
             else
             {
-                Console.BackgroundColor = ConsoleColor.Black;
+                //locIcon = "\x1b[48;5;" + "255" + "m  ";
+                locIcon = Lighting.getTileColor(x, y);
             }
+
             //Write out icon
             Console.Write(locIcon);
         }

@@ -55,6 +55,15 @@ namespace CRPG
             Program.SetupWritingLine();
         }
 
+        public static void redrawMapPoint(Point point, Player player)
+        {
+            Console.SetCursorPosition(point.X * 2, point.Y); //Moves cursor to wanted position on map
+            drawPoint(point.X, point.Y, player); //Calls drawPoint at wanted position
+
+            //Resets cursor
+            Program.SetupWritingLine();
+        }
+
         private static void drawPoint(int x, int y, Player player)
         {
             //Get player position
@@ -68,17 +77,17 @@ namespace CRPG
             if (x == playerXPos && y == playerYPos)
             {
                 //Leather brown for player
-                locIcon = "\x1b[48;2;149;87;33m  ";
+                locIcon = "\x1b[48;2;255;255;255m  ";
             }
             else if (!World.locations[x, y].IsWall)
             {
                 //Do darkest if not wall
-                locIcon = "\x1b[48;2;0;0;0m  ";
+                //locIcon = "\x1b[48;2;0;0;0m  ";
+                locIcon = Lighting.getFloorTileColor(x, y);
             }
             else
             {
-                //locIcon = "\x1b[48;5;" + "255" + "m  ";
-                locIcon = Lighting.getTileColor(x, y);
+                locIcon = Lighting.getWallTileColor(x, y);
             }
 
             //Write out icon

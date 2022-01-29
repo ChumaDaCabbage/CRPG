@@ -42,6 +42,7 @@ namespace CRPG
                 }
                 SetupWritingLine(); //Starts setup writing line
                 ParseInput(userInput); //Starts ParseInput and gives it the user input
+                Lighting.lightingUpdate(_player); //Updates lighting
                 lastPressedTime = DateTime.Now; //Gets current time
             }
         }
@@ -51,7 +52,7 @@ namespace CRPG
             switch (key)
             {
                 case ConsoleKey.H: //Help
-                    Console.Write("Help is coming later... stay tuned.");
+                    Console.Write("Help is coming later... stay tuned. >");
                     break;
 
                 case ConsoleKey.W: //Move up
@@ -71,7 +72,7 @@ namespace CRPG
                     break;
 
                 default:
-                    Console.WriteLine("I don't understand. Sorry!");
+                    Console.Write("I don't understand. Sorry! >");
                     break;
 
             }

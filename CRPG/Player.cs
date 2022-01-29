@@ -30,14 +30,8 @@ namespace CRPG
                 //Move player
                 yPos++;
 
-                //Update location lightSources
-                World.GetLocationByPos(xPos, yPos - 1).IsLightSource = false;
-                World.GetLocationByPos(xPos, yPos).IsLightSource = true;
-                Lighting.lightingUpdate(this);
-
-                //Redraw new location and old location
-                Map.redrawMapPoint(xPos, yPos - 1, this);
-                Map.redrawMapPoint(xPos, yPos, this);
+                //Updates locations
+                movementUpdate(new Point(xPos, yPos - 1), new Point(xPos, yPos));
             }
             else
             {
@@ -54,14 +48,8 @@ namespace CRPG
                 //Move player
                 xPos++;
 
-                //Update ocation lightSources
-                World.GetLocationByPos(xPos - 1, yPos).IsLightSource = false;
-                World.GetLocationByPos(xPos, yPos).IsLightSource = true;
-                Lighting.lightingUpdate(this);
-
-                //Redraw new location and old location
-                Map.redrawMapPoint(xPos - 1, yPos, this);
-                Map.redrawMapPoint(xPos, yPos, this);
+                //Updates locations
+                movementUpdate(new Point(xPos - 1, yPos), new Point(xPos, yPos));
             }
             else
             {
@@ -78,14 +66,8 @@ namespace CRPG
                 //Move player
                 yPos--;
 
-                //Update location lightSources
-                World.GetLocationByPos(xPos, yPos + 1).IsLightSource = false;
-                World.GetLocationByPos(xPos, yPos).IsLightSource = true;
-                Lighting.lightingUpdate(this);
-
-                //Redraw new location and old location
-                Map.redrawMapPoint(xPos, yPos + 1, this);
-                Map.redrawMapPoint(xPos, yPos, this);
+                //Updates locations
+                movementUpdate(new Point(xPos, yPos + 1), new Point(xPos, yPos));
             }
             else
             {
@@ -102,20 +84,26 @@ namespace CRPG
                 //Move player
                 xPos--;
 
-                //Update ocation lightSources
-                World.GetLocationByPos(xPos + 1, yPos).IsLightSource = false;
-                World.GetLocationByPos(xPos, yPos).IsLightSource = true;
-                Lighting.lightingUpdate(this);
-
-                //Redraw new location and old location
-                Map.redrawMapPoint(xPos + 1, yPos, this);
-                Map.redrawMapPoint(xPos, yPos, this);
+                //Updates locations
+                movementUpdate(new Point(xPos + 1, yPos), new Point(xPos, yPos));
             }
             else
             {
                 //Inform player of failed move
                 Console.Write("You cannot move west. >");
             }
+        }
+
+        private void movementUpdate(Point oldPos, Point newPos)
+        {
+            //Update location lightSources
+            World.GetLocationByPos(oldPos).setLightSource(false, 0);//.IsLightSource = false;
+            World.GetLocationByPos(newPos).setLightSource(true, 6);//.IsLightSource = true;
+            //Lighting.lightingUpdate(this);
+
+            //Redraw new location and old location
+            Map.redrawMapPoint(oldPos, this);
+            Map.redrawMapPoint(newPos, this);
         }
     }
 }

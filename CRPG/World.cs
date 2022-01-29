@@ -43,13 +43,26 @@ namespace CRPG
             }
 
             //Manual wall setup:
+            locations[5, 1] = new Location(true);
+            locations[5, 2] = new Location(true);
             locations[5, 5] = new Location(true);
+            locations[5, 6] = new Location(true);
+            locations[5, 7] = new Location(true);
+            locations[4, 8] = new Location(true);
+            locations[5, 8] = new Location(true);
+            locations[1, 8] = new Location(true);
         }
 
         //Returns location object at position in locations array
         public static Location GetLocationByPos(int xPos, int yPos)
         {
             return locations[xPos, yPos];
+        }
+
+        //Returns location object at position in locations array using a point
+        public static Location GetLocationByPos(Point pos)
+        {
+            return locations[pos.X, pos.Y];
         }
     }
 }

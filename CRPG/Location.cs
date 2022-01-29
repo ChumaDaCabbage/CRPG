@@ -6,8 +6,12 @@ namespace CRPG
 {
     public class Location
     {
+        //Wall info
         public bool IsWall;
+
+        //Light info
         public bool IsLightSource;
+        public int lightPower = 1;
         public int lightLevel = 1;
 
         //Constructors
@@ -27,6 +31,13 @@ namespace CRPG
         public Location()
         {
             //Empty location
+        }
+
+        public void setLightSource(bool isLightSource, int power)
+        {
+            //Set lighting data
+            this.IsLightSource = isLightSource;
+            this.lightPower = power;
         }
     }
 }

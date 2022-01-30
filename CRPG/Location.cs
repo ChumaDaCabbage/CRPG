@@ -6,7 +6,7 @@ namespace CRPG
 {
     public class Location
     {
-        //Wall info
+        //Static location info
         public bool IsWall;
 
         //LightSource info

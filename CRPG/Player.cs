@@ -6,8 +6,9 @@ namespace CRPG
 {
     public class Player
     {
-        public int xPos = 0;
-        public int yPos = 0;
+        //public int xPos = 0;
+        //public int yPos = 0;
+        public Point Pos = new Point(0, 0);
 
         public const int PLAYER_LIGHT_LEVEL = 4;
         public const int PLAYER_SHOOT_SPEED = 2;
@@ -15,27 +16,27 @@ namespace CRPG
 
         //public Location CurrentLocation { set; get; }
 
-        //Teleports player to passed location and updates map
-        public void MoveTo(int xpos, int ypos)
+        //Teleports player to passed point and updates map
+        public void MoveTo(Point newPos)
         {
-            Point oldPos = new Point(xPos, yPos);
+            Point oldPos = new Point(Pos.X, Pos.Y);
 
-            xPos = xpos;
-            yPos = ypos;
+            Pos.X = newPos.X;
+            Pos.Y = newPos.Y;
 
-            MovementUpdate(oldPos, new Point(xPos, yPos));
+            MovementUpdate(oldPos, new Point(Pos.X, Pos.Y));
         }
 
         public void MoveSouth()
         {
             //If wanted location is available
-            if (yPos + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(xPos, yPos + 1).IsWall)
+            if (Pos.Y + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(Pos.X, Pos.Y + 1).IsWall)
             {
                 //Move player
-                yPos++;
+                Pos.Y++;
 
                 //Updates locations
-                MovementUpdate(new Point(xPos, yPos - 1), new Point(xPos, yPos));
+                MovementUpdate(new Point(Pos.X, Pos.Y - 1), Pos);
             }
             else
             {
@@ -47,13 +48,13 @@ namespace CRPG
         public void MoveEast()
         {
             //If wanted location is available
-            if (xPos + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(xPos + 1, yPos).IsWall)
+            if (Pos.X + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(Pos.X + 1, Pos.Y).IsWall)
             {
                 //Move player
-                xPos++;
+                Pos.X++;
 
                 //Updates locations
-                MovementUpdate(new Point(xPos - 1, yPos), new Point(xPos, yPos));
+                MovementUpdate(new Point(Pos.X - 1, Pos.Y), Pos);
             }
             else
             {
@@ -65,13 +66,13 @@ namespace CRPG
         public void MoveNorth()
         {
             //If wanted location is available
-            if (yPos - 1 >= 0 && !World.GetLocationByPos(xPos, yPos - 1).IsWall)
+            if (Pos.Y - 1 >= 0 && !World.GetLocationByPos(Pos.X, Pos.Y - 1).IsWall)
             {
                 //Move player
-                yPos--;
+                Pos.Y--;
 
                 //Updates locations
-                MovementUpdate(new Point(xPos, yPos + 1), new Point(xPos, yPos));
+                MovementUpdate(new Point(Pos.X, Pos.Y + 1), Pos);
             }
             else
             {
@@ -83,13 +84,13 @@ namespace CRPG
         public void MoveWest()
         {
             //If wanted location is available
-            if (xPos - 1 >= 0 && !World.GetLocationByPos(xPos - 1, yPos).IsWall)
+            if (Pos.X - 1 >= 0 && !World.GetLocationByPos(Pos.X - 1, Pos.Y).IsWall)
             {
                 //Move player
-                xPos--;
+                Pos.X--;
 
                 //Updates locations
-                MovementUpdate(new Point(xPos + 1, yPos), new Point(xPos, yPos));
+                MovementUpdate(new Point(Pos.X + 1, Pos.Y), Pos);
             }
             else
             {
@@ -101,7 +102,7 @@ namespace CRPG
         public void Shoot(Point direction)
         {
             //Add to flare list
-            Program._player._flares.Add(new Flare(direction, new Point(xPos, yPos)));
+            Program._player._flares.Add(new Flare(direction, Pos));
         }
 
         public bool CheckForFlare(Point pos)

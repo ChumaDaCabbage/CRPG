@@ -19,7 +19,7 @@ namespace CRPG
             Map.DrawMap();
 
             //Set player start point
-            _player.MoveTo(1, 1);
+            _player.MoveTo(new Point(1, 1));
 
             //Starts lighting
             Lighting.LightingUpdate();

@@ -67,8 +67,8 @@ namespace CRPG
         private static void DrawPoint(int x, int y)
         {
             //Get player position
-            int playerXPos = Program._player.xPos;
-            int playerYPos = Program._player.yPos;
+            int playerXPos = Program._player.Pos.X;
+            int playerYPos = Program._player.Pos.Y;
 
             //Sets up default icon
             string locIcon;

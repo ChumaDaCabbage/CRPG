@@ -43,28 +43,13 @@ namespace CRPG
             }
 
             //Manual wall setup:
-            locations[5, 1] = new Location(true);
-            locations[5, 2] = new Location(true);
-
-            locations[5, 5] = new Location(true);
-            locations[5, 6] = new Location(true);
-            locations[5, 7] = new Location(true);
-
-            locations[4, 8] = new Location(true);
-            locations[5, 8] = new Location(true);
+            drawWall(new Point(5, 1), new Point(5, 2));
+            drawWall(new Point(5, 5), new Point(5, 7));
+            drawWall(new Point(4, 8), new Point(5, 8));
             locations[1, 8] = new Location(true);
+            drawWall(new Point(6, 5), new Point(9, 5));
+            drawWall(new Point(6, 2), new Point(9, 2));
 
-            locations[6, 5] = new Location(true);
-            locations[7, 5] = new Location(true);
-            locations[8, 5] = new Location(true);
-            locations[9, 5] = new Location(true);
-
-            locations[6, 2] = new Location(true);
-            locations[7, 2] = new Location(true);
-            locations[8, 2] = new Location(true);
-            locations[9, 2] = new Location(true);
-
-            //locations[10, 5].setLightSource(true, 6, true);
         }
 
         //Returns location object at position in locations array
@@ -77,6 +62,23 @@ namespace CRPG
         public static Location GetLocationByPos(Point pos)
         {
             return locations[pos.X, pos.Y];
+        }
+
+        /// <summary>
+        /// Sets all points on a line between two passed points to walls
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        private static void drawWall(Point start, Point end)
+        {
+            //Get all points on line
+            List<Point> walls = LineFinder.GetLinePoints(start, end);
+
+            //Set all points to walls
+            foreach (Point wall in walls)
+            {
+                locations[wall.X, wall.Y] = new Location(true);
+            }
         }
     }
 }

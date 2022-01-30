@@ -48,7 +48,7 @@ namespace CRPG
                 }
                 else //Destroy self when light is off
                 {
-                    destroySelf();
+                    DestroySelf();
                 }
 
                 //Get new time
@@ -72,8 +72,8 @@ namespace CRPG
             else if (Math.Abs(Dir.X) > 1 || Math.Abs(Dir.Y) > 1) //If not available and going a long way
             {
                 //Shrink move size
-                Dir.X = Dir.X/2;
-                Dir.Y = Dir.Y/2;
+                Dir.X /= 2;
+                Dir.Y /= 2;
             }
             else //If going only one block and still not  available
             {
@@ -82,7 +82,7 @@ namespace CRPG
             }
         }
 
-        private void destroySelf()
+        private void DestroySelf()
         {
             //Find self, destroy self, update map
             for (int i = 0; i < Program._player._flares.Count; i++)
@@ -100,7 +100,7 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources
-            if (!oldPos.Equals(new Point(Program._player.xPos, Program._player.yPos))) World.GetLocationByPos(oldPos).SetLightSource(false, 0, false); //Remove light source
+            if (!oldPos.Equals(Program._player.Pos)) World.GetLocationByPos(oldPos).SetLightSource(false, 0, false); //Remove light source
             else World.GetLocationByPos(oldPos).SetLightSource(true, Player.PLAYER_LIGHT_LEVEL, false); //Give player light back
 
             World.GetLocationByPos(newPos).SetLightSource(true, flareLightLevel, true);

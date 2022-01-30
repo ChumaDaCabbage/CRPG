@@ -51,6 +51,8 @@ namespace CRPG
             locations[4, 8] = new Location(true);
             locations[5, 8] = new Location(true);
             locations[1, 8] = new Location(true);
+
+            //locations[10, 5].setLightSource(true, 6, true);
         }
 
         //Returns location object at position in locations array

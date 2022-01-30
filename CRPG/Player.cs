@@ -9,17 +9,20 @@ namespace CRPG
         public string Name { set; get; }
         public int xPos = 0;
         public int yPos = 0;
+
+        const int PLAYER_LIGHT_LEVEL = 6;
+
         //public Location CurrentLocation { set; get; }
 
-        //Teleports player to passed location and updates lighting
+        //Teleports player to passed location and updates map
         public void MoveTo(int xpos, int ypos)
         {
-            World.GetLocationByPos(xPos, yPos).IsLightSource = false;
+            Point oldPos = new Point(xPos, yPos);
 
             xPos = xpos;
             yPos = ypos;
 
-            World.GetLocationByPos(xPos, yPos).IsLightSource = true;
+            movementUpdate(oldPos, new Point(xPos, yPos));
         }
 
         public void MoveSouth()
@@ -97,8 +100,8 @@ namespace CRPG
         private void movementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources
-            World.GetLocationByPos(oldPos).setLightSource(false, 0);//.IsLightSource = false;
-            World.GetLocationByPos(newPos).setLightSource(true, 6);//.IsLightSource = true;
+            World.GetLocationByPos(oldPos).setLightSource(false, 0, false);
+            World.GetLocationByPos(newPos).setLightSource(true, PLAYER_LIGHT_LEVEL, false);
             //Lighting.lightingUpdate(this);
 
             //Redraw new location and old location

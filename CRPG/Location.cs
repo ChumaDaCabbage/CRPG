@@ -9,10 +9,14 @@ namespace CRPG
         //Wall info
         public bool IsWall;
 
-        //Light info
-        public bool IsLightSource;
-        public int lightPower = 1;
-        public int lightLevel = 1;
+        //LightSource info
+        public bool IsLightSource = false;
+        public bool RedLightSource = false;
+        public int LightPower = 1;
+
+        //Light Received info
+        public int currentLightLevel = 1;
+        public bool redLight = false;
 
         //Constructors
         /// <summary>
@@ -33,11 +37,12 @@ namespace CRPG
             //Empty location
         }
 
-        public void setLightSource(bool isLightSource, int power)
+        public void setLightSource(bool isLightSource, int lightPower, bool redLightSource)
         {
             //Set lighting data
             this.IsLightSource = isLightSource;
-            this.lightPower = power;
+            this.LightPower = lightPower;
+            this.RedLightSource = redLightSource;
         }
     }
 }

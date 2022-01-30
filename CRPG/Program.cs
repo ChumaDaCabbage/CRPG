@@ -15,10 +15,12 @@ namespace CRPG
 
             //Set up default player info
             _player.Name = "Fred the fearful";
-            _player.MoveTo(1, 1);
 
             //Setup default map
             Map.DrawMap(_player);
+
+            //Set player start point
+            _player.MoveTo(1, 1);
 
             //Starts lighting
             Lighting.lightingUpdate(_player);

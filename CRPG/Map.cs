@@ -83,11 +83,11 @@ namespace CRPG
             {
                 //Do darkest if not wall
                 //locIcon = "\x1b[48;2;0;0;0m  ";
-                locIcon = Lighting.getFloorTileColor(x, y);
+                locIcon = Lighting.getFloorTileColor(x, y).getExtendedColorsString();
             }
             else
             {
-                locIcon = Lighting.getWallTileColor(x, y);
+                locIcon = Lighting.getWallTileColor(x, y).getExtendedColorsString();
             }
 
             //Write out icon

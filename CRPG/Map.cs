@@ -84,7 +84,7 @@ namespace CRPG
                 Color player = new Color(255, 255, 255);
                 locIcon = player.GetExtendedColorsString(); ;
             }
-            else if (!World.locations[x, y].IsWall) //Check for walls
+            else if (!World.locations[x, y].IfWall()) //Check for walls
             {
                 locIcon = Lighting.GetFloorTileColor(x, y).GetExtendedColorsString();
             }

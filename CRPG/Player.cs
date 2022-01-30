@@ -8,7 +8,7 @@ namespace CRPG
     {
         //public int xPos = 0;
         //public int yPos = 0;
-        public Point Pos = new Point(0, 0);
+        public Point Pos = new Point(1, 1);
 
         public const int PLAYER_LIGHT_LEVEL = 4;
         public const int PLAYER_SHOOT_SPEED = 2;
@@ -30,7 +30,7 @@ namespace CRPG
         public void MoveSouth()
         {
             //If wanted location is available
-            if (Pos.Y + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(Pos.X, Pos.Y + 1).IsWall)
+            if (Pos.Y + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(Pos.X, Pos.Y + 1).IfWall())
             {
                 //Move player
                 Pos.Y++;
@@ -48,7 +48,7 @@ namespace CRPG
         public void MoveEast()
         {
             //If wanted location is available
-            if (Pos.X + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(Pos.X + 1, Pos.Y).IsWall)
+            if (Pos.X + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(Pos.X + 1, Pos.Y).IfWall())
             {
                 //Move player
                 Pos.X++;
@@ -66,7 +66,7 @@ namespace CRPG
         public void MoveNorth()
         {
             //If wanted location is available
-            if (Pos.Y - 1 >= 0 && !World.GetLocationByPos(Pos.X, Pos.Y - 1).IsWall)
+            if (Pos.Y - 1 >= 0 && !World.GetLocationByPos(Pos.X, Pos.Y - 1).IfWall())
             {
                 //Move player
                 Pos.Y--;
@@ -84,7 +84,7 @@ namespace CRPG
         public void MoveWest()
         {
             //If wanted location is available
-            if (Pos.X - 1 >= 0 && !World.GetLocationByPos(Pos.X - 1, Pos.Y).IsWall)
+            if (Pos.X - 1 >= 0 && !World.GetLocationByPos(Pos.X - 1, Pos.Y).IfWall())
             {
                 //Move player
                 Pos.X--;
@@ -123,8 +123,8 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources (Check for flares to not overwrite their light)
-            if (!CheckForFlare(oldPos)) World.GetLocationByPos(oldPos).SetLightSource(false, 0, false);
-            if (!CheckForFlare(newPos)) World.GetLocationByPos(newPos).SetLightSource(true, PLAYER_LIGHT_LEVEL, false);
+            if (!CheckForFlare(oldPos)) World.SetLocationByPos(oldPos, new Floor());
+            if (!CheckForFlare(newPos)) World.SetLocationByPos(newPos, new LightSource(newPos, true, PLAYER_LIGHT_LEVEL, false));
 
             //Lighting.lightingUpdate(this);
 

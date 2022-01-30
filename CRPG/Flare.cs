@@ -22,7 +22,7 @@ namespace CRPG
             Map.RedrawMapPoint(Pos);
 
             //Setup lighting for flare
-            World.GetLocationByPos(Pos).SetLightSource(true, flareLightLevel, true);
+            World.SetLocationByPos(Pos, new LightSource(Pos, true, flareLightLevel, true));
             Lighting.LightingUpdate();
             
         }
@@ -43,7 +43,7 @@ namespace CRPG
                     flareLightLevel--; //Increment light level down
 
                     //Update lighting
-                    World.GetLocationByPos(Pos).SetLightSource(true, flareLightLevel, true);
+                    World.SetLocationByPos(Pos, new LightSource(Pos, true, flareLightLevel, true));
                     Lighting.LightingUpdate();
                 }
                 else //Destroy self when light is off
@@ -91,7 +91,7 @@ namespace CRPG
                 {
                     Program._player._flares.RemoveAt(i);
                     Map.RedrawMapPoint(Pos);
-                    World.GetLocationByPos(Pos).SetLightSource(false, 0, false);
+                    World.SetLocationByPos(Pos, new Floor());
                     Lighting.LightingUpdate();
                 }
             }
@@ -100,10 +100,10 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources
-            if (!oldPos.Equals(Program._player.Pos)) World.GetLocationByPos(oldPos).SetLightSource(false, 0, false); //Remove light source
-            else World.GetLocationByPos(oldPos).SetLightSource(true, Player.PLAYER_LIGHT_LEVEL, false); //Give player light back
+            if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, new Floor()); //Remove light source
+            else World.SetLocationByPos(oldPos, new LightSource(oldPos, true, Player.PLAYER_LIGHT_LEVEL, false)); //Give player light back
 
-            World.GetLocationByPos(newPos).SetLightSource(true, flareLightLevel, true);
+            World.SetLocationByPos(newPos, new LightSource(newPos, true, flareLightLevel, true));
             Lighting.LightingUpdate();
 
             //Redraw new location and old location

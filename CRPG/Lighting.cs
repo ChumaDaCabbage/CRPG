@@ -11,7 +11,7 @@ namespace CRPG
         public static void LightingUpdate()
         {
             //Will hold all lightsources
-            List<Point> foundLightSources = new List<Point>();
+            List<LightSource> foundLightSources = new List<LightSource>();
 
             //Goes through all locations
             for (int x = 0; x < World.MAX_WORLD_X; x++)
@@ -19,10 +19,10 @@ namespace CRPG
                 for (int y = 0; y < World.MAX_WORLD_Y; y++)
                 {
                     //If lightSource is found
-                    if (World.locations[x, y].IsLightSource == true)
+                    if (World.locations[x, y].IfLightSource())
                     {
                         //Add lightsource to list
-                        foundLightSources.Add(new Point(x, y));
+                        foundLightSources.Add(World.GetLightSourceByPos(new Point(x, y)));
                     }
                 }
             }
@@ -35,7 +35,7 @@ namespace CRPG
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public static void SetLightLevels(List<Point> lightSources)
+        public static void SetLightLevels(List<LightSource> lightSources)
         {
             //Goes through all locations
             for (int x2 = 0; x2 < World.MAX_WORLD_X; x2++)
@@ -51,22 +51,22 @@ namespace CRPG
                     for (int i = 0; i < lightSources.Count; i++)
                     {
                         //Holds dist of current lightsource
-                        float newDist = MathF.Sqrt(MathF.Pow(x2 - lightSources[i].X, 2) + MathF.Pow(y2 - lightSources[i].Y, 2));
+                        float newDist = MathF.Sqrt(MathF.Pow(x2 - lightSources[i].Pos.X, 2) + MathF.Pow(y2 - lightSources[i].Pos.Y, 2));
 
                         //Holds possible light level from current source
-                        int level = (int)Math.Clamp(World.GetLocationByPos(lightSources[i]).LightPower - ((newDist / 2.5f) - 1), 1, 9); 
+                        int level = (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9); 
 
                         //If new lightsource is giving better light
-                        if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i]))
+                        if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                         {
                             //Replace shortestDist and lightPower
                             shortestDist = newDist;
                             greatestLightLevel = level;
-                            lightPower = World.GetLocationByPos(lightSources[i]).LightPower;
+                            lightPower = lightSources[i].LightPower;
                         }
 
                         //If red light is close enough to location and not blocked
-                        if (World.GetLocationByPos(lightSources[i]).RedLightSource && (int)Math.Clamp(World.GetLocationByPos(lightSources[i]).LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i]))
+                        if (lightSources[i].RedLightSource && (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                         {
                             //Set redlight to true
                             isRedLight = true;

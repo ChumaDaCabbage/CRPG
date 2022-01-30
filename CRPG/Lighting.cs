@@ -6,9 +6,9 @@ namespace CRPG
 {
     public static class Lighting
     {
-        private const int RED_BOOST_AMOUNT = 20;
+        private const int RED_BOOST_AMOUNT = 15;
 
-        public static void lightingUpdate(Player player)
+        public static void LightingUpdate()
         {
             //Will hold all lightsources
             List<Point> foundLightSources = new List<Point>();
@@ -27,7 +27,7 @@ namespace CRPG
                 }
             }
 
-            setLightLevels(foundLightSources, player);
+            SetLightLevels(foundLightSources);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace CRPG
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public static void setLightLevels(List<Point> lightSources, Player player)
+        public static void SetLightLevels(List<Point> lightSources)
         {
             //Goes through all locations
             for (int x2 = 0; x2 < World.MAX_WORLD_X; x2++)
@@ -43,6 +43,7 @@ namespace CRPG
                 for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
                 {
                     float shortestDist = 9999; //Holds shortest distance to a lightsource
+                    int greatestLightLevel = 1; //Holds greatest lightlevel found
                     int lightPower = 0; //Holds power of current light
                     bool isRedLight = false; //Holds if red light source
 
@@ -52,16 +53,20 @@ namespace CRPG
                         //Holds dist of current lightsource
                         float newDist = MathF.Sqrt(MathF.Pow(x2 - lightSources[i].X, 2) + MathF.Pow(y2 - lightSources[i].Y, 2));
 
-                        //If distance to lightsource is shorter
-                        if (newDist < shortestDist && !blockedCheck(x2, y2, lightSources[i]))
+                        //Holds possible light level from current source
+                        int level = (int)Math.Clamp(World.GetLocationByPos(lightSources[i]).LightPower - ((newDist / 2.5f) - 1), 1, 9); 
+
+                        //If new lightsource is giving better light
+                        if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i]))
                         {
                             //Replace shortestDist and lightPower
-                            shortestDist = MathF.Sqrt(MathF.Pow(x2 - lightSources[i].X, 2) + MathF.Pow(y2 - lightSources[i].Y, 2));
+                            shortestDist = newDist;
+                            greatestLightLevel = level;
                             lightPower = World.GetLocationByPos(lightSources[i]).LightPower;
                         }
 
-                        //If red light is close enough to player and not blocked
-                        if (World.GetLocationByPos(lightSources[i]).RedLightSource && World.GetLocationByPos(lightSources[i]).LightPower - ((newDist / 2.5f) - 1) > 0 && !blockedCheck(x2, y2, lightSources[i]))
+                        //If red light is close enough to location and not blocked
+                        if (World.GetLocationByPos(lightSources[i]).RedLightSource && (int)Math.Clamp(World.GetLocationByPos(lightSources[i]).LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i]))
                         {
                             //Set redlight to true
                             isRedLight = true;
@@ -69,29 +74,13 @@ namespace CRPG
                     }
 
                     //Sets up light level info
-                    setLightLevel(x2, y2, (int)Math.Clamp(lightPower - ((shortestDist / 2.5f) - 1), 1, 9), player, isRedLight);
+                    SetLightLevel(x2, y2, greatestLightLevel, isRedLight);
 
                 }
             }
         }
 
-        private static bool blockedCheck(int x, int y, Point light)
-        {
-            //Check for walls blocking
-            List<Point> possibleBlockers = LineFinder.getLinePoints(new Point(x, y), light);
-            bool blocked = false;
-            for (int j = 1; j < possibleBlockers.Count; j++)
-            {
-                if (World.GetLocationByPos(possibleBlockers[j]).IsWall)
-                {
-                    blocked = true;
-                }
-            }
-
-            return blocked;
-        }
-
-        private static void setLightLevel(int x, int y, int level, Player player, bool newRedLight)
+        private static void SetLightLevel(int x, int y, int level, bool newRedLight)
         {
             //If light level is a new value
             if (World.locations[x, y].currentLightLevel != level || World.locations[x, y].redLight != newRedLight)
@@ -101,12 +90,66 @@ namespace CRPG
                 World.locations[x, y].redLight = newRedLight;
 
                 //Redraw map point
-                Map.redrawMapPoint(x, y, player);
+                Map.RedrawMapPoint(x, y);
             }
         }
 
-        //Returns wall color to be used based off light level
-        public static Color getWallTileColor(int x, int y)
+        /// <summary>
+        /// Returns flare color to be used based off light level
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static Color GetFlareColor(int x, int y)
+        {
+            //Holds color for flare
+            Color flareColor;
+
+            //Gets color based off of light level
+            switch (World.locations[x, y].currentLightLevel)
+            {
+                case 1:
+                    flareColor = new Color(0, 0, 0);
+                    break;
+                case 2:
+                    flareColor = new Color(51, 4, 4);
+                    break;
+                case 3:
+                    flareColor = new Color(105, 15, 15);
+                    break;
+                case 4:
+                    flareColor = new Color(156, 31, 31);
+                    break;
+                case 5:
+                    flareColor = new Color(209, 56, 56);
+                    break;
+                case 6:
+                    flareColor = new Color(222, 71, 71);
+                    break;
+                case 7:
+                    flareColor = new Color(235, 87, 87);
+                    break;
+                case 8:
+                    flareColor = new Color(247, 104, 104);
+                    break;
+                case 9:
+                    flareColor = new Color(255, 120, 120);
+                    break;
+                default:
+                    return null;
+            }
+
+            //Returns flareColor
+            return flareColor;
+        }
+
+        /// <summary>
+        /// Returns wall color to be used based off light level
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static Color GetWallTileColor(int x, int y)
         {
             //Holds color for wall
             Color wallColor;
@@ -155,8 +198,13 @@ namespace CRPG
             return wallColor;
         }
 
-        //Returns floor color to be used based off light level
-        public static Color getFloorTileColor(int x, int y)
+        /// <summary>
+        /// Returns floor color to be used based off light level
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static Color GetFloorTileColor(int x, int y)
         {
             //Holds color for wall
             Color wallColor;

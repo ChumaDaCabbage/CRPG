@@ -6,11 +6,12 @@ namespace CRPG
 {
     public class Player
     {
-        public string Name { set; get; }
         public int xPos = 0;
         public int yPos = 0;
 
-        const int PLAYER_LIGHT_LEVEL = 6;
+        public const int PLAYER_LIGHT_LEVEL = 4;
+        public const int PLAYER_SHOOT_SPEED = 2;
+        public List<Flare> _flares = new List<Flare>();
 
         //public Location CurrentLocation { set; get; }
 
@@ -22,7 +23,7 @@ namespace CRPG
             xPos = xpos;
             yPos = ypos;
 
-            movementUpdate(oldPos, new Point(xPos, yPos));
+            MovementUpdate(oldPos, new Point(xPos, yPos));
         }
 
         public void MoveSouth()
@@ -34,7 +35,7 @@ namespace CRPG
                 yPos++;
 
                 //Updates locations
-                movementUpdate(new Point(xPos, yPos - 1), new Point(xPos, yPos));
+                MovementUpdate(new Point(xPos, yPos - 1), new Point(xPos, yPos));
             }
             else
             {
@@ -52,7 +53,7 @@ namespace CRPG
                 xPos++;
 
                 //Updates locations
-                movementUpdate(new Point(xPos - 1, yPos), new Point(xPos, yPos));
+                MovementUpdate(new Point(xPos - 1, yPos), new Point(xPos, yPos));
             }
             else
             {
@@ -70,7 +71,7 @@ namespace CRPG
                 yPos--;
 
                 //Updates locations
-                movementUpdate(new Point(xPos, yPos + 1), new Point(xPos, yPos));
+                MovementUpdate(new Point(xPos, yPos + 1), new Point(xPos, yPos));
             }
             else
             {
@@ -88,7 +89,7 @@ namespace CRPG
                 xPos--;
 
                 //Updates locations
-                movementUpdate(new Point(xPos + 1, yPos), new Point(xPos, yPos));
+                MovementUpdate(new Point(xPos + 1, yPos), new Point(xPos, yPos));
             }
             else
             {
@@ -97,16 +98,38 @@ namespace CRPG
             }
         }
 
-        private void movementUpdate(Point oldPos, Point newPos)
+        public void Shoot(Point direction)
         {
-            //Update location lightSources
-            World.GetLocationByPos(oldPos).setLightSource(false, 0, false);
-            World.GetLocationByPos(newPos).setLightSource(true, PLAYER_LIGHT_LEVEL, false);
+            //Add to flare list
+            Program._player._flares.Add(new Flare(direction, new Point(xPos, yPos)));
+        }
+
+        public bool CheckForFlare(Point pos)
+        {
+            bool isFlare = false;
+            for (int i = 0; i < _flares.Count; i++)
+            {
+                //If position is a flare
+                if (pos.X == _flares[i].Pos.X && pos.Y == _flares[i].Pos.Y)
+                {
+                    isFlare = true; //Set is flare to true
+                }
+            }
+
+            return isFlare;
+        }
+
+        private void MovementUpdate(Point oldPos, Point newPos)
+        {
+            //Update location lightSources (Check for flares to not overwrite their light)
+            if (!CheckForFlare(oldPos)) World.GetLocationByPos(oldPos).SetLightSource(false, 0, false);
+            if (!CheckForFlare(newPos)) World.GetLocationByPos(newPos).SetLightSource(true, PLAYER_LIGHT_LEVEL, false);
+
             //Lighting.lightingUpdate(this);
 
             //Redraw new location and old location
-            Map.redrawMapPoint(oldPos, this);
-            Map.redrawMapPoint(newPos, this);
+            Map.RedrawMapPoint(oldPos);
+            Map.RedrawMapPoint(newPos);
         }
     }
 }

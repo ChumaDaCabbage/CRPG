@@ -6,7 +6,7 @@ namespace CRPG
 {
     public class World
     {
-        public static readonly string WorldName = "HelloWorld";
+        //public static readonly string WorldName = "HelloWorld";
         //public static readonly List<Location> Locations = new List<Location>();
         public static Location[,] locations;
 
@@ -45,12 +45,24 @@ namespace CRPG
             //Manual wall setup:
             locations[5, 1] = new Location(true);
             locations[5, 2] = new Location(true);
+
             locations[5, 5] = new Location(true);
             locations[5, 6] = new Location(true);
             locations[5, 7] = new Location(true);
+
             locations[4, 8] = new Location(true);
             locations[5, 8] = new Location(true);
             locations[1, 8] = new Location(true);
+
+            locations[6, 5] = new Location(true);
+            locations[7, 5] = new Location(true);
+            locations[8, 5] = new Location(true);
+            locations[9, 5] = new Location(true);
+
+            locations[6, 2] = new Location(true);
+            locations[7, 2] = new Location(true);
+            locations[8, 2] = new Location(true);
+            locations[9, 2] = new Location(true);
 
             //locations[10, 5].setLightSource(true, 6, true);
         }

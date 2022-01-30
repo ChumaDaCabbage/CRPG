@@ -7,7 +7,7 @@ namespace CRPG
 {
     public static class GameEngine
     {
-        public static string Version = "0.0.5";
+        public static string Version = "0.0.7";
 
         public static void Initialize()
         {
@@ -15,10 +15,25 @@ namespace CRPG
             Console.SetWindowSize(Console.LargestWindowWidth / 2, Console.LargestWindowHeight - (Console.LargestWindowHeight / 3));
 
             //Start message
-            Console.WriteLine("Initializing Game Engine Version {0}", Version);
-            Console.WriteLine("\n\nWelcome to the World of {0}", World.WorldName);
+            Console.WriteLine("                                       Initializing Game Engine Version {0}", Version);
             Console.WriteLine();
-            Console.WriteLine("Press any Key to begin!");
+            Console.WriteLine();
+
+            //Credits to https://patorjk.com/software/taag/ for the awesome ascii art
+
+            Console.WriteLine("                       ▄████████    ▄████████  ▄████████    ▄████████    ▄███████▄    ▄████████ ");
+            Console.WriteLine("                      ███    ███   ███    ███ ███    ███   ███    ███   ███    ███   ███    ███ ");
+            Console.WriteLine("                      ███    █▀    ███    █▀  ███    █▀    ███    ███   ███    ███   ███    █▀  ");
+            Console.WriteLine("                     ▄███▄▄▄       ███        ███          ███    ███   ███    ███  ▄███▄▄▄     ");
+            Console.WriteLine("                    ▀▀███▀▀▀     ▀███████████ ███        ▀███████████ ▀█████████▀  ▀▀███▀▀▀     ");
+            Console.WriteLine("                      ███    █▄           ███ ███    █▄    ███    ███   ███          ███    █▄  ");
+            Console.WriteLine("                      ███    ███    ▄█    ███ ███    ███   ███    ███   ███          ███    ███ ");
+            Console.WriteLine("                      ██████████  ▄████████▀  ████████▀    ███    █▀   ▄████▀        ██████████ ");
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("                                              Press any Key to begin!");
             Console.ReadKey();
             Console.Clear();
         }

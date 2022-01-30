@@ -7,7 +7,7 @@ namespace CRPG
     public static class LineFinder
     {
         //Gets all points on a line between two points
-        public static List<Point> getLinePoints(Point start, Point end)
+        public static List<Point> GetLinePoints(Point start, Point end)
         {
             //Gets x and y int's out of Points
             int x0 = start.X;
@@ -67,6 +67,38 @@ namespace CRPG
 
             //Return final points
             return linePoints;
+        }
+
+        public static bool BlockedCheck(int x, int y, Point end)
+        {
+            //Check for walls blocking
+            List<Point> possibleBlockers = LineFinder.GetLinePoints(new Point(x, y), end);
+            bool blocked = false;
+            for (int i = 1; i < possibleBlockers.Count; i++)
+            {
+                if (World.GetLocationByPos(possibleBlockers[i]).IsWall)
+                {
+                    blocked = true;
+                }
+            }
+
+            return blocked;
+        }
+
+        public static bool BlockedCheck(Point start, Point end)
+        {
+            //Check for walls blocking
+            List<Point> possibleBlockers = LineFinder.GetLinePoints(start, end);
+            bool blocked = false;
+            for (int i = 1; i < possibleBlockers.Count; i++)
+            {
+                if (World.GetLocationByPos(possibleBlockers[i]).IsWall)
+                {
+                    blocked = true;
+                }
+            }
+
+            return blocked;
         }
     }
 }

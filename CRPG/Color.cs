@@ -17,7 +17,7 @@ namespace CRPG
             B = b;
         }
 
-        public string getExtendedColorsString()
+        public string GetExtendedColorsString()
         { 
             return "\x1b[48;2;" + R + ";" + G + ";" + B + "m  ";
         }

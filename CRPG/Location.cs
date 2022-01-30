@@ -37,7 +37,7 @@ namespace CRPG
             //Empty location
         }
 
-        public void setLightSource(bool isLightSource, int lightPower, bool redLightSource)
+        public void SetLightSource(bool isLightSource, int lightPower, bool redLightSource)
         {
             //Set lighting data
             this.IsLightSource = isLightSource;

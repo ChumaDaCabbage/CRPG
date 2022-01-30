@@ -15,5 +15,14 @@ namespace CRPG
         {
             return false;
         }
+        public override bool IfFlare()
+        {
+            return false;
+        }
+
+        public override bool IfFloor()
+        {
+            return true;
+        }
     }
 }

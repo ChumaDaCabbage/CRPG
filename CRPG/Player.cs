@@ -30,7 +30,7 @@ namespace CRPG
         public void MoveSouth()
         {
             //If wanted location is available
-            if (Pos.Y + 1 < World.MAX_WORLD_Y && !World.GetLocationByPos(Pos.X, Pos.Y + 1).IfWall())
+            if (Pos.Y + 1 < World.MAX_WORLD_Y && World.GetLocationByPos(Pos.X, Pos.Y + 1).IfFloor())
             {
                 //Move player
                 Pos.Y++;
@@ -48,7 +48,7 @@ namespace CRPG
         public void MoveEast()
         {
             //If wanted location is available
-            if (Pos.X + 1 < World.MAX_WORLD_X && !World.GetLocationByPos(Pos.X + 1, Pos.Y).IfWall())
+            if (Pos.X + 1 < World.MAX_WORLD_X && World.GetLocationByPos(Pos.X + 1, Pos.Y).IfFloor())
             {
                 //Move player
                 Pos.X++;
@@ -66,7 +66,7 @@ namespace CRPG
         public void MoveNorth()
         {
             //If wanted location is available
-            if (Pos.Y - 1 >= 0 && !World.GetLocationByPos(Pos.X, Pos.Y - 1).IfWall())
+            if (Pos.Y - 1 >= 0 && World.GetLocationByPos(Pos.X, Pos.Y - 1).IfFloor())
             {
                 //Move player
                 Pos.Y--;
@@ -84,7 +84,7 @@ namespace CRPG
         public void MoveWest()
         {
             //If wanted location is available
-            if (Pos.X - 1 >= 0 && !World.GetLocationByPos(Pos.X - 1, Pos.Y).IfWall())
+            if (Pos.X - 1 >= 0 && World.GetLocationByPos(Pos.X - 1, Pos.Y).IfFloor())
             {
                 //Move player
                 Pos.X--;
@@ -105,28 +105,11 @@ namespace CRPG
             Program._player._flares.Add(new Flare(direction, Pos));
         }
 
-        public bool CheckForFlare(Point pos)
-        {
-            bool isFlare = false;
-            for (int i = 0; i < _flares.Count; i++)
-            {
-                //If position is a flare
-                if (pos.X == _flares[i].Pos.X && pos.Y == _flares[i].Pos.Y)
-                {
-                    isFlare = true; //Set is flare to true
-                }
-            }
-
-            return isFlare;
-        }
-
         private void MovementUpdate(Point oldPos, Point newPos)
         {
-            //Update location lightSources (Check for flares to not overwrite their light)
-            if (!CheckForFlare(oldPos)) World.SetLocationByPos(oldPos, new Floor());
-            if (!CheckForFlare(newPos)) World.SetLocationByPos(newPos, new LightSource(newPos, true, PLAYER_LIGHT_LEVEL, false));
-
-            //Lighting.lightingUpdate(this);
+            //Update location lightSources
+            World.SetLocationByPos(oldPos, new Floor());
+            World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
 
             //Redraw new location and old location
             Map.RedrawMapPoint(oldPos);

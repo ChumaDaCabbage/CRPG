@@ -31,5 +31,10 @@ namespace CRPG
         {
             return (X == point2.X && Y == point2.Y);
         }
+
+        public static Point Zero()
+        {
+            return new Point(0, 0);
+        }
     }
 }

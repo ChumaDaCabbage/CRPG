@@ -38,13 +38,6 @@ namespace CRPG
                     }
 
                     //Update all flares
-                    /*
-                    foreach (Flare flare in _player._flares)
-                    {
-                        flare.FlareUpdate();  
-                    }
-                    */
-
                     for (int i = 0; i < _player._flares.Count; i++)
                     {
                         _player._flares[i].FlareUpdate();

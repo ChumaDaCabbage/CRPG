@@ -4,27 +4,26 @@ using System.Text;
 
 namespace CRPG
 {
-    public class Flare 
+    public class Flare : LightSource
     {
         private int flareLightLevel = 5; //Starts with a default of 5
 
         DateTime lastMovedTime = DateTime.Now; //Holds last time moved
         Point Dir; //Holds direction of movement
-        public Point Pos; //Holds current position of flare
+        //public Point Pos; //Holds current position of flare
         bool moving = true; //Holds if flare is moveing
 
-        public Flare(Point dir, Point pos)
+        public Flare(Point dir, Point pos) : base(pos)
         {
             Dir = dir;
-            Pos = pos;
+            LightPower = flareLightLevel;
 
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
 
-            //Setup lighting for flare
-            World.SetLocationByPos(Pos, new LightSource(Pos, true, flareLightLevel, true));
+            //Set flare pos in Locations[] and upadte lighting
+            World.SetLocationByPos(Pos, this);
             Lighting.LightingUpdate();
-            
         }
 
         public void FlareUpdate()
@@ -43,7 +42,7 @@ namespace CRPG
                     flareLightLevel--; //Increment light level down
 
                     //Update lighting
-                    World.SetLocationByPos(Pos, new LightSource(Pos, true, flareLightLevel, true));
+                    LightPower = flareLightLevel;
                     Lighting.LightingUpdate();
                 }
                 else //Destroy self when light is off
@@ -90,8 +89,8 @@ namespace CRPG
                 if (Program._player._flares[i] == this)
                 {
                     Program._player._flares.RemoveAt(i);
-                    Map.RedrawMapPoint(Pos);
                     World.SetLocationByPos(Pos, new Floor());
+                    Map.RedrawMapPoint(Pos);
                     Lighting.LightingUpdate();
                 }
             }
@@ -101,14 +100,20 @@ namespace CRPG
         {
             //Update location lightSources
             if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, new Floor()); //Remove light source
-            else World.SetLocationByPos(oldPos, new LightSource(oldPos, true, Player.PLAYER_LIGHT_LEVEL, false)); //Give player light back
+            else World.SetLocationByPos(oldPos, new LightSource(oldPos, Player.PLAYER_LIGHT_LEVEL)); //Give player light back
 
-            World.SetLocationByPos(newPos, new LightSource(newPos, true, flareLightLevel, true));
+            //Set new flare pos in Locations[] and update lighting
+            World.SetLocationByPos(newPos, this);
             Lighting.LightingUpdate();
 
             //Redraw new location and old location
             Map.RedrawMapPoint(oldPos);
             Map.RedrawMapPoint(newPos);
+        }
+
+        public override bool IfFlare()
+        {
+            return true;
         }
     }
 }

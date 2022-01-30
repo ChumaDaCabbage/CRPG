@@ -42,9 +42,7 @@ namespace CRPG
             {
                 for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
                 {
-                    float shortestDist = 9999; //Holds shortest distance to a lightsource
                     int greatestLightLevel = 1; //Holds greatest lightlevel found
-                    int lightPower = 0; //Holds power of current light
                     bool isRedLight = false; //Holds if red light source
 
                     //Go through all lightsources
@@ -60,13 +58,11 @@ namespace CRPG
                         if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                         {
                             //Replace shortestDist and lightPower
-                            shortestDist = newDist;
                             greatestLightLevel = level;
-                            lightPower = lightSources[i].LightPower;
                         }
 
                         //If red light is close enough to location and not blocked
-                        if (lightSources[i].RedLightSource && (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
+                        if (lightSources[i].IfFlare() && (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                         {
                             //Set redlight to true
                             isRedLight = true;

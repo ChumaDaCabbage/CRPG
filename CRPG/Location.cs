@@ -13,5 +13,9 @@ namespace CRPG
         public abstract bool IfWall();
 
         public abstract bool IfLightSource();
+
+        public abstract bool IfFlare();
+
+        public abstract bool IfFloor();
     }
 }

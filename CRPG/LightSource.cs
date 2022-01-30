@@ -7,26 +7,19 @@ namespace CRPG
     public class LightSource : Location
     {
         //LightSource info
-        public bool IsLightSource = false;
-        public bool RedLightSource = false;
-        public Point Pos;
         public int LightPower = 1;
+        public Point Pos;
 
-        public LightSource(Point pos,  bool isLightSource, int lightPower, bool redLightSource)
+        public LightSource(Point pos, int lightPower)
         {
             Pos = pos;
-            IsLightSource = isLightSource;
-            RedLightSource = redLightSource;
             LightPower = lightPower;
         }
 
-        //public void SetLightSource(bool isLightSource, int lightPower, bool redLightSource)
-        //{
-        //    //Set lighting data
-        //    this.IsLightSource = isLightSource;
-        //    this.LightPower = lightPower;
-        //    this.RedLightSource = redLightSource;
-        //}
+        public LightSource(Point pos)
+        {
+            Pos = pos;
+        }
 
         public override bool IfWall()
         {
@@ -36,6 +29,16 @@ namespace CRPG
         public override bool IfLightSource()
         {
             return true;
+        }
+
+        public override bool IfFlare()
+        {
+            return false;
+        }
+
+        public override bool IfFloor()
+        {
+            return false;
         }
     }
 }

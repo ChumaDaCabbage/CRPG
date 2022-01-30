@@ -73,24 +73,23 @@ namespace CRPG
             //Sets up default icon
             string locIcon;
 
-            //Get color
-            if(Program._player.CheckForFlare(new Point(x, y))) //Check for flare
+
+            if (World.locations[x, y].IfFlare()) //Check for flare
             {
-                //Color flareRed = new Color(209, 56, 56);
-                locIcon = Lighting.GetFlareColor(x, y).GetExtendedColorsString();//flareRed.GetExtendedColorsString();
+                locIcon = Lighting.GetFlareColor(x, y).GetExtendedColorsString();
             }
             else if (x == playerXPos && y == playerYPos) //Check for player
             {
                 Color player = new Color(255, 255, 255);
-                locIcon = player.GetExtendedColorsString(); ;
+                locIcon = player.GetExtendedColorsString();
             }
-            else if (!World.locations[x, y].IfWall()) //Check for walls
+            else if (World.locations[x, y].IfWall()) //Check for walls
             {
-                locIcon = Lighting.GetFloorTileColor(x, y).GetExtendedColorsString();
+                locIcon = Lighting.GetWallTileColor(x, y).GetExtendedColorsString();
             }
             else //Floor
             {
-                locIcon = Lighting.GetWallTileColor(x, y).GetExtendedColorsString();
+                locIcon = Lighting.GetFloorTileColor(x, y).GetExtendedColorsString();
             }
 
             //Write out icon

@@ -24,5 +24,10 @@ namespace CRPG
         {
             return true;
         }
+
+        public override bool IfTorch()
+        {
+            return false;
+        }
     }
 }

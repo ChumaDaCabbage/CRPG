@@ -52,7 +52,7 @@ namespace CRPG
             DrawPoint(xPos, yPos); //Calls drawPoint at wanted position
 
             //Resets cursor
-            Program.SetupWritingLine();
+            Program.ResetCursor();
         }
 
         public static void RedrawMapPoint(Point point)
@@ -61,7 +61,7 @@ namespace CRPG
             DrawPoint(point.X, point.Y); //Calls drawPoint at wanted position
 
             //Resets cursor
-            Program.SetupWritingLine();
+            Program.ResetCursor();
         }
 
         private static void DrawPoint(int x, int y)
@@ -86,6 +86,10 @@ namespace CRPG
             else if (World.locations[x, y].IfWall()) //Check for walls
             {
                 locIcon = Lighting.GetWallTileColor(x, y).GetExtendedColorsString();
+            }
+            else if (World.locations[x, y].IfTorch()) //Torch
+            {
+                locIcon = Lighting.GetTorchTileColor(x, y).GetExtendedColorsString();
             }
             else //Floor
             {

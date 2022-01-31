@@ -8,10 +8,10 @@ namespace CRPG
     {
         private int flareLightLevel = 5; //Starts with a default of 5
 
-        DateTime lastMovedTime = DateTime.Now; //Holds last time moved
+        DateTime LastMovedTime = DateTime.Now; //Holds last time moved
         Point Dir; //Holds direction of movement
         //public Point Pos; //Holds current position of flare
-        bool moving = true; //Holds if flare is moveing
+        bool Moving = true; //Holds if flare is moveing
 
         public Flare(Point dir, Point pos) : base(pos)
         {
@@ -28,14 +28,14 @@ namespace CRPG
 
         public void FlareUpdate()
         {
-            if (moving && DateTime.Now >= lastMovedTime.AddSeconds(0.05f)) //If moving and wait time is over 0.05
+            if (Moving && DateTime.Now >= LastMovedTime.AddSeconds(0.05f)) //If moving and wait time is over 0.05
             {
                 Move();
 
                 //Get new time
-                lastMovedTime = DateTime.Now;
+                LastMovedTime = DateTime.Now;
             }
-            else if(DateTime.Now >= lastMovedTime.AddSeconds(3)) //If wait time is over 3
+            else if(DateTime.Now >= LastMovedTime.AddSeconds(3)) //If wait time is over 3
             {
                 if (flareLightLevel > 2) //If flare light level is over 2
                 {
@@ -51,7 +51,7 @@ namespace CRPG
                 }
 
                 //Get new time
-                lastMovedTime = DateTime.Now;
+                LastMovedTime = DateTime.Now;
             }
         }
 
@@ -77,7 +77,7 @@ namespace CRPG
             else //If going only one block and still not  available
             {
                 //Stop movement
-                moving = false;
+                Moving = false;
             }
         }
 

@@ -24,6 +24,9 @@ namespace CRPG
             //Starts lighting
             Lighting.LightingUpdate();
 
+            //Sets up line for player input
+            SetupWritingLine();
+
             DateTime lastPressedTime = DateTime.MinValue; //Holds time buttons were last pressed
             while (true)
             {
@@ -37,15 +40,11 @@ namespace CRPG
                         break; //Leave loop
                     }
 
-                    //Update all flares
-                    for (int i = 0; i < _player._flares.Count; i++)
-                    {
-                        _player._flares[i].FlareUpdate();
-                    }
+                    //While waiting for input update world
+                    WorldUpdate();
                 }
                 SetupWritingLine(); //Starts setup writing line
                 ParseInput(userInput); //Starts ParseInput and gives it the user input
-                Lighting.LightingUpdate(); //Updates lighting
                 lastPressedTime = DateTime.Now; //Gets current time
             }
         }
@@ -90,10 +89,28 @@ namespace CRPG
                     _player.Shoot(new Point(Player.PLAYER_SHOOT_SPEED, 0));
                     break;
 
+                case ConsoleKey.Spacebar: //Light torches
+                    _player.LightTorches();
+                    break;
+
                 default:
                     Console.Write("I don't understand. Sorry! >");
                     break;
+            }
+        }
 
+        private static void WorldUpdate()
+        {
+            //Update all flares
+            for (int i = 0; i < _player._flares.Count; i++)
+            {
+                _player._flares[i].FlareUpdate();
+            }
+
+            //Update all flares
+            for (int i = 0; i < World._tourches.Count; i++)
+            {
+                World._tourches[i].TorchEffectsUpdate();
             }
         }
 
@@ -114,6 +131,12 @@ namespace CRPG
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(40, World.MAX_WORLD_Y + 2);
             Console.WriteLine("> ");
+            Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
+        }
+
+        public static void ResetCursor()
+        {
+            Console.ResetColor();
             Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
         }
     }

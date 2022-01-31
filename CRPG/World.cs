@@ -7,6 +7,7 @@ namespace CRPG
     public class World
     {
         public static Location[,] locations;
+        public static List<Torch> _tourches = new List<Torch>();
 
         //Setup max world sizes
         public const int MAX_WORLD_X = 60;
@@ -41,12 +42,14 @@ namespace CRPG
             }
 
             //Manual wall setup:
-            drawWall(new Point(5, 1), new Point(5, 2));
-            drawWall(new Point(5, 5), new Point(5, 7));
-            drawWall(new Point(4, 8), new Point(5, 8));
+            DrawWall(new Point(5, 1), new Point(5, 2));
+            DrawWall(new Point(5, 5), new Point(5, 7));
+            DrawWall(new Point(4, 8), new Point(5, 8));
             locations[1, 8] = new Wall();
-            drawWall(new Point(6, 5), new Point(9, 5));
-            drawWall(new Point(6, 2), new Point(9, 2));
+            DrawWall(new Point(6, 5), new Point(9, 5));
+            DrawWall(new Point(6, 2), new Point(9, 2));
+
+            locations[4, 6] = new Torch(new Point(4, 6));
 
         }
 
@@ -102,7 +105,7 @@ namespace CRPG
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        private static void drawWall(Point start, Point end)
+        private static void DrawWall(Point start, Point end)
         {
             //Get all points on line
             List<Point> walls = LineFinder.GetLinePoints(start, end);

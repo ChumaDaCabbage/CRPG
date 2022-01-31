@@ -7,8 +7,9 @@ namespace CRPG
     public abstract class Location
     {
         //Light Received info
-        public int currentLightLevel = 1;
-        public bool redLight = false;
+        public int CurrentLightLevel = 1;
+        public bool RedLight = false;
+        public bool OrangeLight = false;
 
         public abstract bool IfWall();
 
@@ -17,5 +18,7 @@ namespace CRPG
         public abstract bool IfFlare();
 
         public abstract bool IfFloor();
+
+        public abstract bool IfTorch();
     }
 }

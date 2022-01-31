@@ -7,6 +7,7 @@ namespace CRPG
     public static class Lighting
     {
         private const int RED_BOOST_AMOUNT = 15;
+        private const int ORANGE_BOOST_AMOUNT = 15;
 
         public static void LightingUpdate()
         {
@@ -44,6 +45,7 @@ namespace CRPG
                 {
                     int greatestLightLevel = 1; //Holds greatest lightlevel found
                     bool isRedLight = false; //Holds if red light source
+                    bool isYellowLight = false; //Holds if yellow light source
 
                     //Go through all lightsources
                     for (int i = 0; i < lightSources.Count; i++)
@@ -67,27 +69,48 @@ namespace CRPG
                             //Set redlight to true
                             isRedLight = true;
                         }
+                        else if (lightSources[i].IfTorch() && (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9) >= 2f && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
+                        {
+                            //Set yellowlight to true
+                            isYellowLight = true;
+                        }
                     }
 
                     //Sets up light level info
-                    SetLightLevel(x2, y2, greatestLightLevel, isRedLight);
-
+                    SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
                 }
             }
         }
 
-        private static void SetLightLevel(int x, int y, int level, bool newRedLight)
+        private static void SetLightLevel(int x, int y, int level, bool newRedLight, bool newYellowLight)
         {
             //If light level is a new value
-            if (World.locations[x, y].currentLightLevel != level || World.locations[x, y].redLight != newRedLight)
+            if (World.locations[x, y].CurrentLightLevel != level || World.locations[x, y].RedLight != newRedLight || World.locations[x, y].RedLight != newYellowLight)
             {
                 //Update lightlevel and redLight
-                World.locations[x, y].currentLightLevel = level;
-                World.locations[x, y].redLight = newRedLight;
+                World.locations[x, y].CurrentLightLevel = level;
+                World.locations[x, y].RedLight = newRedLight;
+                World.locations[x, y].OrangeLight = newYellowLight;
 
                 //Redraw map point
                 Map.RedrawMapPoint(x, y);
             }
+        }
+
+        private static Color ColorBoosts(int x, int y, Color currentColor)
+        {
+            //Adds colorboosts if needed
+            if (World.locations[x, y].RedLight)
+            {
+                currentColor.R += RED_BOOST_AMOUNT * (World.locations[x, y].CurrentLightLevel - 1);
+            }
+            else if (World.locations[x, y].OrangeLight)
+            {
+                currentColor.R += ORANGE_BOOST_AMOUNT * (World.locations[x, y].CurrentLightLevel - 1);
+                currentColor.G += (ORANGE_BOOST_AMOUNT / 3) * (World.locations[x, y].CurrentLightLevel - 1);
+            }
+
+            return currentColor;
         }
 
         /// <summary>
@@ -102,7 +125,7 @@ namespace CRPG
             Color flareColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].currentLightLevel)
+            switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     flareColor = new Color(0, 0, 0);
@@ -151,7 +174,7 @@ namespace CRPG
             Color wallColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].currentLightLevel)
+            switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     wallColor = new Color(0, 0, 0);
@@ -184,11 +207,8 @@ namespace CRPG
                     return null;
             }
 
-            //Adds redboost if needed
-            if (World.locations[x, y].redLight)
-            {
-                wallColor.R += RED_BOOST_AMOUNT * (World.locations[x, y].currentLightLevel - 1);
-            }
+            //Adds color boosts
+            wallColor = ColorBoosts(x, y, wallColor);
 
             //Returns wallColor
             return wallColor;
@@ -206,7 +226,7 @@ namespace CRPG
             Color wallColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].currentLightLevel)
+            switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     wallColor = new Color(0, 0, 0);
@@ -239,14 +259,67 @@ namespace CRPG
                     return null;
             }
 
-            //Adds redboost if needed
-            if (World.locations[x, y].redLight)
-            {
-                wallColor.R += RED_BOOST_AMOUNT * (World.locations[x, y].currentLightLevel - 1);
-            }
+            //Adds color boosts
+            wallColor = ColorBoosts(x, y, wallColor);
 
             //Returns wallColor
             return wallColor;
+        }
+
+        /// <summary>
+        /// Returns torch color to be used based off light level
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static Color GetTorchTileColor(int x, int y)
+        {
+            //Holds color for wall
+            Color torchColor;
+
+            if (((Torch)World.GetLightSourceByPos(new Point(x, y))).on)
+            {
+                torchColor = ((Torch)World.locations[x, y]).GetCurrentTorchColor();
+            }
+            else
+            {
+                //Gets color based off of light level
+                switch (World.locations[x, y].CurrentLightLevel)
+                {
+                    case 1:
+                        torchColor = new Color(0, 0, 0);
+                        break;
+                    case 2:
+                        torchColor = new Color(46, 8, 0);
+                        break;
+                    case 3:
+                        torchColor = new Color(69, 11, 0);
+                        break;
+                    case 4:
+                        torchColor = new Color(105, 18, 0);
+                        break;
+                    case 5:
+                        torchColor = new Color(140, 24, 3);
+                        break;
+                    case 6:
+                        torchColor = new Color(176, 40, 12);
+                        break;
+                    case 7:
+                        torchColor = new Color(189, 51, 23);
+                        break;
+                    case 8:
+                        torchColor = new Color(201, 62, 34);
+                        break;
+                    case 9:
+                        torchColor = new Color(214, 75, 47);
+                        break;
+                    default:
+                        return null;
+                }
+            }
+
+            //Returns torchColor
+            return torchColor;
         }
     }
 }

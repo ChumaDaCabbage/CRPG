@@ -99,6 +99,30 @@ namespace CRPG
             }
         }
 
+        public void LightTorches()
+        {
+            //Goes through all locations
+            for (int x = 0; x < World.MAX_WORLD_X; x++)
+            {
+                for (int y = 0; y < World.MAX_WORLD_Y; y++)
+                {
+                    //Gets points inside lighting distance
+                    if (World.GetLocationByPos(new Point(x, y)).IfTorch() && MathF.Sqrt(MathF.Pow(x - Pos.X, 2) + MathF.Pow(y - Pos.Y, 2)) < 1.5)
+                    {
+                        if (!((Torch)World.GetLightSourceByPos(new Point(x, y))).on)
+                        {
+                            ((Torch)World.GetLightSourceByPos(new Point(x, y))).TurnOnTorch();
+                            return;
+                        }
+                    }
+                }
+            }
+
+            //Inform player of failed light
+            Console.Write("There are no torches to light. >");
+        }
+
+
         public void Shoot(Point direction)
         {
             //Add to flare list
@@ -110,6 +134,8 @@ namespace CRPG
             //Update location lightSources
             World.SetLocationByPos(oldPos, new Floor());
             World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
+
+            Lighting.LightingUpdate(); //Updates lighting
 
             //Redraw new location and old location
             Map.RedrawMapPoint(oldPos);

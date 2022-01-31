@@ -7,7 +7,7 @@ namespace CRPG
     public static class Lighting
     {
         private const int RED_BOOST_AMOUNT = 15;
-        private const int ORANGE_BOOST_AMOUNT = 15;
+        private const int ORANGE_BOOST_AMOUNT = 7;
 
         public static void LightingUpdate()
         {

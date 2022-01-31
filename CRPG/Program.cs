@@ -107,7 +107,7 @@ namespace CRPG
                 _player._flares[i].FlareUpdate();
             }
 
-            //Update all flares
+            //Update all torches
             for (int i = 0; i < World._tourches.Count; i++)
             {
                 World._tourches[i].TorchEffectsUpdate();

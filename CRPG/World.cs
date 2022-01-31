@@ -34,23 +34,49 @@ namespace CRPG
                     {
                         locations[x, y] = new Wall();
                     }
-                    else //Set as empty
+                    else //Set as floor
                     {
                         locations[x, y] = new Floor();
                     }
                 }
             }
 
-            //Manual wall setup:
-            DrawWall(new Point(5, 1), new Point(5, 2));
-            DrawWall(new Point(5, 5), new Point(5, 7));
-            DrawWall(new Point(4, 8), new Point(5, 8));
-            locations[1, 8] = new Wall();
-            DrawWall(new Point(6, 5), new Point(9, 5));
-            DrawWall(new Point(6, 2), new Point(9, 2));
+            //Draw custom world
+            DrawAllWalls();
+            DrawAllTorches();
+        }
 
+        private static void DrawAllWalls()
+        {
+            //Manual wall setup (Lines put together are touching on the map):
+            locations[5, 1] = new Wall();
+            locations[11, 1] = new Wall();
+            DrawWall(new Point(5, 2), new Point(11, 2));
+
+            DrawWall(new Point(1, 8), new Point(1, 10));
+
+            DrawWall(new Point(5, 5), new Point(5, 10));
+            DrawWall(new Point(6, 5), new Point(7, 5));
+            DrawWall(new Point(4, 8), new Point(4, 10));
+            DrawWall(new Point(6, 10), new Point(11, 10));
+            DrawWall(new Point(11, 5), new Point(11, 9));
+            DrawWall(new Point(8, 11), new Point(8, 13));
+
+            DrawWall(new Point(5, 13), new Point(5, 16));
+            DrawWall(new Point(4, 16), new Point(3, 16));
+
+            DrawWall(new Point(1, 19), new Point(2, 19));
+
+            DrawWall(new Point(6, 19), new Point(8, 19));
+            DrawWall(new Point(8, 19), new Point(8, 17));
+        }
+
+        private static void DrawAllTorches()
+        {
+            //Manual torch setup:
             locations[4, 6] = new Torch(new Point(4, 6));
-
+            locations[7, 9] = new Torch(new Point(7, 9));
+            locations[4, 15] = new Torch(new Point(4, 15));
         }
 
         /// <summary>

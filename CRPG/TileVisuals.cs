@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CRPG
 {
-    public class Tile
+    public class TileVisuals
     {
         public int R = 0;
         public int G = 0;
@@ -14,14 +14,14 @@ namespace CRPG
         public string Forground = "  ";
         public int ForgroundShift = 0;
 
-        public Tile(int r, int g, int b)
+        public TileVisuals(int r, int g, int b)
         {
             R = r;
             G = g;
             B = b;
     }
 
-        public Tile(int r, int g, int b, string forground, int forgroundShift)
+        public TileVisuals(int r, int g, int b, string forground, int forgroundShift)
         {
             R = r;
             G = g;
@@ -33,6 +33,7 @@ namespace CRPG
 
         public string GetExtendedColorsString()
         {
+            //Gets wanted icon string using the extended colors strings
             string extendedForground = "m\x1b[38;2;" + Math.Clamp((R - ForgroundShift), 0, 255) + ";" + Math.Clamp((G - ForgroundShift), 0, 255) + ";" + Math.Clamp((B - ForgroundShift), 0, 255) + "m" + Forground;
             string extendedBackground = "\x1b[48;2;" + R + ";" + G + ";" + B;
 

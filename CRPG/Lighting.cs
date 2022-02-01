@@ -97,7 +97,7 @@ namespace CRPG
             }
         }
 
-        private static Tile ColorBoosts(int x, int y, Tile currentColor)
+        private static TileVisuals ColorBoosts(int x, int y, TileVisuals currentColor)
         {
             //Adds colorboosts if needed
             if (World.locations[x, y].RedLight)
@@ -119,40 +119,40 @@ namespace CRPG
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static Tile GetFlareColor(int x, int y)
+        public static TileVisuals GetFlareColor(int x, int y)
         {
             //Holds color for flare
-            Tile flareColor;
+            TileVisuals flareColor;
 
             //Gets color based off of light level
             switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
-                    flareColor = new Tile(0, 0, 0);
+                    flareColor = new TileVisuals(0, 0, 0);
                     break;
                 case 2:
-                    flareColor = new Tile(51, 4, 4);
+                    flareColor = new TileVisuals(51, 4, 4);
                     break;
                 case 3:
-                    flareColor = new Tile(105, 15, 15);
+                    flareColor = new TileVisuals(105, 15, 15);
                     break;
                 case 4:
-                    flareColor = new Tile(156, 31, 31);
+                    flareColor = new TileVisuals(156, 31, 31);
                     break;
                 case 5:
-                    flareColor = new Tile(209, 56, 56);
+                    flareColor = new TileVisuals(209, 56, 56);
                     break;
                 case 6:
-                    flareColor = new Tile(222, 71, 71);
+                    flareColor = new TileVisuals(222, 71, 71);
                     break;
                 case 7:
-                    flareColor = new Tile(235, 87, 87);
+                    flareColor = new TileVisuals(235, 87, 87);
                     break;
                 case 8:
-                    flareColor = new Tile(247, 104, 104);
+                    flareColor = new TileVisuals(247, 104, 104);
                     break;
                 case 9:
-                    flareColor = new Tile(255, 120, 120);
+                    flareColor = new TileVisuals(255, 120, 120);
                     break;
                 default:
                     return null;
@@ -168,40 +168,40 @@ namespace CRPG
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static Tile GetWallTileColor(int x, int y)
+        public static TileVisuals GetWallTileColor(int x, int y)
         {
             //Holds color for wall
-            Tile wallColor;
+            TileVisuals wallColor;
 
             //Gets color based off of light level
             switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
-                    wallColor = new Tile(0, 0, 0, "░░", 255);
+                    wallColor = new TileVisuals(0, 0, 0, "░░", 255);
                     break;
                 case 2:
-                    wallColor = new Tile(13, 13, 13, "░░", 255);
+                    wallColor = new TileVisuals(13, 13, 13, "░░", 255);
                     break;
                 case 3:
-                    wallColor = new Tile(26, 26, 26, "░░", 255);
+                    wallColor = new TileVisuals(26, 26, 26, "░░", 255);
                     break;
                 case 4:
-                    wallColor = new Tile(38, 38, 38, "░░", 255);
+                    wallColor = new TileVisuals(38, 38, 38, "░░", 255);
                     break;
                 case 5:
-                    wallColor = new Tile(51, 51, 51, "░░", 255);
+                    wallColor = new TileVisuals(51, 51, 51, "░░", 255);
                     break;
                 case 6:
-                    wallColor = new Tile(64, 64, 64, "░░", 255);
+                    wallColor = new TileVisuals(64, 64, 64, "░░", 255);
                     break;
                 case 7:
-                    wallColor = new Tile(77, 77, 77, "░░", 255);
+                    wallColor = new TileVisuals(77, 77, 77, "░░", 255);
                     break;
                 case 8:
-                    wallColor = new Tile(89, 89, 89, "░░", 255);
+                    wallColor = new TileVisuals(89, 89, 89, "░░", 255);
                     break;
                 case 9:
-                    wallColor = new Tile(102, 102, 102, "░░", 255);
+                    wallColor = new TileVisuals(102, 102, 102, "░░", 255);
                     break;
                 default:
                     return null;
@@ -220,40 +220,40 @@ namespace CRPG
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static Tile GetFloorTileColor(int x, int y)
+        public static TileVisuals GetFloorTileColor(int x, int y)
         {
             //Holds color for wall
-            Tile floorColor;
+            TileVisuals floorColor;
 
             //Gets color based off of light level
             switch (World.locations[x, y].CurrentLightLevel)
             {
                 case 1:
-                    floorColor = new Tile(0, 0, 0, "▓▓", 9);
+                    floorColor = new TileVisuals(0, 0, 0, "▓▓", 9);
                     break;
                 case 2:
-                    floorColor = new Tile(26, 15, 2, "▓▓", 9);
+                    floorColor = new TileVisuals(26, 15, 2, "▓▓", 9);
                     break;
                 case 3:
-                    floorColor = new Tile(51, 30, 7, "▓▓", 9);
+                    floorColor = new TileVisuals(51, 30, 7, "▓▓", 9);
                     break;
                 case 4:
-                    floorColor = new Tile(77, 48, 15, "▓▓", 9);
+                    floorColor = new TileVisuals(77, 48, 15, "▓▓", 9);
                     break;
                 case 5:
-                    floorColor = new Tile(103, 66, 27, "▓▓", 9);
+                    floorColor = new TileVisuals(103, 66, 27, "▓▓", 9);
                     break;
                 case 6:
-                    floorColor = new Tile(128, 86, 41, "▓▓", 9);
+                    floorColor = new TileVisuals(128, 86, 41, "▓▓", 9);
                     break;
                 case 7:
-                    floorColor = new Tile(153, 108, 58, "▓▓", 9);
+                    floorColor = new TileVisuals(153, 108, 58, "▓▓", 9);
                     break;
                 case 8:
-                    floorColor = new Tile(179, 132, 79, "▓▓", 9);
+                    floorColor = new TileVisuals(179, 132, 79, "▓▓", 9);
                     break;
                 case 9:
-                    floorColor = new Tile(204, 157, 102, "▓▓", 9);
+                    floorColor = new TileVisuals(204, 157, 102, "▓▓", 9);
                     break;
                 default:
                     return null;
@@ -272,10 +272,10 @@ namespace CRPG
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static Tile GetTorchTileColor(int x, int y)
+        public static TileVisuals GetTorchTileColor(int x, int y)
         {
             //Holds color for wall
-            Tile torchColor;
+            TileVisuals torchColor;
 
             if (((Torch)World.GetLightSourceByPos(new Point(x, y))).on)
             {
@@ -287,31 +287,31 @@ namespace CRPG
                 switch (World.locations[x, y].CurrentLightLevel)
                 {
                     case 1:
-                        torchColor = new Tile(0, 0, 0);
+                        torchColor = new TileVisuals(0, 0, 0);
                         break;
                     case 2:
-                        torchColor = new Tile(46, 8, 0);
+                        torchColor = new TileVisuals(46, 8, 0);
                         break;
                     case 3:
-                        torchColor = new Tile(69, 11, 0);
+                        torchColor = new TileVisuals(69, 11, 0);
                         break;
                     case 4:
-                        torchColor = new Tile(105, 18, 0);
+                        torchColor = new TileVisuals(105, 18, 0);
                         break;
                     case 5:
-                        torchColor = new Tile(140, 24, 3);
+                        torchColor = new TileVisuals(140, 24, 3);
                         break;
                     case 6:
-                        torchColor = new Tile(176, 40, 12);
+                        torchColor = new TileVisuals(176, 40, 12);
                         break;
                     case 7:
-                        torchColor = new Tile(189, 51, 23);
+                        torchColor = new TileVisuals(189, 51, 23);
                         break;
                     case 8:
-                        torchColor = new Tile(201, 62, 34);
+                        torchColor = new TileVisuals(201, 62, 34);
                         break;
                     case 9:
-                        torchColor = new Tile(214, 75, 47);
+                        torchColor = new TileVisuals(214, 75, 47);
                         break;
                     default:
                         return null;

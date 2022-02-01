@@ -17,7 +17,7 @@ namespace CRPG
         float FlickerTime = 0.5f;
 
         //Flicker color data
-        Tile CurrentColor = new Tile(176, 40, 12);
+        TileVisuals CurrentColor = new TileVisuals(176, 40, 12);
 
         public Torch(Point pos) : base(pos) 
         {
@@ -36,17 +36,17 @@ namespace CRPG
                     if (randomValue < 5)
                     {
                         //Set color infor and get new wait time
-                        CurrentColor = new Tile(255, 146, 0, "░░", -50);
+                        CurrentColor = new TileVisuals(255, 146, 0, "░░", -50);
                         FlickerTime = Math.Clamp((float)RandomGenerator.NextDouble(), 0.6f, 1);
                     }
                     else if (randomValue < 8)
                     {
-                        CurrentColor = new Tile(237, 119, 0, "░░", -25);
+                        CurrentColor = new TileVisuals(237, 119, 0, "░░", -25);
                         FlickerTime = Math.Clamp((float)RandomGenerator.NextDouble() - 0.2f, 0.3f, 1);
                     }
                     else
                     {
-                        CurrentColor = new Tile(255, 94, 0, "░░", -75);
+                        CurrentColor = new TileVisuals(255, 94, 0, "░░", -75);
                         FlickerTime = Math.Clamp((float)RandomGenerator.NextDouble() - 0.2f, 0.3f, 1);
                     }
 
@@ -59,7 +59,7 @@ namespace CRPG
             }
         }
 
-        public Tile GetCurrentTorchColor()
+        public TileVisuals GetCurrentTorchColor()
         {
             return CurrentColor;
         }

@@ -14,7 +14,7 @@ namespace CRPG
         public const int PLAYER_SHOOT_SPEED = 2;
         public List<Flare> _flares = new List<Flare>();
 
-        //public Location CurrentLocation { set; get; }
+        private DateTime LastShotTime = DateTime.Now; //Holds last time shot
 
         //Teleports player to passed point and updates map
         public void MoveTo(Point newPos)
@@ -125,8 +125,15 @@ namespace CRPG
 
         public void Shoot(Point direction)
         {
-            //Add to flare list
-            Program._player._flares.Add(new Flare(direction, Pos));
+            //If flare are owned
+            if (FlareInventory.FlareCount > 0 && DateTime.Now >= LastShotTime.AddSeconds(0.5))
+            {
+                //Add to flare list
+                Program._player._flares.Add(new Flare(direction, Pos));
+
+                //Reset time
+                LastShotTime = DateTime.Now;
+            }
         }
 
         private void MovementUpdate(Point oldPos, Point newPos)

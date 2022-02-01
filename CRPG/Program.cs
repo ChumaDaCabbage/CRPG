@@ -130,6 +130,7 @@ namespace CRPG
             Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(40, World.MAX_WORLD_Y + 2);
+            FlareInventory.drawFlareBar();
             Console.WriteLine("> ");
             Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
         }

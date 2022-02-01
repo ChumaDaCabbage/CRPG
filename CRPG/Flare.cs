@@ -18,6 +18,10 @@ namespace CRPG
             Dir = dir;
             LightPower = flareLightLevel;
 
+            //Remove flare from inventory and redraw bar
+            FlareInventory.FlareCount--;
+            FlareInventory.drawFlareBar();
+
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
 

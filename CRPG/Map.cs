@@ -80,7 +80,7 @@ namespace CRPG
             }
             else if (x == playerXPos && y == playerYPos) //Check for player
             {
-                Tile player = new Tile(255, 224, 189, "ºº", 120);
+                TileVisuals player = new TileVisuals(255, 224, 189, "ºº", 120);
                 locIcon = player.GetExtendedColorsString();
             }
             else if (World.locations[x, y].IfWall()) //Check for walls

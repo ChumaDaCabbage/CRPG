@@ -8,6 +8,7 @@ namespace CRPG
     {
         public static Location[,] locations;
         public static List<Torch> _tourches = new List<Torch>();
+        public static List<Enemy> _enemies = new List<Enemy>();
 
         //Setup max world sizes
         public const int MAX_WORLD_X = 60;
@@ -44,6 +45,15 @@ namespace CRPG
             //Draw custom world
             DrawAllWalls();
             DrawAllTorches();
+            DrawAllPickups();
+
+            locations[2, 13] = new Enemy(new Point(2, 13));
+            locations[4, 14] = new Enemy(new Point(4, 14));
+            locations[2, 15] = new Enemy(new Point(2, 15));
+            locations[1, 16] = new Enemy(new Point(1, 16));
+            locations[1, 11] = new Enemy(new Point(1, 11));
+            locations[2, 18] = new Enemy(new Point(2, 18));
+            locations[4, 18] = new Enemy(new Point(4, 18));
         }
 
         private static void DrawAllWalls()
@@ -77,6 +87,12 @@ namespace CRPG
             locations[4, 6] = new Torch(new Point(4, 6));
             locations[7, 9] = new Torch(new Point(7, 9));
             locations[4, 15] = new Torch(new Point(4, 15));
+        }
+
+        private static void DrawAllPickups()
+        {
+
+            ((Floor)World.locations[10, 8]).HasFlare = true;
         }
 
         /// <summary>

@@ -30,5 +30,10 @@ namespace CRPG
         {
             return false;
         }
+
+        public override bool IfEnemy()
+        {
+            return false;
+        }
     }
 }

@@ -112,6 +112,15 @@ namespace CRPG
             {
                 World._tourches[i].TorchEffectsUpdate();
             }
+
+            //Update all Enemies
+            for (int i = 0; i < World._enemies.Count; i++)
+            {
+
+                System.Diagnostics.Debug.WriteLine("{0}: {1} + {2}", i, World._enemies[i].CurrentLightLevel, World._enemies[i].blinkStatus);//World._enemies[i].beingLitBy.Count);
+
+                World._enemies[i].EnemyUpdate();
+            }
         }
 
         //Clears buffered key inputs
@@ -130,7 +139,7 @@ namespace CRPG
             Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(40, World.MAX_WORLD_Y + 2);
-            FlareInventory.drawFlareBar();
+            FlareInventory.DrawFlareBar();
             Console.WriteLine("> ");
             Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
         }

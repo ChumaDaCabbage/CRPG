@@ -10,16 +10,6 @@ namespace CRPG
 {
     public static class Map
     {
-        #region Virtual Terminal Sequences setup
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleMode(IntPtr handle, out int mode);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr GetStdHandle(int handle);
-        #endregion
-
         /// <summary>
         /// Draws map of the world on screen
         /// </summary>
@@ -76,24 +66,35 @@ namespace CRPG
 
             if (World.locations[x, y].IfFlare()) //Check for flare
             {
-                locIcon = Lighting.GetFlareColor(x, y).GetExtendedColorsString();
+                locIcon = Lighting.GetFlareColor(x, y).GetFullExtendedColorsString();
             }
             else if (x == playerXPos && y == playerYPos) //Check for player
             {
-                TileVisuals player = new TileVisuals(255, 224, 189, "ºº", 120);
-                locIcon = player.GetExtendedColorsString();
+                TileVisuals player = new TileVisuals(new Color(255, 224, 189), "ºº", 120);
+                locIcon = player.GetFullExtendedColorsString();
             }
             else if (World.locations[x, y].IfWall()) //Check for walls
             {
-                locIcon = Lighting.GetWallTileColor(x, y).GetExtendedColorsString();
+                locIcon = Lighting.GetWallTileColor(x, y).GetFullExtendedColorsString();
             }
             else if (World.locations[x, y].IfTorch()) //Torch
             {
-                locIcon = Lighting.GetTorchTileColor(x, y).GetExtendedColorsString();
+                locIcon = Lighting.GetTorchTileColor(x, y).GetFullExtendedColorsString();
+            }
+            else if (World.locations[x, y].IfEnemy()) //Enemy
+            {
+                locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
             else //Floor
             {
-                locIcon = Lighting.GetFloorTileColor(x, y).GetExtendedColorsString();
+                if (((Floor)World.locations[x,y]).HasFlare)
+                {
+                    locIcon = Lighting.GetFloorTileColor(x, y).GetBackgroundColorString() + Lighting.GetFloorTileColor(x, y).GetForgroundColorString() + "▓\x1b[38;2;"+ Lighting.GetFlarePickupColor(x,y).R + ";0;0m║";
+                }
+                else
+                {
+                    locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
+                }
             }
 
             //Write out icon

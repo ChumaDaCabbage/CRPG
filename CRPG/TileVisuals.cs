@@ -6,38 +6,82 @@ namespace CRPG
 {
     public class TileVisuals
     {
-        public int R = 0;
-        public int G = 0;
-        public int B = 0;
+        public Color BackgroundColor;
+        private Color ForgroundColor = null;
 
         //Holds foroground tile info
-        public string Forground = "  ";
+        public string ForGroundTile = "  ";
         public int ForgroundShift = 0;
 
-        public TileVisuals(int r, int g, int b)
+        public TileVisuals(Color tileColor)
         {
-            R = r;
-            G = g;
-            B = b;
-    }
-
-        public TileVisuals(int r, int g, int b, string forground, int forgroundShift)
-        {
-            R = r;
-            G = g;
-            B = b;
-
-            Forground = forground;
-            ForgroundShift = forgroundShift;
+            BackgroundColor = tileColor;
         }
 
-        public string GetExtendedColorsString()
+        public TileVisuals(Color backgroundColor, string forGroundTile, int forgroundShift)
         {
-            //Gets wanted icon string using the extended colors strings
-            string extendedForground = "m\x1b[38;2;" + Math.Clamp((R - ForgroundShift), 0, 255) + ";" + Math.Clamp((G - ForgroundShift), 0, 255) + ";" + Math.Clamp((B - ForgroundShift), 0, 255) + "m" + Forground;
-            string extendedBackground = "\x1b[48;2;" + R + ";" + G + ";" + B;
+            BackgroundColor = backgroundColor;
 
+            ForGroundTile = forGroundTile;
+            ForgroundShift = forgroundShift;
+        }
+        public TileVisuals(Color backgroundColor, string forGroundTile, Color forgroundColor)
+        {
+            BackgroundColor = backgroundColor;
+
+            ForGroundTile = forGroundTile;
+            ForgroundColor = forgroundColor;
+        }
+
+        //Gets wanted icon string using the extended colors strings
+        public string GetFullExtendedColorsString()
+        {
+            //Will hold froground
+            string extendedForground;
+
+            if (ForgroundColor == null) //If no forground color
+            {
+                //Uses forgroundShift to make froground color
+                extendedForground = "m\x1b[38;2;" + Math.Clamp((BackgroundColor.R - ForgroundShift), 0, 255) + ";" + Math.Clamp((BackgroundColor.G - ForgroundShift), 0, 255) + ";" + Math.Clamp((BackgroundColor.B - ForgroundShift), 0, 255) + "m" + ForGroundTile;
+            }
+            else
+            {
+                //Sets forground to forground color
+                extendedForground = "m\x1b[38;2;" + Math.Clamp(ForgroundColor.R, 0, 255) + ";" + Math.Clamp(ForgroundColor.G, 0, 255) + ";" + Math.Clamp(ForgroundColor.B, 0, 255) + "m" + ForGroundTile;
+            }
+
+            //Makes background color from BackgroundColor
+            string extendedBackground = "\x1b[48;2;" + BackgroundColor.R + ";" + BackgroundColor.G + ";" + BackgroundColor.B;
+
+
+            //Return combined string
             return extendedBackground + extendedForground;
+        }
+
+        public string GetBackgroundColorString()
+        {
+            //Return BackgroundColor string
+            return "\x1b[48;2;" + BackgroundColor.R + ";" + BackgroundColor.G + ";" + BackgroundColor.B;
+        }
+
+        public string GetForgroundColorString()
+        {
+            //Will hold froground
+            string extendedForground;
+
+            if (ForgroundColor == null) //If no forground color
+            {
+                //Uses forgroundShift to make froground color
+                extendedForground = "m\x1b[38;2;" + Math.Clamp((BackgroundColor.R - ForgroundShift), 0, 255) + ";" + Math.Clamp((BackgroundColor.G - ForgroundShift), 0, 255) + ";" + Math.Clamp((BackgroundColor.B - ForgroundShift), 0, 255) + "m";
+            }
+            else
+            {
+                //Sets forground to forground color
+                extendedForground = "m\x1b[38;2;" + Math.Clamp(ForgroundColor.R, 0, 255) + ";" + Math.Clamp(ForgroundColor.G, 0, 255) + ";" + Math.Clamp(ForgroundColor.B, 0, 255) + "m" + ForGroundTile;
+            }
+
+            //Return ForgroundColor string
+            return extendedForground;
         }
     }
 }

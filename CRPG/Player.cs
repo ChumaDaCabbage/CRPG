@@ -6,13 +6,13 @@ namespace CRPG
 {
     public class Player
     {
-        //public int xPos = 0;
-        //public int yPos = 0;
         public Point Pos = new Point(1, 1);
 
         public const int PLAYER_LIGHT_LEVEL = 4;
         public const int PLAYER_SHOOT_SPEED = 2;
         public List<Flare> _flares = new List<Flare>();
+
+        private Location on; //Holds what the player was standing on
 
         private DateTime LastShotTime = DateTime.Now; //Holds last time shot
 
@@ -23,6 +23,8 @@ namespace CRPG
 
             Pos.X = newPos.X;
             Pos.Y = newPos.Y;
+
+            on = World.GetLocationByPos(Pos);
 
             MovementUpdate(oldPos, new Point(Pos.X, Pos.Y));
         }
@@ -138,8 +140,21 @@ namespace CRPG
 
         private void MovementUpdate(Point oldPos, Point newPos)
         {
-            //Update location lightSources
-            World.SetLocationByPos(oldPos, new Floor());
+            //Update old location
+            World.SetLocationByPos(oldPos, on);
+
+            //Check for flare pickups
+            if (World.GetLocationByPos(newPos).IfFloor() && ((Floor)World.GetLocationByPos(newPos)).HasFlare && FlareInventory.FlareCount < 5)
+            {
+                //Updates flare info
+                FlareInventory.FlareCount++;
+                ((Floor)World.GetLocationByPos(newPos)).HasFlare = false;
+                FlareInventory.DrawFlareBar();
+            }
+            on = World.GetLocationByPos(newPos); //Updates on
+
+
+            //Update new location
             World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
 
             Lighting.LightingUpdate(); //Updates lighting

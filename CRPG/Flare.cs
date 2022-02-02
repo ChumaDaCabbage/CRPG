@@ -8,9 +8,11 @@ namespace CRPG
     {
         private int flareLightLevel = 5; //Starts with a default of 5
 
-        DateTime LastMovedTime = DateTime.Now; //Holds last time moved
+        DateTime LastMovedTime = DateTime.Now; //Holds last time moved 
         Point Dir; //Holds direction of movement
-        //public Point Pos; //Holds current position of flare
+
+        private Location on; //Holds what the flare is on
+
         bool Moving = true; //Holds if flare is moveing
 
         public Flare(Point dir, Point pos) : base(pos)
@@ -18,9 +20,11 @@ namespace CRPG
             Dir = dir;
             LightPower = flareLightLevel;
 
+            on = World.GetLocationByPos(Pos);
+
             //Remove flare from inventory and redraw bar
             FlareInventory.FlareCount--;
-            FlareInventory.drawFlareBar();
+            FlareInventory.DrawFlareBar();
 
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
@@ -103,8 +107,10 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources
-            if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, new Floor()); //Remove light source
+            if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, on); //Remove light source
             else World.SetLocationByPos(oldPos, new LightSource(oldPos, Player.PLAYER_LIGHT_LEVEL)); //Give player light back
+
+            on = World.GetLocationByPos(newPos); //Updates on
 
             //Set new flare pos in Locations[] and update lighting
             World.SetLocationByPos(newPos, this);

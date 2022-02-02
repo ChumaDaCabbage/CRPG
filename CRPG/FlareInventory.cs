@@ -8,9 +8,9 @@ namespace CRPG
     {
         private const string flareColor = "\x1b[38;2;255;0;0m";
         public static int FlareCount = 5;
-        static Point barPos = new Point(82, World.MAX_WORLD_Y + 2);
+        static readonly Point barPos = new Point(82, World.MAX_WORLD_Y + 2);
 
-        public static void drawFlareBar()
+        public static void DrawFlareBar()
         {
             Console.Write(flareColor);
             Console.SetCursorPosition(barPos.X, barPos.Y - 1);

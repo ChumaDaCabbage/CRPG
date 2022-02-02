@@ -6,6 +6,8 @@ namespace CRPG
 {
     public class Floor : Location
     {
+        public bool HasFlare = false;
+
         public override bool IfWall()
         {
             return false;
@@ -26,6 +28,11 @@ namespace CRPG
         }
 
         public override bool IfTorch()
+        {
+            return false;
+        }
+
+        public override bool IfEnemy()
         {
             return false;
         }

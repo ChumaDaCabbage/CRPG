@@ -17,19 +17,20 @@ namespace CRPG
         public int OverrideLightLevel = 0;
         public bool lit = false;
 
+        List<AstarTile> currentPath = null;
         public List<Enemy> beingLitBy = new List<Enemy>();
 
         readonly Color[] backLightColors = new Color[] //Holds all colors for back light
-        { 
-            new Color(0, 0, 0), 
-            new Color(64, 46, 19), 
-            new Color(127, 93, 38), 
-            new Color(191, 139, 58), 
-            new Color(255, 186, 77), 
-            new Color(255, 232, 96), 
-            new Color(255, 255, 115), 
-            new Color(255, 255, 135), 
-            new Color(255, 255, 154) 
+        {
+            new Color(0, 0, 0),
+            new Color(64, 46, 19),
+            new Color(127, 93, 38),
+            new Color(191, 139, 58),
+            new Color(255, 186, 77),
+            new Color(255, 232, 96),
+            new Color(255, 255, 115),
+            new Color(255, 255, 135),
+            new Color(255, 255, 154)
         };
 
         private Location on; //Holds what the enemy is on
@@ -111,48 +112,57 @@ namespace CRPG
             return backLightColors[Math.Clamp((CurrentLightLevel + blinkStatus) - 1, 0, 8)];
         }
 
+
+        private void MoveSetup()
+        {
+            //Holds starting tile 
+            AstarTile start = new AstarTile();
+            start.Pos = Pos; //Sets start to enemy current position
+
+            //Holds ending tile
+            AstarTile finish = new AstarTile();
+            finish.Pos = Program._player.Pos; //Sets finish to player currentPos
+
+            ///Sets start's distance to the distance to finish
+            start.SetDistance(finish.Pos);
+
+            //Will hold all currently active tiles
+            List<AstarTile> activeTiles = new List<AstarTile>();
+            activeTiles.Add(start); //Adds start to activeTiles list
+
+            //Will hold all previously visited tiles
+            List<AstarTile> visitedTiles = new List<AstarTile>();
+        }
+
         /*
-        private void Move()
+        private static List<AstarTile> getWalkableTiles(AstarTile currentTile, AstarTile targetTile)
         {
-            Point newPos = Pos.Add(Dir);
+            List<AstarTile> possibleTiles = new List<AstarTile>()
+            {
+                 new AstarTile {Pos = new Point(currentTile.Pos.X, currentTile.Pos.Y - 1), Parent = currentTile, Cost = currentTile.Cost + 1 },
+                 new AstarTile {Pos = new Point(currentTile.Pos.X, currentTile.Pos.Y + 1), Parent = currentTile, Cost = currentTile.Cost + 1},
+                 new AstarTile {Pos = new Point(currentTile.Pos.X - 1, currentTile.Pos.Y), Parent = currentTile, Cost = currentTile.Cost + 1 },
+                 new AstarTile {Pos = new Point(currentTile.Pos.X + 1, currentTile.Pos.Y), Parent = currentTile, Cost = currentTile.Cost + 1 },
+	        };
 
-            //If wanted location is available
-            if (newPos.Y < World.MAX_WORLD_Y && newPos.Y >= 0
-                && newPos.X < World.MAX_WORLD_X && newPos.X >= 0
-                && !LineFinder.BlockedCheck(Pos, newPos))
-            {
-                Point oldPos = new Point(Pos.X, Pos.Y); //Save old pos
-                Pos = newPos; //Update pos
-                MovementUpdate(oldPos, Pos); //Updates location data
-            }
-            else if (Math.Abs(Dir.X) > 1 || Math.Abs(Dir.Y) > 1) //If not available and going a long way
-            {
-                //Shrink move size
-                Dir.X /= 2;
-                Dir.Y /= 2;
-            }
-            else //If going only one block and still not  available
-            {
-                //Stop movement
-                Moving = false;
-            }
+	        possibleTiles.ForEach(tile => tile.SetDistance(targetTile.Pos));
+
+            
+
+	        return possibleTiles
+			        .Where(tile => tile.X >= 0 && tile.X <= maxX)
+			        .Where(tile => tile.Y >= 0 && tile.Y <= maxY)
+			        .Where(tile => map[tile.Y][tile.X] == ' ' || map[tile.Y][tile.X] == 'B')
+			        .ToList();
         }
 
-        private void DestroySelf()
+        private List<AstarTile> getFinalPath()
         {
-            //Find self, destroy self, update map
-            for (int i = 0; i < Program._player._flares.Count; i++)
-            {
-                if (Program._player._flares[i] == this)
-                {
-                    Program._player._flares.RemoveAt(i);
-                    World.SetLocationByPos(Pos, new Floor());
-                    Map.RedrawMapPoint(Pos);
-                    Lighting.LightingUpdate();
-                }
-            }
+            return null;
         }
+        */
 
+        /*
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources

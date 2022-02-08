@@ -33,6 +33,7 @@ namespace CRPG
         AstarTile path = null; //Holds path to player
         private Location on; //Holds what the enemy is on
         DateTime LastMovedTime = DateTime.Now; //Holds last time moved
+        DateTime PathedDelay = DateTime.Now; //Holds last time asked to find path
         bool fleeing = false; //Holds if enemy is fleeing light
         Point fleeingLocation = null;
 
@@ -48,10 +49,43 @@ namespace CRPG
         {
             if(fleeing) //Fleeing back to darkness
             {
-                //If havent found fleeing location
-                if (fleeingLocation == null)
-                { 
+                //If move wait time is up
+                if (DateTime.Now >= LastMovedTime.AddSeconds(0.15f))
+                {
+                    Point bestPoint = null;
+                    float distance = 9999;
+
+                    //If havent found fleeing location
+                    if (fleeingLocation == null)
+                    {
+                        //Goes through all locations
+                        for (int x2 = 0; x2 < World.MAX_WORLD_X; x2++)
+                        {
+                            for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
+                            {
+                                if (World.GetLocationByPos(x2, y2).CurrentLightLevel == 1 &&
+                                    MathF.Sqrt(MathF.Pow(x2 - Pos.X, 2) + MathF.Pow(y2 - Pos.Y, 2)) < distance)
+                                {
+                                    bestPoint = new Point(x2, y2);
+                                    distance = MathF.Sqrt(MathF.Pow(x2 - Pos.X, 2) + MathF.Pow(y2 - Pos.Y, 2));
+                                }
+                            }
+                        }
+
+                        fleeingLocation = bestPoint;
+                    }
+
+                    //Update path
+                    //path = PathFinder(fleeingLocation);
+                    //LightPower = 0;
+                    //blinkStatus = 0;
+                    //AgitationLevel = 0;
+
+                    //Runs movement
+                    //move();
                     
+                    //Get new time
+                    //LastMovedTime = DateTime.Now;
                 }
             }
             else if (AgitationLevel == 5) //Chasing
@@ -67,32 +101,16 @@ namespace CRPG
                     //If move wait time is up
                     if (DateTime.Now >= LastMovedTime.AddSeconds(0.15f))
                     {
-                        //Update path and light
-                        path = PathFinder();
-                        LightPower = ENEMY_LIGHT_LEVEL;
-
-                        AstarTile nextMove = path; //Will hold next move
-
-                        //Get move that is one after current pos
-                        while (nextMove.Parent != null && !nextMove.Parent.Pos.Equals(Pos))
+                        AstarTile newPath = PathFinder(Program._player.Pos);
+                        if (newPath != null)
                         {
-                            nextMove = nextMove.Parent;
+                            //Update path and light
+                            path = newPath;
+                            LightPower = ENEMY_LIGHT_LEVEL;
                         }
 
-                        //Check for player
-                        if (nextMove.Pos.X == Program._player.Pos.X && nextMove.Pos.Y == Program._player.Pos.Y)
-                        {
-                            //End game
-                            while (true)
-                            {
-                                Console.ReadKey();
-                            }
-                        }
-                        else //If not player
-                        {
-                            //Move enemy
-                            MovementUpdate(Pos, nextMove.Pos);
-                        }
+                        //Runs movement
+                        move();
 
                         //Get new time
                         LastMovedTime = DateTime.Now;
@@ -173,6 +191,33 @@ namespace CRPG
             }
         }
 
+        //Runs movement for current path
+        private void move()
+        {
+            AstarTile nextMove = path; //Will hold next move
+
+            //Get move that is one after current pos
+            while (nextMove.Parent != null && !nextMove.Parent.Pos.Equals(Pos))
+            {
+                nextMove = nextMove.Parent;
+            }
+
+            //Check for player
+            if (nextMove.Pos.X == Program._player.Pos.X && nextMove.Pos.Y == Program._player.Pos.Y)
+            {
+                //End game
+                while (true)
+                {
+                    Console.ReadKey();
+                }
+            }
+            else if(!World.GetLocationByPos(nextMove.Pos).IfEnemy()) //If not moving into enemy
+            {
+                //Move enemy
+                MovementUpdate(Pos, nextMove.Pos);
+            }
+        }
+
         public Color GetBackColor()
         {
             return backLightColors[Math.Clamp((CurrentLightLevel + blinkStatus) - 1, 0, 8)];
@@ -182,77 +227,83 @@ namespace CRPG
         /// Returns file tile of the A* path
         /// </summary>
         /// <returns></returns>
-        private AstarTile PathFinder()
+        private AstarTile PathFinder(Point target)
         {
-            //Holds starting tile and sets start to enemy current position
-            AstarTile start = new AstarTile(Pos);
-
-            //Holds ending tile and Sets finish to player currentPos
-            AstarTile finish = new AstarTile(Program._player.Pos);
-
-            ///Sets start's distance to the distance to finish
-            start.SetDistance(finish.Pos);
-
-            //Will hold all currently active tiles and adds start to list
-            List<AstarTile> activeTiles = new List<AstarTile>() {start};
-
-            //Will hold all previously visited tiles
-            List<AstarTile> visitedTiles = new List<AstarTile>();
-
-
-            while (activeTiles.Count > 0)
+            //If pathing not currently delayed
+            if (DateTime.Now > PathedDelay)
             {
-                AstarTile checkTile = activeTiles[0];//.OrderBy(x => x.CostDistance).First();
+                //Holds starting tile and sets start to enemy current position
+                AstarTile start = new AstarTile(Pos);
 
-                //Check all active tiles
-                foreach (AstarTile tile in activeTiles)
+                //Holds ending tile and Sets finish to player currentPos
+                AstarTile finish = new AstarTile(target);
+
+                ///Sets start's distance to the distance to finish
+                start.SetDistance(finish.Pos);
+
+                //Will hold all currently active tiles and adds start to list
+                List<AstarTile> activeTiles = new List<AstarTile>() { start };
+
+                //Will hold all previously visited tiles
+                List<AstarTile> visitedTiles = new List<AstarTile>();
+
+
+                while (activeTiles.Count > 0)
                 {
-                    //If current cost is lower
-                    if (tile.Cost < checkTile.Cost)
+                    AstarTile checkTile = activeTiles[0];//.OrderBy(x => x.CostDistance).First();
+
+                    //Check all active tiles
+                    foreach (AstarTile tile in activeTiles)
                     {
-                        checkTile = tile;
-                    }
-                }
-
-                if (checkTile.Pos.X == finish.Pos.X && checkTile.Pos.Y == finish.Pos.Y)
-                {
-                    //Console.WriteLine("We are at the destination!");
-                    //We can actually loop through the parents of each tile to find our exact path which we will show shortly. 
-                    return checkTile;
-                }
-
-                visitedTiles.Add(checkTile);
-                activeTiles.Remove(checkTile);
-
-                List<AstarTile> walkableTiles = GetWalkableTiles(checkTile, finish);
-
-                foreach (AstarTile walkableTile in walkableTiles)
-                {
-                    //If we have already visited this tile
-                    if (visitedTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
-                    {
-                        continue;
-                    }
-
-                    //It's already in the active list
-                    if (activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
-                    {
-                        AstarTile existingTile = activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y);
-                        if (existingTile.CostDistance > checkTile.CostDistance)
+                        //If current cost is lower
+                        if (tile.Cost < checkTile.Cost)
                         {
-                            activeTiles.Remove(existingTile);
+                            checkTile = tile;
+                        }
+                    }
+
+                    if (checkTile.Pos.X == finish.Pos.X && checkTile.Pos.Y == finish.Pos.Y)
+                    {
+                        System.Diagnostics.Debug.WriteLine(visitedTiles.Count);
+                        return checkTile;
+                    }
+
+                    visitedTiles.Add(checkTile);
+                    activeTiles.Remove(checkTile);
+
+                    List<AstarTile> walkableTiles = GetWalkableTiles(checkTile, finish);
+
+                    foreach (AstarTile walkableTile in walkableTiles)
+                    {
+                        //If we have already visited this tile
+                        if (visitedTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
+                        {
+                            continue;
+                        }
+
+                        //If its already in the active list
+                        if (activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
+                        {
+                            AstarTile existingTile = activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y);
+                            if (existingTile.CostDistance > checkTile.CostDistance)
+                            {
+                                activeTiles.Remove(existingTile);
+                                activeTiles.Add(walkableTile);
+                            }
+                        }
+                        else //If have never seen this tile before
+                        {
                             activeTiles.Add(walkableTile);
                         }
                     }
-                    else //If never seen this tile before
-                    {
-                        activeTiles.Add(walkableTile);
-                    }
                 }
+
+                //If failed to find path add one second delay
+                PathedDelay = DateTime.Now.AddSeconds(1);
             }
 
-            //If no path found return empty path on self to stop movement
-            return new AstarTile(Pos);
+            //If no path found return null
+            return null;
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace CRPG
         }
 
         /// <summary>
-        /// Sets light levels from passed position of all light sources
+        /// Sets light levels from passed positions of all light sources
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -104,6 +104,12 @@ namespace CRPG
                         //Get if enemy is lighting enemy
                         if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
                         {
+                            //If lightsource enemy is awake, anger the enemy at x2,y2
+                            if (((Enemy)lightSources[i]).AgitationLevel == 5)
+                            {
+                                ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0 , 5);
+                            }
+
                             //Holds if already logged in on of the enemies
                             bool notRepeat = true;
 
@@ -145,7 +151,7 @@ namespace CRPG
                     }
 
                     //Sets up light level info
-                    SetLightLevel(x2, y2, /*greatestLightLevel*/ 5, isRedLight, isYellowLight);
+                    SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
                 }
             }
         }

@@ -116,9 +116,6 @@ namespace CRPG
             //Update all Enemies
             for (int i = 0; i < World._enemies.Count; i++)
             {
-
-                System.Diagnostics.Debug.WriteLine("{0}: {1} + {2}", i, World._enemies[i].CurrentLightLevel, World._enemies[i].blinkStatus);//World._enemies[i].beingLitBy.Count);
-
                 World._enemies[i].EnemyUpdate();
             }
         }

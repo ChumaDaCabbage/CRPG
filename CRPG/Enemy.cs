@@ -6,22 +6,17 @@ namespace CRPG
 {
     public class Enemy : LightSource
     {
-        //private int enemyLightLevel = 5; //Starts with a default of 5
+        const int ENEMY_LIGHT_LEVEL = 3; 
 
-        //bool Moving = true; //Holds if enemy is moveing
-
-        int AgitationLevel = 0; //Holds how angry the enemy is
+        //Sleeping info
+        public int AgitationLevel = 0; //Holds how angry the enemy is
         DateTime LastAgitatiedTime = DateTime.Now; //Holds last time agitatied
         DateTime LastBlinkedTime = DateTime.Now; //Holds last time blinked
-        public int blinkStatus = 0;
-        public int OverrideLightLevel = 0;
-        public bool lit = false;
-
-        List<AstarTile> currentPath = null;
-        public List<Enemy> beingLitBy = new List<Enemy>();
-
+        public int blinkStatus = 0; //Holds if back should be yellow currently
+        public int OverrideLightLevel = 0; //Holds light level that doesnt effect agitation
+        public bool lit = false; //Holds if this enemy is being directly lit
         readonly Color[] backLightColors = new Color[] //Holds all colors for back light
-        {
+       {
             new Color(0, 0, 0),
             new Color(64, 46, 19),
             new Color(127, 93, 38),
@@ -31,9 +26,15 @@ namespace CRPG
             new Color(255, 255, 115),
             new Color(255, 255, 135),
             new Color(255, 255, 154)
-        };
-
+       }; //Holds colors to use for back
+        public List<Enemy> beingLitBy = new List<Enemy>(); //Hold all enemies that are lighting this enemy
+        
+        //Pathing info
+        AstarTile path = null; //Holds path to player
         private Location on; //Holds what the enemy is on
+        DateTime LastMovedTime = DateTime.Now; //Holds last time moved
+        bool fleeing = false; //Holds if enemy is fleeing light
+        Point fleeingLocation = null;
 
         public Enemy(Point pos) : base(pos)
         {
@@ -45,64 +46,129 @@ namespace CRPG
 
         public void EnemyUpdate()
         {
-            if (CurrentLightLevel > 1)
+            if(fleeing) //Fleeing back to darkness
             {
-                lit = true;
+                //If havent found fleeing location
+                if (fleeingLocation == null)
+                { 
+                    
+                }
             }
-            else
+            else if (AgitationLevel == 5) //Chasing
             {
-                lit = false;
-            }
-
-
-            if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.5f) && CurrentLightLevel > 1) //If in light and wait time is over
-            {
-                AgitationLevel = Math.Clamp(AgitationLevel + 1, 0, 5);
-                if (AgitationLevel >= 2)
+                //If too bright
+                if (CurrentLightLevel >= 5 || RedLight)
                 {
-                    LightPower = 2;
-                    Lighting.LightingUpdate();
-                    OverrideLightLevel = 2;
-                    Map.RedrawMapPoint(Pos);
+                    //Set fleeing to true
+                    fleeing = true;
+                }
+                else
+                {
+                    //If move wait time is up
+                    if (DateTime.Now >= LastMovedTime.AddSeconds(0.15f))
+                    {
+                        //Update path and light
+                        path = PathFinder();
+                        LightPower = ENEMY_LIGHT_LEVEL;
+
+                        AstarTile nextMove = path; //Will hold next move
+
+                        //Get move that is one after current pos
+                        while (nextMove.Parent != null && !nextMove.Parent.Pos.Equals(Pos))
+                        {
+                            nextMove = nextMove.Parent;
+                        }
+
+                        //Check for player
+                        if (nextMove.Pos.X == Program._player.Pos.X && nextMove.Pos.Y == Program._player.Pos.Y)
+                        {
+                            //End game
+                            while (true)
+                            {
+                                Console.ReadKey();
+                            }
+                        }
+                        else //If not player
+                        {
+                            //Move enemy
+                            MovementUpdate(Pos, nextMove.Pos);
+                        }
+
+                        //Get new time
+                        LastMovedTime = DateTime.Now;
+                    }
+                }
+            }
+            else //Sleeping
+            {
+                //Empty path if sleeping
+                path = null;
+
+
+                if (CurrentLightLevel > 1)
+                {
+                    lit = true;
+                }
+                else
+                {
+                    lit = false;
                 }
 
-                //Get new time
-                LastAgitatiedTime = DateTime.Now;
-            }
-            else if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.7f) && CurrentLightLevel == 1) //If in light and wait time is over
-            {
-                AgitationLevel = Math.Clamp(AgitationLevel - 1, 0, 5);
-                if (AgitationLevel < 2)
+                if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.55f) && CurrentLightLevel > 1) //If in light and wait time is over
                 {
-                    LightPower = 0;
-                    Lighting.LightingUpdate();
-                    OverrideLightLevel = 0;
-                    Map.RedrawMapPoint(Pos);
-                    beingLitBy.Clear();
-                }
+                    AgitationLevel = Math.Clamp(AgitationLevel + 1, 0, 5);
+                    if (AgitationLevel >= 2)
+                    {
+                        LightPower = 2;
+                        Lighting.LightingUpdate();
+                        OverrideLightLevel = 2;
+                        Map.RedrawMapPoint(Pos);
+                    }
 
-                //Get new time
-                LastAgitatiedTime = DateTime.Now;
+                    //Get new time
+                    LastAgitatiedTime = DateTime.Now;
+                }
+                else if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.7f) && CurrentLightLevel == 1) //If not in light and wait time is over
+                {
+                    AgitationLevel = Math.Clamp(AgitationLevel - 1, 0, 5);
+                    if (AgitationLevel < 2)
+                    {
+                        LightPower = 0;
+                        Lighting.LightingUpdate();
+                        OverrideLightLevel = 0;
+                        Map.RedrawMapPoint(Pos);
+                        beingLitBy.Clear();
+                    }
+
+                    //Get new time
+                    LastAgitatiedTime = DateTime.Now;
+                }
             }
 
+            //If agitated and blick time is up
             if (AgitationLevel > 0 && DateTime.Now >= LastBlinkedTime.AddSeconds(0.5f / AgitationLevel))
             {
+                //If not blinking
                 if (blinkStatus == 0)
                 {
+                    //Turn blink on
                     blinkStatus += AgitationLevel;
                 }
                 else
                 {
+                    //Turn blink off
                     blinkStatus = 0;
                 }
 
+                //Redraw enemy pos
                 Map.RedrawMapPoint(Pos);
 
                 //Get new time
                 LastBlinkedTime = DateTime.Now;
             }
-            else if (AgitationLevel == 0)
+            else if (AgitationLevel == 0) //If not agitated
             {
+                //Turn off blink
                 blinkStatus = 0;
             }
         }
@@ -112,30 +178,90 @@ namespace CRPG
             return backLightColors[Math.Clamp((CurrentLightLevel + blinkStatus) - 1, 0, 8)];
         }
 
-
-        private void MoveSetup()
+        /// <summary>
+        /// Returns file tile of the A* path
+        /// </summary>
+        /// <returns></returns>
+        private AstarTile PathFinder()
         {
-            //Holds starting tile 
-            AstarTile start = new AstarTile();
-            start.Pos = Pos; //Sets start to enemy current position
+            //Holds starting tile and sets start to enemy current position
+            AstarTile start = new AstarTile(Pos);
 
-            //Holds ending tile
-            AstarTile finish = new AstarTile();
-            finish.Pos = Program._player.Pos; //Sets finish to player currentPos
+            //Holds ending tile and Sets finish to player currentPos
+            AstarTile finish = new AstarTile(Program._player.Pos);
 
             ///Sets start's distance to the distance to finish
             start.SetDistance(finish.Pos);
 
-            //Will hold all currently active tiles
-            List<AstarTile> activeTiles = new List<AstarTile>();
-            activeTiles.Add(start); //Adds start to activeTiles list
+            //Will hold all currently active tiles and adds start to list
+            List<AstarTile> activeTiles = new List<AstarTile>() {start};
 
             //Will hold all previously visited tiles
             List<AstarTile> visitedTiles = new List<AstarTile>();
+
+
+            while (activeTiles.Count > 0)
+            {
+                AstarTile checkTile = activeTiles[0];//.OrderBy(x => x.CostDistance).First();
+
+                //Check all active tiles
+                foreach (AstarTile tile in activeTiles)
+                {
+                    //If current cost is lower
+                    if (tile.Cost < checkTile.Cost)
+                    {
+                        checkTile = tile;
+                    }
+                }
+
+                if (checkTile.Pos.X == finish.Pos.X && checkTile.Pos.Y == finish.Pos.Y)
+                {
+                    //Console.WriteLine("We are at the destination!");
+                    //We can actually loop through the parents of each tile to find our exact path which we will show shortly. 
+                    return checkTile;
+                }
+
+                visitedTiles.Add(checkTile);
+                activeTiles.Remove(checkTile);
+
+                List<AstarTile> walkableTiles = GetWalkableTiles(checkTile, finish);
+
+                foreach (AstarTile walkableTile in walkableTiles)
+                {
+                    //If we have already visited this tile
+                    if (visitedTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
+                    {
+                        continue;
+                    }
+
+                    //It's already in the active list
+                    if (activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y) != null)
+                    {
+                        AstarTile existingTile = activeTiles.Find(x => x.Pos.X == walkableTile.Pos.X && x.Pos.Y == walkableTile.Pos.Y);
+                        if (existingTile.CostDistance > checkTile.CostDistance)
+                        {
+                            activeTiles.Remove(existingTile);
+                            activeTiles.Add(walkableTile);
+                        }
+                    }
+                    else //If never seen this tile before
+                    {
+                        activeTiles.Add(walkableTile);
+                    }
+                }
+            }
+
+            //If no path found return empty path on self to stop movement
+            return new AstarTile(Pos);
         }
 
-        /*
-        private static List<AstarTile> getWalkableTiles(AstarTile currentTile, AstarTile targetTile)
+        /// <summary>
+        /// Returns walkable tiles one tile away from currentTile
+        /// </summary>
+        /// <param name="currentTile"></param>
+        /// <param name="targetTile"></param>
+        /// <returns></returns>
+        private static List<AstarTile> GetWalkableTiles(AstarTile currentTile, AstarTile targetTile)
         {
             List<AstarTile> possibleTiles = new List<AstarTile>()
             {
@@ -145,33 +271,37 @@ namespace CRPG
                  new AstarTile {Pos = new Point(currentTile.Pos.X + 1, currentTile.Pos.Y), Parent = currentTile, Cost = currentTile.Cost + 1 },
 	        };
 
-	        possibleTiles.ForEach(tile => tile.SetDistance(targetTile.Pos));
+	        possibleTiles.ForEach(AstarTile => AstarTile.SetDistance(targetTile.Pos));
 
-            
+            for (int i = 0; i < possibleTiles.Count; i++)
+            {
+                if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) &&
+                    (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) &&
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && 
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()))
+                {
+                    continue;
+                }
+                else
+                {
+                    possibleTiles.RemoveAt(i);
+                    i--; //This line might not work
+                }
+            }
 
-	        return possibleTiles
-			        .Where(tile => tile.X >= 0 && tile.X <= maxX)
-			        .Where(tile => tile.Y >= 0 && tile.Y <= maxY)
-			        .Where(tile => map[tile.Y][tile.X] == ' ' || map[tile.Y][tile.X] == 'B')
-			        .ToList();
+            return possibleTiles;
         }
 
-        private List<AstarTile> getFinalPath()
-        {
-            return null;
-        }
-        */
-
-        /*
         private void MovementUpdate(Point oldPos, Point newPos)
         {
+            Pos = newPos;
+
             //Update location lightSources
-            if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, on); //Remove light source
-            else World.SetLocationByPos(oldPos, new LightSource(oldPos, Player.PLAYER_LIGHT_LEVEL)); //Give player light back
+            World.SetLocationByPos(oldPos, on); //Remove light source
 
             on = World.GetLocationByPos(newPos); //Updates on
 
-            //Set new flare pos in Locations[] and update lighting
+            //Set new enemy pos in Locations[] and update lighting
             World.SetLocationByPos(newPos, this);
             Lighting.LightingUpdate();
 
@@ -179,7 +309,6 @@ namespace CRPG
             Map.RedrawMapPoint(oldPos);
             Map.RedrawMapPoint(newPos);
         }
-        */
 
         public override bool IfEnemy()
         {

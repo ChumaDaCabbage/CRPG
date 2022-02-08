@@ -12,6 +12,13 @@ namespace CRPG
         public int CostDistance => Cost + Distance;
         public AstarTile Parent { get; set; }
 
+        public AstarTile() { }
+
+        public AstarTile(Point pos) 
+        {
+            Pos = pos;
+        }
+
         /// <summary>
         /// Sets Distance to the distance between this point and passed point (ignoring walls)
         /// </summary>

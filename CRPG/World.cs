@@ -51,16 +51,15 @@ namespace CRPG
             locations[4, 14] = new Enemy(new Point(4, 14));
             locations[2, 15] = new Enemy(new Point(2, 15));
             locations[1, 16] = new Enemy(new Point(1, 16));
-            locations[1, 11] = new Enemy(new Point(1, 11));
-            locations[2, 18] = new Enemy(new Point(2, 18));
-            locations[4, 18] = new Enemy(new Point(4, 18));
+            //locations[1, 11] = new Enemy(new Point(1, 11));
+            //locations[2, 18] = new Enemy(new Point(2, 18));
+            //locations[4, 18] = new Enemy(new Point(4, 18));
         }
 
         private static void DrawAllWalls()
         {
             //Manual wall setup (Lines put together are touching on the map):
-            locations[5, 1] = new Wall();
-            locations[11, 1] = new Wall();
+            DrawWall(new Point(5, 1), new Point(11, 1));
             DrawWall(new Point(5, 2), new Point(11, 2));
 
             DrawWall(new Point(1, 8), new Point(1, 10));

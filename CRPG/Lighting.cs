@@ -76,7 +76,7 @@ namespace CRPG
                             if (feedback)
                             {
                                 //Turn on overrideLight and stop current loop
-                                ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                if(!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                                 continue;
                             }
                         }
@@ -85,13 +85,13 @@ namespace CRPG
                         if (lightSources[i].IfEnemy() && lightSources[i].Pos.Equals(new Point(x2, y2))) //Make sure enemy cant anger itself with light
                         {
                             //Turn on overrideLight and stop current loop
-                            ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                            if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                             continue;
                         }
                         if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && !((Enemy)lightSources[i]).lit) //Make that enemys fading out dont anger other enemies
                         {
                             //Turn on overrideLight and stop current loop
-                            ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                            if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                             continue;
                         }
                         else if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))   //If new lightsource is giving better light
@@ -104,10 +104,14 @@ namespace CRPG
                         //Get if enemy is lighting enemy
                         if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
                         {
-                            //If lightsource enemy is awake, anger the enemy at x2,y2
-                            if (((Enemy)lightSources[i]).AgitationLevel == 5)
+                            //If neither enemy is fleeing
+                            if (!((Enemy)lightSources[i]).fleeing && !((Enemy)World.GetLocationByPos(x2, y2)).fleeing)
                             {
-                                ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0 , 5);
+                                //If lightsource enemy is awake, anger the enemy at x2,y2
+                                if (((Enemy)lightSources[i]).AgitationLevel == 5)
+                                {
+                                    ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0, 5);
+                                }
                             }
 
                             //Holds if already logged in on of the enemies
@@ -458,7 +462,7 @@ namespace CRPG
 
             int level = World.locations[x, y].CurrentLightLevel;
 
-            if (((Enemy)World.locations[x, y]).OverrideLightLevel != 0)
+            if (((Enemy)World.locations[x, y]).OverrideLightLevel > level)
             {
                 level = ((Enemy)World.locations[x, y]).OverrideLightLevel;
             }
@@ -479,19 +483,19 @@ namespace CRPG
                     floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 case 5:
-                    floorColor = new TileVisuals(new Color(226, 160, 145), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 case 6:
-                    floorColor = new TileVisuals(new Color(255, 184, 171), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 case 7:
-                    floorColor = new TileVisuals(new Color(255, 201, 192), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 case 8:
-                    floorColor = new TileVisuals(new Color(255, 219, 214), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 case 9:
-                    floorColor = new TileVisuals(new Color(255, 237, 236), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
                     break;
                 default:
                     return null;

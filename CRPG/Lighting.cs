@@ -54,7 +54,7 @@ namespace CRPG
                         float newDist = MathF.Sqrt(MathF.Pow(x2 - lightSources[i].Pos.X, 2) + MathF.Pow(y2 - lightSources[i].Pos.Y, 2));
 
                         //Holds possible light level from current source
-                        int level = (int)Math.Clamp(lightSources[i].LightPower - ((newDist / 2.5f) - 1), 1, 9);
+                        int level = (int)Math.Clamp(lightSources[i].LightPower - ((Math.Clamp(newDist, 2.5, 999) / 2.5f) - 1), 1, 9);
 
 
                         //Stop enemy anger feedback loops
@@ -96,13 +96,13 @@ namespace CRPG
                         }
                         else if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))   //If new lightsource is giving better light
                         {
-                            //Replace shortestDist and lightPower
+                            //Replace greatestLightLevel and lighter
                             greatestLightLevel = level;
                         }
 
 
                         //Get if enemy is lighting enemy
-                        if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
+                        if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                         {
                             //If neither enemy is fleeing
                             if (!((Enemy)lightSources[i]).fleeing && !((Enemy)World.GetLocationByPos(x2, y2)).fleeing)

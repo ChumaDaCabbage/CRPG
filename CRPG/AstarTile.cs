@@ -4,12 +4,13 @@ using System.Text;
 
 namespace CRPG
 {
-    class AstarTile
+    public class AstarTile
     {
         public Point Pos { get; set; }
         public int Cost { get; set; }
         public int Distance { get; set; }
         public int CostDistance => Cost + Distance;
+        public int InverseCostDistance => Cost - Distance;
         public AstarTile Parent { get; set; }
 
         public AstarTile() { }

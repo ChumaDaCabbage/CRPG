@@ -71,21 +71,14 @@ namespace CRPG
                 }
                 else if (AgitationLevel == 5) //Chasing
                 {
-                    if (fleeDelay != DateTime.MinValue && DateTime.Now > fleeDelay)
-                    {
-                        AllFleeing();
-                    }
-
                     //If too bright
-                    if (CurrentLightLevel >= 5 && fleeDelay == DateTime.MinValue)
+                    if ((CurrentLightLevel >= 5 || RedLight) && fleeDelay == DateTime.MinValue)
                     {
+                        //Starts fleeing
+                        selfFleeing();
+
                         //Starts fleeDelay
                         fleeDelay = DateTime.Now.AddSeconds(2);
-                    }
-                    else if (RedLight && fleeDelay == DateTime.MinValue) //If in redlight
-                    {
-                        //Starts fleeDelay
-                        fleeDelay = DateTime.Now.AddSeconds(0);
                     }
                     else
                     {
@@ -191,6 +184,11 @@ namespace CRPG
                 OverrideLightLevel = 0;
                 Map.RedrawMapPoint(Pos);
                 beingLitBy.Clear();
+            }
+
+            if (fleeDelay != DateTime.MinValue && DateTime.Now > fleeDelay)
+            {
+                AllFleeing();
             }
         }
 
@@ -344,6 +342,13 @@ namespace CRPG
                     enemy.path = null;
                 }
             }
+        }
+
+        private void selfFleeing()
+        {
+            //Start fleeing and Reset path
+            fleeing = true;
+            path = null;
         }
 
         public Color GetBackColor()

@@ -9,7 +9,7 @@ namespace CRPG
         private int flareLightLevel = 5; //Starts with a default of 5
 
         DateTime LastMovedTime = DateTime.Now; //Holds last time moved 
-        Point Dir; //Holds direction of movement
+        public Point Dir; //Holds direction of movement
 
         private Location on; //Holds what the flare is on
 
@@ -20,6 +20,7 @@ namespace CRPG
             Dir = dir;
             LightPower = flareLightLevel;
 
+            //Setup on info
             on = World.GetLocationByPos(Pos);
 
             //Remove flare from inventory and redraw bar
@@ -91,13 +92,14 @@ namespace CRPG
 
         private void DestroySelf()
         {
+            System.Diagnostics.Debug.WriteLine(flareLightLevel);
             //Find self, destroy self, update map
             for (int i = 0; i < Program._player._flares.Count; i++)
             {
                 if (Program._player._flares[i] == this)
                 {
                     Program._player._flares.RemoveAt(i);
-                    World.SetLocationByPos(Pos, new Floor());
+                    World.SetLocationByPos(Pos, on);
                     Map.RedrawMapPoint(Pos);
                     Lighting.LightingUpdate();
                 }

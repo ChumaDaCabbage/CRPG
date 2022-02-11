@@ -184,6 +184,7 @@ namespace CRPG
                 OverrideLightLevel = 0;
                 Map.RedrawMapPoint(Pos);
                 beingLitBy.Clear();
+                fleeDelay = DateTime.MinValue;
             }
 
             if (fleeDelay != DateTime.MinValue && DateTime.Now > fleeDelay)

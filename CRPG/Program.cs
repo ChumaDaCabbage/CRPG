@@ -101,45 +101,6 @@ namespace CRPG
 
         private static void WorldUpdate()
         {
-            if (!World.GetLightSourceByPos(_player.Pos).IfFlare())
-            {
-                World.SetLocationByPos(_player.Pos, new LightSource(_player.Pos, Player.PLAYER_LIGHT_LEVEL));
-            }
-
-
-            //Debug lines---------------------------------
-
-            //Will hold all lightsources
-            List<LightSource> foundLightSources = new List<LightSource>();
-
-            //Goes through all locations
-            for (int x = 0; x < World.MAX_WORLD_X; x++)
-            {
-                for (int y = 0; y < World.MAX_WORLD_Y; y++)
-                {
-                    //If lightSource is found
-                    if (World.locations[x, y].IfLightSource())
-                    {
-                        if (((LightSource)World.locations[x, y]).IfFlare())
-                        {
-                            //Add lightsource to list
-                            foundLightSources.Add(World.GetLightSourceByPos(new Point(x, y)));
-
-                            //System.Diagnostics.Debug.WriteLine($"-f-({((Flare)World.GetLocationByPos(x,y)).Pos.X},{((Flare)World.GetLocationByPos(x, y)).Pos.Y})");
-                        }
-                    }
-                }
-            }
-
-            //System.Diagnostics.Debug.WriteLine(foundLightSources.Count + ":");
-
-            foreach (LightSource light in foundLightSources)
-            {
-                //System.Diagnostics.Debug.WriteLine($"\t({light.Pos.X},{light.Pos.Y})");
-            }
-
-            //Debug lines end---------------------------------
-
             //Update all flares
             for (int i = 0; i < _player._flares.Count; i++)
             {

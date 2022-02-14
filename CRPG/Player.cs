@@ -14,6 +14,9 @@ namespace CRPG
 
         public Location on; //Holds what the player was standing on
 
+        //Point toShoot = null;
+        //Point toShootDir = null;
+
         private DateTime LastShotTime = DateTime.Now; //Holds last time shot
 
         //Teleports player to passed point and updates map
@@ -159,6 +162,15 @@ namespace CRPG
 
             //Update new location
             World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
+
+            //if (toShoot != null && !toShoot.Equals(Pos))
+            //{
+            //    World.SetLocationByPos(Pos, new Flare(toShootDir, toShoot));
+            //    Map.RedrawMapPoint(toShoot);
+            //
+            //    toShoot = null;
+            //    toShootDir = null;
+            //}
 
             Lighting.LightingUpdate(); //Updates lighting
 

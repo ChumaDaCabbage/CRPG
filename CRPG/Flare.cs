@@ -30,7 +30,7 @@ namespace CRPG
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
 
-            //Set flare pos in Locations[] and upadte lighting
+            //Set flare pos in Locations[] and update lighting
             World.SetLocationByPos(Pos, this);
             Lighting.LightingUpdate();
         }
@@ -39,6 +39,7 @@ namespace CRPG
         {
             if (Moving && DateTime.Now >= LastMovedTime.AddSeconds(0.05f)) //If moving and wait time is over 0.05
             {
+
                 Move();
 
                 //Get new time

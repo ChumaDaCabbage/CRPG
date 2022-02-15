@@ -13,7 +13,9 @@ namespace CRPG
 
         private Location on; //Holds what the flare is on
 
-        bool Moving = true; //Holds if flare is moveing
+        bool Moving = true; //Holds if flare is moving
+
+        bool neverMoved = true; //Holds if flare never moved
 
         public Flare(Point dir, Point pos) : base(pos)
         {
@@ -22,10 +24,6 @@ namespace CRPG
 
             //Setup on info
             on = World.GetLocationByPos(Pos);
-
-            //Remove flare from inventory and redraw bar
-            FlareInventory.FlareCount--;
-            FlareInventory.DrawFlareBar();
 
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
@@ -74,6 +72,9 @@ namespace CRPG
                 && newPos.X < World.MAX_WORLD_X && newPos.X >= 0
                 && !LineFinder.BlockedCheck(Pos, newPos))
             {
+                //Set neverMoved to false
+                neverMoved = false;
+
                 Point oldPos = new Point(Pos.X, Pos.Y); //Save old pos
                 Pos = newPos; //Update pos
                 MovementUpdate(oldPos, Pos); //Updates location data
@@ -93,7 +94,13 @@ namespace CRPG
 
         private void DestroySelf()
         {
-            System.Diagnostics.Debug.WriteLine(flareLightLevel);
+            //If never moved
+            if (neverMoved)
+            {
+                //Set on to floor
+                on = new Floor();
+            }
+
             //Find self, destroy self, update map
             for (int i = 0; i < Program._player._flares.Count; i++)
             {

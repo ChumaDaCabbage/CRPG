@@ -14,9 +14,6 @@ namespace CRPG
 
         public Location on; //Holds what the player was standing on
 
-        //Point toShoot = null;
-        //Point toShootDir = null;
-
         private DateTime LastShotTime = DateTime.Now; //Holds last time shot
 
         //Teleports player to passed point and updates map
@@ -128,16 +125,20 @@ namespace CRPG
         }
 
 
-        public void Shoot(Point direction)
+        public void Shoot(Point direction, Point point)
         {
             //If flare are owned
             if (FlareInventory.FlareCount > 0 && DateTime.Now >= LastShotTime.AddSeconds(0.5))
             {
                 //Add to flare list
-                Program._player._flares.Add(new Flare(direction, Pos));
+                Program._player._flares.Add(new Flare(direction, new Point(point.X, point.Y)));
 
                 //Reset time
                 LastShotTime = DateTime.Now;
+
+                //Remove flare from inventory and redraw bar
+                FlareInventory.FlareCount--;
+                FlareInventory.DrawFlareBar();
             }
         }
 
@@ -149,34 +150,31 @@ namespace CRPG
                 World.SetLocationByPos(oldPos, on);
             }
 
-            //Check for flare pickups
-            if (World.GetLocationByPos(newPos).IfFloor() && ((Floor)World.GetLocationByPos(newPos)).HasFlare && FlareInventory.FlareCount < 5)
-            {
-                //Updates flare info
-                FlareInventory.FlareCount++;
-                ((Floor)World.GetLocationByPos(newPos)).HasFlare = false;
-                FlareInventory.DrawFlareBar();
-            }
+            //Start flare ground check
+            GroundFlareCheck(newPos);
 
             on = World.GetLocationByPos(newPos); //Updates on
 
             //Update new location
             World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
 
-            //if (toShoot != null && !toShoot.Equals(Pos))
-            //{
-            //    World.SetLocationByPos(Pos, new Flare(toShootDir, toShoot));
-            //    Map.RedrawMapPoint(toShoot);
-            //
-            //    toShoot = null;
-            //    toShootDir = null;
-            //}
-
             Lighting.LightingUpdate(); //Updates lighting
 
             //Redraw new location and old location
             Map.RedrawMapPoint(oldPos);
             Map.RedrawMapPoint(newPos);
+        }
+
+        //Check for flare pickups
+        private void GroundFlareCheck(Point worldPoint)
+        {
+            if (World.GetLocationByPos(worldPoint).IfFloor() && ((Floor)World.GetLocationByPos(worldPoint)).HasFlare && FlareInventory.FlareCount < 5)
+            {
+                //Updates flare info
+                FlareInventory.FlareCount++;
+                ((Floor)World.GetLocationByPos(worldPoint)).HasFlare = false;
+                FlareInventory.DrawFlareBar();
+            }
         }
     }
 }

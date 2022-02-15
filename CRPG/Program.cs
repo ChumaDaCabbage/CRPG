@@ -74,19 +74,19 @@ namespace CRPG
                     break;
 
                 case ConsoleKey.UpArrow: //Shoot up
-                    _player.Shoot(new Point(0, -Player.PLAYER_SHOOT_SPEED));
+                    _player.Shoot(new Point(0, -Player.PLAYER_SHOOT_SPEED), _player.Pos);
                     break;
 
                 case ConsoleKey.LeftArrow: //Shoot left
-                    _player.Shoot(new Point(-Player.PLAYER_SHOOT_SPEED, 0));
+                    _player.Shoot(new Point(-Player.PLAYER_SHOOT_SPEED, 0), _player.Pos);
                     break;
 
                 case ConsoleKey.DownArrow: //Shoot down
-                    _player.Shoot(new Point(0, Player.PLAYER_SHOOT_SPEED));
+                    _player.Shoot(new Point(0, Player.PLAYER_SHOOT_SPEED), _player.Pos);
                     break;
 
                 case ConsoleKey.RightArrow: //Shoot right
-                    _player.Shoot(new Point(Player.PLAYER_SHOOT_SPEED, 0));
+                    _player.Shoot(new Point(Player.PLAYER_SHOOT_SPEED, 0), _player.Pos);
                     break;
 
                 case ConsoleKey.Spacebar: //Light torches

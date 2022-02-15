@@ -36,5 +36,15 @@ namespace CRPG
         {
             return new Point(0, 0);
         }
+
+        public Point ScuffedNormalize()
+        {
+            return new Point(Math.Clamp(X, -1, 1), Math.Clamp(Y, -1, 1));
+        }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
+        }
     }
 }

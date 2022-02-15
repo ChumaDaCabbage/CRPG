@@ -31,7 +31,7 @@ namespace CRPG
         public List<Enemy> beingLitBy = new List<Enemy>(); //Hold all enemies that are lighting this enemy
         
         //Pathing info
-        AstarTile path = null; //Holds path to player
+        public AstarTile path = null; //Holds path to player
         private Location on; //Holds what the enemy is on
         DateTime LastMovedTime = DateTime.Now; //Holds last time moved
         public DateTime PathedDelay = DateTime.Now; //Holds delay for pathfinding

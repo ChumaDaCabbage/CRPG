@@ -134,10 +134,22 @@ namespace CRPG
                         {
                             if (!start.Pos.Equals(enemy.Pos)) //If not this enemy
                             {
-                                if (MathF.Sqrt(MathF.Pow(start.Pos.X - enemy.Pos.X, 2) + MathF.Pow(start.Pos.Y - enemy.Pos.Y, 2)) < 1) //If too close
+                                //If enemy is not moving
+                                if (enemy.path == null)
+                                {
+                                    //If too close to enemy current pos
+                                    if (MathF.Sqrt(MathF.Pow(checkTile.Pos.X - enemy.Pos.X, 2) + MathF.Pow(checkTile.Pos.Y - enemy.Pos.Y, 2)) < 2.5f)
+                                    {
+                                        //Set bunched up to true
+                                        bunchedUp = true;
+
+                                    }
+                                }
+                                else if (MathF.Sqrt(MathF.Pow(checkTile.Pos.X - enemy.path.Pos.X, 2) + MathF.Pow(checkTile.Pos.Y - enemy.path.Pos.Y, 2)) < 2.5) //If too close to final pos
                                 {
                                     //Set bunched up to true
                                     bunchedUp = true;
+
                                 }
                             }
                         }

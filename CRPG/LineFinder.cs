@@ -84,14 +84,14 @@ namespace CRPG
             return blocked;
         }
 
-        public static bool BlockedCheck(Point start, Point end)
+        public static bool FullBlockedCheck(Point start, Point end)
         {
             //Check for walls blocking
             List<Point> possibleBlockers = LineFinder.GetLinePoints(start, end);
             bool blocked = false;
             for (int i = 1; i < possibleBlockers.Count; i++)
             {
-                if (World.GetLocationByPos(possibleBlockers[i]).IfWall())
+                if (!World.GetLocationByPos(possibleBlockers[i]).IfFloor())
                 {
                     blocked = true;
                 }

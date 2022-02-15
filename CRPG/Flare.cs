@@ -70,7 +70,7 @@ namespace CRPG
             //If wanted location is available
             if (newPos.Y < World.MAX_WORLD_Y && newPos.Y >= 0
                 && newPos.X < World.MAX_WORLD_X && newPos.X >= 0
-                && !LineFinder.BlockedCheck(Pos, newPos))
+                && !LineFinder.FullBlockedCheck(Pos, newPos))
             {
                 //Set neverMoved to false
                 neverMoved = false;

@@ -7,7 +7,7 @@ namespace CRPG
 {
     public static class GameEngine
     {
-        public static string Version = "0.1.0";
+        public static string Version = "0.1.4";
 
         public static void Initialize()
         {

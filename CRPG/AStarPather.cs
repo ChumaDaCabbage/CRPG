@@ -33,7 +33,7 @@ namespace CRPG
 
                 while (activeTiles.Count > 0)
                 {
-                    AstarTile checkTile = activeTiles[0];//.OrderBy(x => x.CostDistance).First();
+                    AstarTile checkTile = activeTiles[0];
 
                     //Check all active tiles
                     foreach (AstarTile tile in activeTiles)
@@ -92,8 +92,10 @@ namespace CRPG
         /// Returns file tile of the A* path to darkness
         /// </summary>
         /// <returns></returns>
-        public static AstarTile DarknessPathFinder(Point Pos, Enemy agent)
+        public static AstarTile DarknessPathFinder(Point Pos, Enemy agent, bool stuck)
         {
+            System.Diagnostics.Debug.WriteLine((Pos) + ": " + stuck);
+
             //If pathing not currently delayed
             if (DateTime.Now > agent.PathedDelay)
             {
@@ -124,6 +126,7 @@ namespace CRPG
                         }
                     }
 
+                    //Done check
                     //If at dark tile and not in red light
                     if (World.GetLocationByPos(checkTile.Pos).CurrentLightLevel == 1 && !World.GetLocationByPos(checkTile.Pos).RedLight)
                     {
@@ -189,7 +192,20 @@ namespace CRPG
                     visitedTiles.Add(checkTile);
                     activeTiles.Remove(checkTile);
 
-                    List<AstarTile> walkableTiles = GetDarkWalkableTiles(checkTile, start);
+                    //Will hold tiles that can be walked on from current tile
+                    List<AstarTile> walkableTiles;
+
+                    System.Diagnostics.Debug.WriteLine((Pos) + ": " + stuck);
+
+                    //Checks if stuck
+                    if (!stuck)
+                    {
+                        walkableTiles = GetDarkWalkableTiles(checkTile, start);
+                    }
+                    else
+                    {
+                        walkableTiles = GetStuckDarkWalkableTiles(checkTile);
+                    }
 
                     foreach (AstarTile walkableTile in walkableTiles)
                     {
@@ -216,8 +232,11 @@ namespace CRPG
                     }
                 }
 
-                //If failed to find path add one second delay
-                agent.PathedDelay = DateTime.Now.AddSeconds(1);
+                //If failed to find path second time add delay
+                if (stuck)
+                {
+                    agent.PathedDelay = DateTime.Now.AddSeconds(0.5f);
+                }
             }
 
             //If no path found return null
@@ -363,6 +382,62 @@ namespace CRPG
                         possibleTiles.RemoveAt(i);
                         i--;
                     }
+                }
+            }
+            //Return possible tiles
+            return possibleTiles;
+        }
+
+        /// <summary>
+        /// Returns walkable tiles one tile away from currentTile ignoring light and length
+        /// </summary>
+        /// <param name="currentTile"></param>
+        /// <param name="targetTile"></param>
+        /// <returns></returns>
+        public static List<AstarTile> GetStuckDarkWalkableTiles(AstarTile currentTile)
+        {
+            //Gets fours directions of tiles from current tile
+            List<AstarTile> possibleTiles = new List<AstarTile>()
+            {
+                 new AstarTile {Pos = new Point(currentTile.Pos.X, currentTile.Pos.Y - 1), Parent = currentTile, Cost = currentTile.Cost + 1 },
+                 new AstarTile {Pos = new Point(currentTile.Pos.X, currentTile.Pos.Y + 1), Parent = currentTile, Cost = currentTile.Cost + 1},
+                 new AstarTile {Pos = new Point(currentTile.Pos.X - 1, currentTile.Pos.Y), Parent = currentTile, Cost = currentTile.Cost + 1 },
+                 new AstarTile {Pos = new Point(currentTile.Pos.X + 1, currentTile.Pos.Y), Parent = currentTile, Cost = currentTile.Cost + 1 },
+            };
+
+            //Sets distance for all new tiles
+            possibleTiles.ForEach(AstarTile => AstarTile.SetDistance(Program._player.Pos));
+
+            //Go through possible tiles
+            for (int i = 0; i < possibleTiles.Count; i++)
+            {
+                //Add extra cost for walkthing through light
+                if (World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel > 1)
+                {
+                    if (World.GetLocationByPos(possibleTiles[i].Pos).RedLight)
+                    {
+                        possibleTiles[i].Cost += 2;
+                    }
+
+                    possibleTiles[i].Cost += World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel - 1;
+                }
+
+                //Do checks
+                if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
+                    (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
+                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
+                {
+                    //Keep this tile
+                    continue;
+                }
+                else
+                {
+                    //If not wanted remove this tile
+                    possibleTiles.RemoveAt(i);
+                    i--;
                 }
             }
             //Return possible tiles

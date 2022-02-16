@@ -75,7 +75,7 @@ namespace CRPG
                     if ((CurrentLightLevel >= 5 || RedLight) && fleeDelay == DateTime.MinValue)
                     {
                         //Starts fleeing
-                        selfFleeing();
+                        SelfFleeing();
 
                         //Starts fleeDelay
                         fleeDelay = DateTime.Now.AddSeconds(2);
@@ -226,8 +226,7 @@ namespace CRPG
                         //Starts fleeDelay
                         fleeDelay = DateTime.Now.AddSeconds(0);
                     }
-
-                    else //If player is in darkness too
+                    else if (World.GetLocationByPos(Program._player.Pos).CurrentLightLevel < 5 && !World.GetLocationByPos(Program._player.Pos).RedLight) //If player is in darkness too
                     {
                         //End game
                         while (true)
@@ -309,11 +308,21 @@ namespace CRPG
         private void GetDarkPath()
         {
             //Gets new path
-            AstarTile newPath = AStarPather.DarknessPathFinder(Pos, this);
+            AstarTile newPath = AStarPather.DarknessPathFinder(Pos, this, false);
             if (newPath != null) //If new path found
             {
                 //Update path and light
                 path = newPath;
+            }
+            else
+            {
+                //Tries stuck pathfinding
+                AstarTile stuckPath = AStarPather.DarknessPathFinder(Pos, this, true);
+                if (stuckPath != null) //If new path found
+                {
+                    //Update path and light
+                    path = stuckPath;
+                }
             }
         }
 
@@ -330,8 +339,6 @@ namespace CRPG
 
         private void AllFleeing()
         {
-            Random r = new Random();
-
             //Go through all enemies
             foreach (Enemy enemy in World._enemies)
             {
@@ -345,7 +352,7 @@ namespace CRPG
             }
         }
 
-        private void selfFleeing()
+        private void SelfFleeing()
         {
             //Start fleeing and Reset path
             fleeing = true;

@@ -33,15 +33,16 @@ namespace CRPG
                 ConsoleKey userInput; //Holds user input
                 while (true)
                 {
-                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.1) && Console.KeyAvailable) //If time greater than input delay and key is being pressed
+                    //While waiting for input update world
+                    WorldUpdate();
+
+                    //If time greater than input delay and key is being pressed
+                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.15) && Console.KeyAvailable)
                     {
                         userInput = Console.ReadKey().Key; //Get input
                         ClearKeyBuffer(); //Start clearKeyBuffer
                         break; //Leave loop
                     }
-
-                    //While waiting for input update world
-                    WorldUpdate();
                 }
                 SetupWritingLine(); //Starts setup writing line
                 ParseInput(userInput); //Starts ParseInput and gives it the user input
@@ -105,12 +106,6 @@ namespace CRPG
             for (int i = 0; i < _player._flares.Count; i++)
             {
                 _player._flares[i].FlareUpdate();
-            }
-
-            //Update all torches
-            for (int i = 0; i < World._tourches.Count; i++)
-            {
-                World._tourches[i].TorchEffectsUpdate();
             }
 
             //Update all Enemies

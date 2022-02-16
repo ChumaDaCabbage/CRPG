@@ -37,7 +37,6 @@ namespace CRPG
         {
             if (Moving && DateTime.Now >= LastMovedTime.AddSeconds(0.05f)) //If moving and wait time is over 0.05
             {
-
                 Move();
 
                 //Get new time

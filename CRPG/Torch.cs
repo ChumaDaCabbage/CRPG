@@ -25,6 +25,7 @@ namespace CRPG
             LightPower = 0;
         }
 
+        /* To costly for minor effect (Not deleting just in case I want to add it back)
         public void TorchEffectsUpdate()
         {
             if (LightPower > 1)
@@ -58,6 +59,7 @@ namespace CRPG
                 }
             }
         }
+        */
 
         public TileVisuals GetCurrentTorchColor()
         {
@@ -68,6 +70,7 @@ namespace CRPG
         {
             //Turn on lights
             LightPower = TORCH_LIGHT_LEVEL;
+            CurrentColor = new TileVisuals(new Color(255, 146, 0), "░░", -50);
             on = true;
 
             //Update lighting

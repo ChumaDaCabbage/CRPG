@@ -8,13 +8,13 @@ namespace CRPG
     {
 
         const int TORCH_LIGHT_LEVEL = 5;
-        readonly Random RandomGenerator = new Random();
+        //readonly Random RandomGenerator = new Random();
 
         public bool on = false;
 
         //Flicker data
-        DateTime LastFlickeredTime = DateTime.Now;
-        float FlickerTime = 0.5f;
+        //DateTime LastFlickeredTime = DateTime.Now;
+        //float FlickerTime = 0.5f;
 
         //Flicker color data
         TileVisuals CurrentColor = new TileVisuals(new Color(176, 40, 12));

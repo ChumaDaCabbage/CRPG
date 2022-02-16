@@ -43,7 +43,7 @@ namespace CRPG
             else
             {
                 //Inform player of failed move
-                Console.Write("You cannot move south. >");
+                Console.Write("You cannot move south.");
             }
         }
 
@@ -61,7 +61,7 @@ namespace CRPG
             else
             {
                 //Inform player of failed move
-                Console.Write("You cannot move east. >");
+                Console.Write("You cannot move east.");
             }
         }
 
@@ -79,7 +79,7 @@ namespace CRPG
             else
             {
                 //Inform player of failed move
-                Console.Write("You cannot move north. >");
+                Console.Write("You cannot move north.");
             }
         }
 
@@ -97,7 +97,7 @@ namespace CRPG
             else
             {
                 //Inform player of failed move
-                Console.Write("You cannot move west. >");
+                Console.Write("You cannot move west.");
             }
         }
 
@@ -121,7 +121,7 @@ namespace CRPG
             }
 
             //Inform player of failed light
-            Console.Write("There are no torches to light. >");
+            Console.Write("There are no torches to light.");
         }
 
 
@@ -139,6 +139,11 @@ namespace CRPG
                 //Remove flare from inventory and redraw bar
                 FlareInventory.FlareCount--;
                 FlareInventory.DrawFlareBar();
+            }
+            else
+            {
+                //Inform player of no more flares
+                Console.Write("You are out of flares.");
             }
         }
 

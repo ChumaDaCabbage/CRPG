@@ -36,7 +36,7 @@ namespace CRPG
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public static void SetLightLevels(List<LightSource> lightSources)
+        private static void SetLightLevels(List<LightSource> lightSources)
         {
             //Goes through all locations
             for (int x2 = 0; x2 < World.MAX_WORLD_X; x2++)

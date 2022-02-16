@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 //Evan Gray :D 2022
 namespace CRPG
@@ -9,6 +10,9 @@ namespace CRPG
     {
 
         public static Player _player = new Player();
+
+        private static ConsoleKey userInput = ConsoleKey.F12; //Holds user input
+        private static DateTime lastPressedTime = DateTime.MinValue; //Holds time buttons were last pressed
 
         static void Main(string[] args)
         {
@@ -27,26 +31,42 @@ namespace CRPG
             //Sets up line for player input
             SetupWritingLine();
 
-            DateTime lastPressedTime = DateTime.MinValue; //Holds time buttons were last pressed
+            //Starts thread
+            Thread inputThread = new Thread(new ThreadStart(GetInput));
+            inputThread.Start();
+
             while (true)
             {
-                ConsoleKey userInput; //Holds user input
-                while (true)
-                {
-                    //While waiting for input update world
-                    WorldUpdate();
+                //Update world
+                WorldUpdate();
 
-                    //If time greater than input delay and key is being pressed
-                    if (DateTime.Now >= lastPressedTime.AddSeconds(0.15) && Console.KeyAvailable)
+                if (userInput != ConsoleKey.F12)
+                {
+                    SetupWritingLine(); //Starts setup writing line
+                    ParseInput(userInput); //Starts ParseInput and gives it the user input
+                    //lastPressedTime = DateTime.Now; //Gets current time
+                    userInput = ConsoleKey.F12;
+                }
+            }
+        }
+
+        //Gets input in different thread to use in main thread
+        private static void GetInput()
+        {
+            //Game loop
+            while (true)
+            {
+                //If input is defualt
+                if (userInput == ConsoleKey.F12)
+                {
+                    //If time greater than input delay
+                    if (DateTime.Now >= lastPressedTime)
                     {
-                        userInput = Console.ReadKey().Key; //Get input
+                        userInput = Console.ReadKey(true).Key; //Get input
                         ClearKeyBuffer(); //Start clearKeyBuffer
-                        break; //Leave loop
+                        lastPressedTime = DateTime.Now.AddSeconds(0.15); //Gets time of next move
                     }
                 }
-                SetupWritingLine(); //Starts setup writing line
-                ParseInput(userInput); //Starts ParseInput and gives it the user input
-                lastPressedTime = DateTime.Now; //Gets current time
             }
         }
 
@@ -55,7 +75,7 @@ namespace CRPG
             switch (key)
             {
                 case ConsoleKey.H: //Help
-                    Console.Write("Help is coming later... stay tuned. >");
+                    Console.Write("Help is coming later... stay tuned.");
                     break;
 
                 case ConsoleKey.W: //Move up
@@ -95,7 +115,7 @@ namespace CRPG
                     break;
 
                 default:
-                    Console.Write("I don't understand. Sorry! >");
+                    Console.Write("I don't understand. Sorry!");
                     break;
             }
         }

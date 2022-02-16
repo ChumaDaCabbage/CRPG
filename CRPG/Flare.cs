@@ -7,7 +7,7 @@ namespace CRPG
     public class Flare : LightSource
     {
         private int flareLightLevel = 5; //Starts with a default of 5
-
+        
         DateTime LastMovedTime = DateTime.Now; //Holds last time moved 
         public Point Dir; //Holds direction of movement
 

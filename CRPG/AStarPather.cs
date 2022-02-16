@@ -94,8 +94,6 @@ namespace CRPG
         /// <returns></returns>
         public static AstarTile DarknessPathFinder(Point Pos, Enemy agent, bool stuck)
         {
-            System.Diagnostics.Debug.WriteLine((Pos) + ": " + stuck);
-
             //If pathing not currently delayed
             if (DateTime.Now > agent.PathedDelay)
             {
@@ -194,8 +192,6 @@ namespace CRPG
 
                     //Will hold tiles that can be walked on from current tile
                     List<AstarTile> walkableTiles;
-
-                    System.Diagnostics.Debug.WriteLine((Pos) + ": " + stuck);
 
                     //Checks if stuck
                     if (!stuck)
@@ -349,7 +345,6 @@ namespace CRPG
                         (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
                         (World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel < 5) &&
                         (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
                         (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
                         (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
                     {

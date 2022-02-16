@@ -56,102 +56,105 @@ namespace CRPG
                         //Holds possible light level from current source
                         int level = (int)Math.Clamp(lightSources[i].LightPower - ((Math.Clamp(newDist, 2.5, 999) / 2.5f) - 1), 1, 9);
 
-
-                        //Stop enemy anger feedback loops
-                        if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
+                        //Skip this tile if completetly dark
+                        if (level > 1)
                         {
-                            //Holds if there is feedback
-                            bool feedback = false;
-                            foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy) //Go through what this light is being lit by
+                            //Stop enemy anger feedback loops
+                            if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
                             {
-                                //If one of those is current tile
-                                if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
+                                //Holds if there is feedback
+                                bool feedback = false;
+                                foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy) //Go through what this light is being lit by
                                 {
-                                    //Toggle feedback
-                                    feedback = true;
+                                    //If one of those is current tile
+                                    if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
+                                    {
+                                        //Toggle feedback
+                                        feedback = true;
+                                    }
+                                }
+
+                                //If feedback
+                                if (feedback)
+                                {
+                                    //Turn on overrideLight and stop current loop
+                                    if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                    continue;
                                 }
                             }
 
-                            //If feedback
-                            if (feedback)
+
+                            if (lightSources[i].IfEnemy() && lightSources[i].Pos.Equals(new Point(x2, y2))) //Make sure enemy cant anger itself with light
                             {
                                 //Turn on overrideLight and stop current loop
-                                if(!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                                 continue;
                             }
-                        }
-                        
-
-                        if (lightSources[i].IfEnemy() && lightSources[i].Pos.Equals(new Point(x2, y2))) //Make sure enemy cant anger itself with light
-                        {
-                            //Turn on overrideLight and stop current loop
-                            if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
-                            continue;
-                        }
-                        if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && !((Enemy)lightSources[i]).lit) //Make that enemys fading out dont anger other enemies
-                        {
-                            //Turn on overrideLight and stop current loop
-                            if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
-                            continue;
-                        }
-                        else if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))   //If new lightsource is giving better light
-                        {
-                            //Replace greatestLightLevel and lighter
-                            greatestLightLevel = level;
-                        }
-
-
-                        //Get if enemy is lighting enemy
-                        if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
-                        {
-                            //If neither enemy is fleeing
-                            if (!((Enemy)lightSources[i]).fleeing && !((Enemy)World.GetLocationByPos(x2, y2)).fleeing)
+                            if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && !((Enemy)lightSources[i]).lit) //Make that enemys fading out dont anger other enemies
                             {
-                                //If lightsource enemy is awake, anger the enemy at x2,y2
-                                if (((Enemy)lightSources[i]).AgitationLevel == 5)
+                                //Turn on overrideLight and stop current loop
+                                if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                continue;
+                            }
+                            else if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))   //If new lightsource is giving better light
+                            {
+                                //Replace greatestLightLevel and lighter
+                                greatestLightLevel = level;
+                            }
+
+
+                            //Get if enemy is lighting enemy
+                            if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
+                            {
+                                //If neither enemy is fleeing
+                                if (!((Enemy)lightSources[i]).fleeing && !((Enemy)World.GetLocationByPos(x2, y2)).fleeing)
                                 {
-                                    ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0, 5);
+                                    //If lightsource enemy is awake, anger the enemy at x2,y2
+                                    if (((Enemy)lightSources[i]).AgitationLevel == 5)
+                                    {
+                                        ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0, 5);
+                                    }
+                                }
+
+                                //Holds if already logged in on of the enemies
+                                bool notRepeat = true;
+
+                                //Check all lit by lists
+                                foreach (Enemy currentEnemy in ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy)
+                                {
+                                    if (((Enemy)lightSources[i]) == currentEnemy)
+                                    {
+                                        notRepeat = false;
+                                    }
+                                }
+                                foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy)
+                                {
+                                    if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
+                                    {
+                                        notRepeat = false;
+                                    }
+                                }
+
+                                //If no repeated
+                                if (notRepeat)
+                                {
+                                    //Log light
+                                    ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy.Add((Enemy)lightSources[i]);
                                 }
                             }
 
-                            //Holds if already logged in on of the enemies
-                            bool notRepeat = true;
-
-                            //Check all lit by lists
-                            foreach (Enemy currentEnemy in ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy)
+                            //If red light is close enough to location and not blocked
+                            if (lightSources[i].IfFlare() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                             {
-                                if (((Enemy)lightSources[i]) == currentEnemy)
-                                {
-                                    notRepeat = false;
-                                }
+                                //Set redlight to true
+                                isRedLight = true;
                             }
-                            foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy)
+                            else if (lightSources[i].IfTorch() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                             {
-                                if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
-                                {
-                                    notRepeat = false;
-                                }
+                                //Set yellowlight to true
+                                isYellowLight = true;
                             }
-
-                            //If no repeated
-                            if (notRepeat)
-                            {
-                                //Log light
-                                ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy.Add((Enemy)lightSources[i]);
-                            }
-                        }
-
-                        //If red light is close enough to location and not blocked
-                        if (lightSources[i].IfFlare() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
-                        {
-                            //Set redlight to true
-                            isRedLight = true;
-                        }
-                        else if (lightSources[i].IfTorch() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
-                        {
-                            //Set yellowlight to true
-                            isYellowLight = true;
-                        }
+                        }                                            
                     }
 
                     //Sets up light level info

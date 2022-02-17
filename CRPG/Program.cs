@@ -8,11 +8,9 @@ namespace CRPG
 {
     class Program
     {
-
         public static Player _player = new Player();
 
         private static ConsoleKey userInput = ConsoleKey.F12; //Holds user input
-        private static DateTime lastPressedTime = DateTime.MinValue; //Holds time buttons were last pressed
 
         static void Main(string[] args)
         {
@@ -44,7 +42,6 @@ namespace CRPG
                 {
                     SetupWritingLine(); //Starts setup writing line
                     ParseInput(userInput); //Starts ParseInput and gives it the user input
-                    //lastPressedTime = DateTime.Now; //Gets current time
                     userInput = ConsoleKey.F12;
                 }
             }
@@ -59,13 +56,9 @@ namespace CRPG
                 //If input is defualt
                 if (userInput == ConsoleKey.F12)
                 {
-                    //If time greater than input delay
-                    if (DateTime.Now >= lastPressedTime)
-                    {
-                        userInput = Console.ReadKey(true).Key; //Get input
-                        ClearKeyBuffer(); //Start clearKeyBuffer
-                        lastPressedTime = DateTime.Now.AddSeconds(0.15); //Gets time of next move
-                    }
+                    userInput = Console.ReadKey(true).Key; //Get input
+                    ClearKeyBuffer(); //Start clearKeyBuffer
+                    Thread.Sleep(TimeSpan.FromSeconds(0.15));
                 }
             }
         }
@@ -140,7 +133,7 @@ namespace CRPG
         {
             while (Console.KeyAvailable)
             {
-                Console.ReadKey(false);
+                Console.ReadKey(true);
             }
         }
 

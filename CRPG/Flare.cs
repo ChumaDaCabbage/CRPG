@@ -105,10 +105,13 @@ namespace CRPG
             {
                 if (Program._player._flares[i] == this)
                 {
+                    //Turn of light and update lighting
+                    LightPower = 0;
+                    Lighting.LightingUpdate();
+
+                    //Remove self from list, remove self from world
                     Program._player._flares.RemoveAt(i);
                     World.SetLocationByPos(Pos, on);
-                    Map.RedrawMapPoint(Pos);
-                    Lighting.LightingUpdate();
                 }
             }
         }

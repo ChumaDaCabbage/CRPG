@@ -47,7 +47,7 @@ namespace CRPG
                     bool active = false;
 
                     //If distance to player is short enough
-                    if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 9)
+                    if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
                     {
                         //Set active to true
                         active = true;
@@ -60,8 +60,8 @@ namespace CRPG
                             //Go through all flares
                             foreach (Flare flare in Program._player._flares)
                             {
-                                //If distance to flare is to long
-                                if (MathF.Sqrt(MathF.Pow(x2 - flare.Pos.X, 2) + MathF.Pow(y2 - flare.Pos.Y, 2)) < 13)
+                                //If distance to flare is short enough
+                                if (MathF.Sqrt(MathF.Pow(x2 - flare.Pos.X, 2) + MathF.Pow(y2 - flare.Pos.Y, 2)) < 12.3f)
                                 {
                                     //Set active to true
                                     active = true;
@@ -189,7 +189,7 @@ namespace CRPG
                         }
 
                         //Sets up light level info
-                        SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
+                        SetLightLevel(x2, y2, /*greatestLightLevel*/ 5, isRedLight, isYellowLight);
                     }
                 }
             }

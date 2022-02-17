@@ -46,7 +46,7 @@ namespace CRPG
             DrawAllWalls();
             DrawAllTorches();
             DrawAllPickups();
-            DrawAllEnemies();
+            //DrawAllEnemies();
         }
 
         private static void DrawAllWalls()
@@ -60,10 +60,26 @@ namespace CRPG
             DrawWall(new Point(16, 6), new Point(16, 7));
             locations[17, 7] = new Wall();
 
-            DrawWall(new Point(21, 1), new Point(22, 1));
+            DrawWall(new Point(21, 1), new Point(58, 1));
             DrawWall(new Point(22, 2), new Point(22, 7));
+            DrawWall(new Point(23, 2), new Point(23, 4));
+            DrawWall(new Point(24, 2), new Point(24, 4));
+            DrawWall(new Point(25, 2), new Point(25, 4));
             DrawWall(new Point(21, 6), new Point(21, 7));
             locations[20, 7] = new Wall();
+            DrawWall(new Point(42, 2), new Point(58, 2));
+            DrawWall(new Point(42, 3), new Point(42, 15));
+            DrawWall(new Point(43, 3), new Point(43, 15));
+            DrawWall(new Point(36, 15), new Point(41, 15));
+            DrawWall(new Point(35, 15), new Point(35, 20));
+            DrawWall(new Point(34, 10), new Point(34, 20));
+            DrawWall(new Point(33, 10), new Point(33, 20));
+            DrawWall(new Point(37, 10), new Point(41, 10));
+
+            DrawWall(new Point(49, 2), new Point(49, 5));
+            DrawWall(new Point(53, 2), new Point(53, 5));
+            DrawWall(new Point(47, 5), new Point(48, 5));
+            DrawWall(new Point(54, 5), new Point(55, 5));
 
             DrawWall(new Point(1, 8), new Point(1, 10));
 
@@ -94,12 +110,33 @@ namespace CRPG
 
             DrawWall(new Point(7, 28), new Point(23, 28));
 
-            DrawWall(new Point(15, 10), new Point(23, 10));
+            DrawWall(new Point(25, 7), new Point(25, 9));
+            DrawWall(new Point(15, 10), new Point(30, 10));
             DrawWall(new Point(16, 11), new Point(23, 11));
             DrawWall(new Point(17, 12), new Point(23, 12));
             DrawWall(new Point(18, 13), new Point(23, 13));
 
+            DrawWall(new Point(28, 3), new Point(28, 4));
+            DrawWall(new Point(29, 3), new Point(29, 4));
+
+            DrawWall(new Point(33, 3), new Point(33, 4));
+            DrawWall(new Point(34, 3), new Point(34, 4));
+
+            DrawWall(new Point(38, 3), new Point(38, 4));
+            DrawWall(new Point(39, 3), new Point(39, 4));
+
+            DrawWall(new Point(28, 7), new Point(28, 8));
+            DrawWall(new Point(29, 7), new Point(29, 8));
+
+            DrawWall(new Point(33, 7), new Point(33, 8));
+            DrawWall(new Point(34, 7), new Point(34, 8));
+
+            DrawWall(new Point(38, 7), new Point(38, 8));
+            DrawWall(new Point(39, 7), new Point(39, 8));
+
             locations[15, 27] = new Wall();
+
+            locations[29, 28] = new Wall();
 
             DrawWall(new Point(15, 23), new Point(15, 25));
             DrawWall(new Point(16, 23), new Point(18, 23));
@@ -112,7 +149,29 @@ namespace CRPG
             DrawWall(new Point(18, 17), new Point(23, 17));
             DrawWall(new Point(23, 19), new Point(23, 25));
             locations[22, 25] = new Wall();
+            DrawWall(new Point(24, 20), new Point(24, 24));
+            DrawWall(new Point(25, 20), new Point(30, 20));
+            DrawWall(new Point(29, 21), new Point(29, 25));
+            DrawWall(new Point(30, 21), new Point(30, 23));
+            DrawWall(new Point(31, 23), new Point(37, 23));
+            DrawWall(new Point(35, 24), new Point(37, 24));
+            DrawWall(new Point(35, 25), new Point(37, 25));
+            locations[25, 24] = new Wall();
+            locations[28, 24] = new Wall();
 
+            locations[27, 13] = new Wall();
+            locations[27, 17] = new Wall();
+            locations[30, 14] = new Wall();
+            locations[30, 16] = new Wall();
+            DrawWall(new Point(26, 13), new Point(26, 17));
+            DrawWall(new Point(29, 13), new Point(30, 13));
+            DrawWall(new Point(29, 17), new Point(30, 17));
+
+            DrawWall(new Point(35, 28), new Point(40, 28));
+            DrawWall(new Point(40, 27), new Point(40, 19));
+            DrawWall(new Point(39, 19), new Point(39, 20));
+            DrawWall(new Point(41, 19), new Point(42, 19));
+            DrawWall(new Point(41, 26), new Point(44, 26));
             #endregion
 
             //---------------------------------------------
@@ -167,6 +226,15 @@ namespace CRPG
 
             locations[5, 25] = new Enemy(new Point(5, 25));
             locations[3, 28] = new Enemy(new Point(3, 28));
+
+            locations[6, 6] = new Enemy(new Point(6, 6));
+
+            locations[14, 6] = new Enemy(new Point(14, 6));
+
+            locations[17, 1] = new Enemy(new Point(17, 1));
+            locations[21, 4] = new Enemy(new Point(21, 4));
+
+            locations[19, 19] = new Enemy(new Point(19, 19));
 
         }
 

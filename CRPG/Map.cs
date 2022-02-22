@@ -85,7 +85,7 @@ namespace CRPG
             {
                 locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
-            else if (x == 57 && y == 27)
+            else if (x == 57 && y == 27) //If level end
             {
                 locIcon = new TileVisuals(new Color(0, 255, 52)).GetFullExtendedColorsString();
             }

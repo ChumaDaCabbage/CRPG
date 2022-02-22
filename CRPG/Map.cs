@@ -85,11 +85,15 @@ namespace CRPG
             {
                 locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
+            else if (x == 57 && y == 27)
+            {
+                locIcon = new TileVisuals(new Color(0, 255, 52)).GetFullExtendedColorsString();
+            }
             else //Floor
             {
-                if (((Floor)World.locations[x,y]).HasFlare)
+                if (((Floor)World.locations[x, y]).HasFlare)
                 {
-                    locIcon = Lighting.GetFloorTileColor(x, y).GetBackgroundColorString() + Lighting.GetFloorTileColor(x, y).GetForgroundColorString() + "▓\x1b[38;2;"+ Lighting.GetFlarePickupColor(x,y).R + ";0;0m║";
+                    locIcon = Lighting.GetFloorTileColor(x, y).GetBackgroundColorString() + Lighting.GetFloorTileColor(x, y).GetForgroundColorString() + "▓\x1b[38;2;" + Lighting.GetFlarePickupColor(x, y).R + ";0;0m║";
                 }
                 else
                 {

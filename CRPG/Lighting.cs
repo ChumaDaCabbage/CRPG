@@ -189,7 +189,7 @@ namespace CRPG
                         }
 
                         //Sets up light level info
-                        SetLightLevel(x2, y2, /*greatestLightLevel*/ 5, isRedLight, isYellowLight);
+                        SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
                     }
                 }
             }

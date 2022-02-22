@@ -172,6 +172,31 @@ namespace CRPG
             DrawWall(new Point(39, 19), new Point(39, 20));
             DrawWall(new Point(41, 19), new Point(42, 19));
             DrawWall(new Point(41, 26), new Point(44, 26));
+
+            DrawWall(new Point(43, 22), new Point(43, 23));
+            DrawWall(new Point(44, 22), new Point(44, 23));
+
+            DrawWall(new Point(47, 28), new Point(47, 14));
+            DrawWall(new Point(45, 19), new Point(46, 19));
+            DrawWall(new Point(48, 15), new Point(55, 15));
+            DrawWall(new Point(48, 15), new Point(55, 15));
+            DrawWall(new Point(51, 12), new Point(51, 14));
+            DrawWall(new Point(55, 14), new Point(55, 17));
+
+            DrawWall(new Point(47, 8), new Point(47, 11));
+            DrawWall(new Point(55, 8), new Point(55, 11));
+            DrawWall(new Point(48, 8), new Point(54, 8));
+
+            DrawWall(new Point(50, 18), new Point(52, 18));
+            DrawWall(new Point(50, 19), new Point(52, 19));
+
+            DrawWall(new Point(55, 20), new Point(58, 20));
+            DrawWall(new Point(55, 21), new Point(58, 21));
+            DrawWall(new Point(50, 22), new Point(58, 22));
+
+            DrawWall(new Point(51, 26), new Point(55, 26));
+            DrawWall(new Point(51, 27), new Point(55, 27));
+            DrawWall(new Point(51, 28), new Point(55, 28));
             #endregion
 
             //---------------------------------------------
@@ -194,6 +219,25 @@ namespace CRPG
             locations[13, 20] = new Wall();
             locations[13, 23] = new Wall();
             locations[13, 26] = new Wall();
+
+            locations[39, 17] = new Wall();
+            locations[42, 17] = new Wall();
+
+            locations[45, 17] = new Wall();
+            locations[45, 14] = new Wall();
+            locations[45, 11] = new Wall();
+            locations[45, 8] = new Wall();
+            locations[45, 5] = new Wall();
+
+            locations[57, 17] = new Wall();
+            locations[57, 14] = new Wall();
+            locations[57, 11] = new Wall();
+            locations[57, 8] = new Wall();
+            locations[57, 5] = new Wall();
+
+            locations[51, 24] = new Wall();
+            locations[53, 24] = new Wall();
+            locations[55, 24] = new Wall();
 
             #endregion
         }

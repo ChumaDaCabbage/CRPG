@@ -44,7 +44,7 @@ namespace CRPG
                 for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
                 {
                     //Holds if tile is active
-                    bool active = false;
+                    bool active = true;//false;
 
                     //If distance to player is short enough
                     if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
@@ -190,7 +190,7 @@ namespace CRPG
                         }
 
                         //Sets up light level info
-                        SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
+                        SetLightLevel(x2, y2, /*greatestLightLevel*/ 5, isRedLight, isYellowLight);
                     }
                 }
             }

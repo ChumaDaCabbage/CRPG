@@ -10,6 +10,9 @@ namespace CRPG
     {
         public static Player _player = new Player();
 
+        //Holds datatime for this update
+        public static DateTime CurrentTimeThisFrame;
+
         private static ConsoleKey userInput = ConsoleKey.F12; //Holds user input
 
         static void Main(string[] args)
@@ -115,6 +118,9 @@ namespace CRPG
 
         private static void WorldUpdate()
         {
+            //Update currentTime
+            CurrentTimeThisFrame = DateTime.Now;
+
             //Update all flares
             for (int i = 0; i < _player._flares.Count; i++)
             {

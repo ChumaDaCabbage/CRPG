@@ -11,8 +11,9 @@ namespace CRPG
 
         //Sleeping info
         public int AgitationLevel = 0; //Holds how angry the enemy is
-        DateTime LastAgitatiedTime = DateTime.Now; //Holds last time agitatied
-        DateTime LastBlinkedTime = DateTime.Now; //Holds last time blinked
+        private int AgitationLastUpdate = 0; //Holds how angry the enemy is last update
+        DateTime LastAgitatiedTime = Program.CurrentTimeThisFrame; //Holds last time agitatied
+        DateTime LastBlinkedTime = Program.CurrentTimeThisFrame; //Holds last time blinked
         public int blinkStatus = 0; //Holds if back should be yellow currently
         public int OverrideLightLevel = 0; //Holds light level that doesnt effect agitation
         public bool lit = false; //Holds if this enemy is being directly lit
@@ -33,12 +34,12 @@ namespace CRPG
         //Pathing info
         public AstarTile path = null; //Holds path to player
         private Location on; //Holds what the enemy is on
-        DateTime LastMovedTime = DateTime.Now; //Holds last time moved
-        public DateTime PathedDelay = DateTime.Now; //Holds delay for pathfinding
+        DateTime LastMovedTime = Program.CurrentTimeThisFrame; //Holds last time moved
+        public DateTime PathedDelay = Program.CurrentTimeThisFrame; //Holds delay for pathfinding
 
         //Fleeing info
         public bool fleeing = false; //Holds if enemy is fleeing light
-        DateTime fullDelay = DateTime.Now; //Delays everything
+        DateTime fullDelay = Program.CurrentTimeThisFrame; //Delays everything
         DateTime fleeDelay = DateTime.MinValue; //Delays fleeing
 
         public Enemy(Point pos) : base(pos)
@@ -52,12 +53,12 @@ namespace CRPG
         public void EnemyUpdate()
         {
             //If not currently delayed
-            if (DateTime.Now > fullDelay)
+            if (Program.CurrentTimeThisFrame > fullDelay)
             {
                 if (fleeing) //Fleeing back to darkness
                 {
                     //If move wait time is up
-                    if (DateTime.Now >= LastMovedTime.AddSeconds(MOVE_DELAY))
+                    if (Program.CurrentTimeThisFrame >= LastMovedTime.AddSeconds(MOVE_DELAY))
                     {
                         //Lower agitation while fleeing
                         AgitationLevel--;
@@ -66,7 +67,7 @@ namespace CRPG
                         FleeingMove();
 
                         //Get new time if not already reset
-                        if (DateTime.Now > LastMovedTime) LastMovedTime = DateTime.Now;
+                        if (Program.CurrentTimeThisFrame > LastMovedTime) LastMovedTime = Program.CurrentTimeThisFrame;
                     }
                 }
                 else if (AgitationLevel == 5) //Chasing
@@ -78,12 +79,12 @@ namespace CRPG
                         SelfFleeing();
 
                         //Starts fleeDelay
-                        fleeDelay = DateTime.Now.AddSeconds(2);
+                        fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(2);
                     }
                     else
                     {
                         //If move wait time is up
-                        if (DateTime.Now >= LastMovedTime.AddSeconds(MOVE_DELAY))
+                        if (Program.CurrentTimeThisFrame >= LastMovedTime.AddSeconds(MOVE_DELAY))
                         {
                             LightPower = ENEMY_LIGHT_LEVEL;
 
@@ -91,7 +92,7 @@ namespace CRPG
                             Move(Program._player.Pos);
 
                             //Get new time if not already reset
-                            if (DateTime.Now > LastMovedTime) LastMovedTime = DateTime.Now;
+                            if (Program.CurrentTimeThisFrame > LastMovedTime) LastMovedTime = Program.CurrentTimeThisFrame;
                         }
                     }
                 }
@@ -110,10 +111,10 @@ namespace CRPG
                         lit = false;
                     }
 
-                    if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.4f) && CurrentLightLevel > 1) //If in light and wait time is over
+                    if (Program.CurrentTimeThisFrame >= LastAgitatiedTime.AddSeconds(0.4f) && CurrentLightLevel > 1) //If in light and wait time is over
                     {
                         AgitationLevel = Math.Clamp(AgitationLevel + 1, 0, 5);
-                        if (AgitationLevel >= 2)
+                        if (AgitationLevel >= 2 && AgitationLastUpdate < 2) //If light should be on and wasnt on last frame
                         {
                             LightPower = 2;
                             Lighting.LightingUpdate();
@@ -122,12 +123,12 @@ namespace CRPG
                         }
 
                         //Get new time
-                        LastAgitatiedTime = DateTime.Now;
+                        LastAgitatiedTime = Program.CurrentTimeThisFrame;
                     }
-                    else if (DateTime.Now >= LastAgitatiedTime.AddSeconds(0.7f) && CurrentLightLevel == 1) //If not in light and wait time is over
+                    else if (Program.CurrentTimeThisFrame >= LastAgitatiedTime.AddSeconds(0.7f) && CurrentLightLevel == 1) //If not in light and wait time is over
                     {
                         AgitationLevel = Math.Clamp(AgitationLevel - 1, 0, 5);
-                        if (AgitationLevel < 2)
+                        if (AgitationLevel < 2 && AgitationLastUpdate >= 2) //If light should be off and was on last frame
                         {
                             LightPower = 1;
                             Lighting.LightingUpdate();
@@ -137,7 +138,7 @@ namespace CRPG
                         }
 
                         //Get new time
-                        LastAgitatiedTime = DateTime.Now;
+                        LastAgitatiedTime = Program.CurrentTimeThisFrame;
                     }
                 }
             }
@@ -152,7 +153,7 @@ namespace CRPG
             }
 
             //If agitated and blink time is up
-            if (AgitationLevel > 0 && DateTime.Now >= LastBlinkedTime.AddSeconds(0.5f / AgitationLevel))
+            if (AgitationLevel > 0 && Program.CurrentTimeThisFrame >= LastBlinkedTime.AddSeconds(0.5f / AgitationLevel))
             {
                 //If not blinking
                 if (blinkStatus == 0)
@@ -170,13 +171,12 @@ namespace CRPG
                 Map.RedrawMapPoint(Pos);
 
                 //Get new time
-                LastBlinkedTime = DateTime.Now;
+                LastBlinkedTime = Program.CurrentTimeThisFrame;
             }
-            else if (AgitationLevel == 0) //If not agitated
+            else if (AgitationLevel == 0 && AgitationLastUpdate != 0) //If not agitated and just got like this
             {
                 //Turn off blink
                 blinkStatus = 0;
-
 
                 //Turn everything else off
                 LightPower = 1;
@@ -187,10 +187,13 @@ namespace CRPG
                 fleeDelay = DateTime.MinValue;
             }
 
-            if (fleeDelay != DateTime.MinValue && DateTime.Now > fleeDelay)
+            if (fleeDelay != DateTime.MinValue && Program.CurrentTimeThisFrame > fleeDelay)
             {
                 AllFleeing();
             }
+
+            //Update AgitationLastUpdate
+            AgitationLastUpdate = AgitationLevel;
         }
 
         //Runs movement for current path
@@ -219,12 +222,12 @@ namespace CRPG
                     if (World.GetLocationByPos(Program._player.Pos).CurrentLightLevel >= 5 && fleeDelay == DateTime.MinValue)
                     {
                         //Starts fleeDelay
-                        fleeDelay = DateTime.Now.AddSeconds(2);
+                        fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(2);
                     }
                     else if (World.GetLocationByPos(Program._player.Pos).RedLight && fleeDelay == DateTime.MinValue) //If player is in redlight when about to kill them
                     {
                         //Starts fleeDelay
-                        fleeDelay = DateTime.Now.AddSeconds(0);
+                        fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(0);
                     }
                     else if (World.GetLocationByPos(Program._player.Pos).CurrentLightLevel < 5 && !World.GetLocationByPos(Program._player.Pos).RedLight) //If player is in darkness too
                     {
@@ -249,12 +252,12 @@ namespace CRPG
                         if (World.GetLocationByPos(nextMove.Pos).RedLight)
                         {
                             //Starts fleeDelay
-                            fleeDelay = DateTime.Now.AddSeconds(0);
+                            fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(0);
                         }
                         else
                         {
                             //Starts fleeDelay
-                            fleeDelay = DateTime.Now.AddSeconds(2);
+                            fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(2);
                         }
                     }
                 }
@@ -296,7 +299,7 @@ namespace CRPG
                 if (nextMove.Pos.X == path.Pos.X && nextMove.Pos.Y == path.Pos.Y)
                 {
                     //Delay everything to make sure it stays calm
-                    fullDelay = DateTime.Now.AddSeconds(2);
+                    fullDelay = Program.CurrentTimeThisFrame.AddSeconds(2);
                 }
             }
             else

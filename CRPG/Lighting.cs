@@ -74,6 +74,7 @@ namespace CRPG
                     //If active, run lighting
                     if (active)
                     {
+
                         int greatestLightLevel = 1; //Holds greatest lightlevel found
                         bool isRedLight = false; //Holds if red light source
                         bool isYellowLight = false; //Holds if yellow light source

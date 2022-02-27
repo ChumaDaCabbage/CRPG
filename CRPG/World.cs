@@ -246,18 +246,18 @@ namespace CRPG
         {
             //Manual torch setup:
             locations[4, 6] = new Torch(new Point(4, 6));
-            locations[7, 9] = new Torch(new Point(7, 9));
-            locations[4, 15] = new Torch(new Point(4, 15));
-            locations[4, 26] = new Torch(new Point(4, 26));
-            locations[22, 19] = new Torch(new Point(22, 19));
-            locations[16, 4] = new Torch(new Point(16, 4));
-            locations[21, 15] = new Torch(new Point(21, 15));
-            locations[28, 15] = new Torch(new Point(28, 15));
-            locations[32, 25] = new Torch(new Point(32, 25));
-            locations[41, 11] = new Torch(new Point(41, 11));
-            locations[49, 27] = new Torch(new Point(49, 27));
-            locations[51, 4] = new Torch(new Point(51, 4));
-            locations[51, 9] = new Torch(new Point(51, 9));
+            //locations[7, 9] = new Torch(new Point(7, 9));
+            //locations[4, 15] = new Torch(new Point(4, 15));
+            //locations[4, 26] = new Torch(new Point(4, 26));
+            //locations[22, 19] = new Torch(new Point(22, 19));
+            //locations[16, 4] = new Torch(new Point(16, 4));
+            //locations[21, 15] = new Torch(new Point(21, 15));
+            //locations[28, 15] = new Torch(new Point(28, 15));
+            //locations[32, 25] = new Torch(new Point(32, 25));
+            //locations[41, 11] = new Torch(new Point(41, 11));
+            //locations[49, 27] = new Torch(new Point(49, 27));
+            //locations[51, 4] = new Torch(new Point(51, 4));
+            //locations[51, 9] = new Torch(new Point(51, 9));
         }
 
         private static void DrawAllPickups()

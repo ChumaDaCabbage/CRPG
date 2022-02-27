@@ -73,8 +73,9 @@ namespace CRPG
             CurrentColor = new TileVisuals(new Color(255, 146, 0), "░░", -50);
             on = true;
 
-            //Update lighting
+            //Update lighting and map pos
             Lighting.LightingUpdate();
+            Map.RedrawMapPoint(Pos);
         }
 
         public override bool IfTorch()

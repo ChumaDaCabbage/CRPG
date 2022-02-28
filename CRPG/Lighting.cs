@@ -31,6 +31,25 @@ namespace CRPG
             SetLightLevels(foundLightSources);
         }
 
+        //Sets all tiles to darkness
+        public static void SetAllDark()
+        {
+            //Goes through all locations
+            for (int x2 = 0; x2 < World.MAX_WORLD_X; x2++)
+            {
+                for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
+                {
+                    //Sets lightlevel to 1 and turns off colored light
+                    Program._world.locations[x2, y2].CurrentLightLevel = 1;
+                    Program._world.locations[x2, y2].RedLight = false;
+                    Program._world.locations[x2, y2].OrangeLight = false;
+
+                    //Redraw map point
+                    Map.RedrawMapPoint(x2, y2);
+                }
+            }
+        }
+
         /// <summary>
         /// Sets light levels from passed positions of all light sources
         /// </summary>
@@ -201,7 +220,7 @@ namespace CRPG
             //If light level is a new value
             if (Program._world.locations[x, y].CurrentLightLevel != level || Program._world.locations[x, y].RedLight != newRedLight || Program._world.locations[x, y].RedLight != newYellowLight)
             {
-                //Update lightlevel and redLight
+                //Update lightlevel and light color
                 Program._world.locations[x, y].CurrentLightLevel = level;
                 Program._world.locations[x, y].RedLight = newRedLight;
                 Program._world.locations[x, y].OrangeLight = newYellowLight;

@@ -27,15 +27,16 @@ namespace CRPG
 
         private static void GameLoop()
         {
-            //Setup
+            #region Setup
             _player = new Player(); //Creates new player
             _world = new World(); //Creates new world    
             _world.WorldSetup(); //Sets up world
-            Map.DrawMap(); //Draws default map
+            Lighting.SetAllDark(); //Resets all lighting info
             _player.MoveTo(new Point(1, 1)); //Set player start point
             Lighting.LightingUpdate(); //Starts lighting
             FlareInventory.InventorySetup(); //Sets up flare inventory
             SetupWritingLine(); //Sets up line for player input
+            #endregion
 
             //Starts input thread
             Thread inputThread = new Thread(new ThreadStart(GetInput));

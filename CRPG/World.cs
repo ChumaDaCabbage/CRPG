@@ -42,6 +42,7 @@ namespace CRPG
             DrawAllTorches();
             DrawAllEnemies();
             DrawAllPickups();
+            locations[17, 7] = new LightSource(new Point(17, 7), 2);
         }
 
         private void DrawAllWalls()

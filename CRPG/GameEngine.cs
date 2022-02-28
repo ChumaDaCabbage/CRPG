@@ -14,6 +14,9 @@ namespace CRPG
             //Set screen size
             Console.SetWindowSize(120, 42);
 
+            //Turn off curser visibility
+            Console.WriteLine("\x1b[?25l  ");
+
             //Start message
             Console.SetCursorPosition(41, 0);
             Console.WriteLine("Initializing Game Engine Version {0}", Version);

@@ -6,32 +6,6 @@ namespace CRPG
 {
     public static class Map
     {
-        /// <summary>
-        /// Draws map of the world on screen
-        /// </summary>
-        /// <param name="player"></param>
-        public static void DrawMap()
-        {
-            //Get x and y dimensions
-            int xDim = World.MAX_WORLD_X;
-            int yDim = World.MAX_WORLD_Y;
-
-            //Turn off curser visibility
-            Console.WriteLine("\x1b[?25l  ");
-
-            //Go through all locations
-            for (int y = 0; y < yDim; y++)
-            {
-                for (int x = 0; x < xDim; x++ )
-                {
-                    //Calls drawPoint
-                    DrawPoint(x, y);
-                }
-                //Next line
-                Console.WriteLine("");
-            }
-        }
-
         public static void RedrawMapPoint(int xPos, int yPos)
         {
             Console.SetCursorPosition(xPos * 2, yPos); //Moves cursor to wanted position on map
@@ -85,7 +59,7 @@ namespace CRPG
             {
                 locIcon = Lighting.GetExitTileColor(x, y).GetFullExtendedColorsString();
             }
-            else //Floor
+            else if (Program._world.locations[x, y].IfFloor()) //Floor
             {
                 if (((Floor)Program._world.locations[x, y]).HasFlare)
                 {
@@ -95,6 +69,19 @@ namespace CRPG
                 {
                     locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
                 }
+            }
+            else
+            {
+                //Log error message
+                System.Diagnostics.Debug.Fail($"Unknown Tile at [{x},{y}]", $"\tTile:        [{x},{y}]" +
+                                                                            $"\n\tType:        {Program._world.locations[x, y]} " +
+                                                                            $"\n\tLight Level: {Program._world.locations[x, y].CurrentLightLevel} " +
+                                                                            $"\n\tRedLight:    {Program._world.locations[x, y].RedLight}" +
+                                                                            $"\n\tOrangeLight: {Program._world.locations[x, y].OrangeLight}"
+                );
+
+                //Set to floor (Best guess, should never get here)
+                locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
             }
 
             //Write out icon

@@ -73,17 +73,20 @@ namespace CRPG
             else //If all checks fail (unknown tile)
             {
                 //Log error message
-                System.Diagnostics.Debug.Fail($"Unknown Tile at [{x},{y}]", $"\tTile:        [{x},{y}]" +
-                                                                            $"\n\tThis:        {Program._world.locations[x, y]} " +
-                                                                            $"\n\tType:        {((LightSource)Program._world.locations[x, y]).lightType()} " +
-                                                                            $"\n\tLight Level: {Program._world.locations[x, y].CurrentLightLevel} " +
-                                                                            $"\n\tRedLight:    {Program._world.locations[x, y].RedLight}" +
-                                                                            $"\n\tOrangeLight: {Program._world.locations[x, y].OrangeLight}"
-                );           
+                //System.Diagnostics.Debug.Fail($"Unknown Tile at [{x},{y}]", $"\tTile:        [{x},{y}]" +
+                //                                                            $"\n\tThis:        {Program._world.locations[x, y]} " +
+                //                                                            $"\n\tType:        {((LightSource)Program._world.locations[x, y]).lightType()} " +
+                //                                                            $"\n\tLight Level: {Program._world.locations[x, y].CurrentLightLevel} " +
+                //                                                            $"\n\tRedLight:    {Program._world.locations[x, y].RedLight}" +
+                //                                                            $"\n\tOrangeLight: {Program._world.locations[x, y].OrangeLight}"
+                //);     
+
+                //Set broken tile to floor (All broken tiles found have been floors, so this should fix the issue)
+                Program._world.locations[x, y] = new Floor();
             }
 
             //Write out icon if icon found
-            if(locIcon != null) Console.Write(locIcon);
+            if (locIcon != null) Console.Write(locIcon);
         }
 
         

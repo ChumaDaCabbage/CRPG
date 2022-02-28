@@ -22,5 +22,7 @@ namespace CRPG
         public abstract bool IfTorch();
 
         public abstract bool IfEnemy();
+
+        public abstract bool IfPlayer();
     }
 }

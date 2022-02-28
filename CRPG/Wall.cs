@@ -35,5 +35,10 @@ namespace CRPG
         {
             return false;
         }
+
+        public override bool IfPlayer()
+        {
+            return false;
+        }
     }
 }

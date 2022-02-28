@@ -31,7 +31,7 @@ namespace CRPG
             int playerYPos = Program._player.Pos.Y;
 
             //Sets up default icon
-            string locIcon;
+            string locIcon = null;
 
 
             if (Program._world.locations[x, y].IfFlare()) //Check for flare
@@ -70,7 +70,7 @@ namespace CRPG
                     locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
                 }
             }
-            else
+            else //If all checks fail (unknown tile)
             {
                 //Log error message
                 System.Diagnostics.Debug.Fail($"Unknown Tile at [{x},{y}]", $"\tTile:        [{x},{y}]" +
@@ -78,14 +78,11 @@ namespace CRPG
                                                                             $"\n\tLight Level: {Program._world.locations[x, y].CurrentLightLevel} " +
                                                                             $"\n\tRedLight:    {Program._world.locations[x, y].RedLight}" +
                                                                             $"\n\tOrangeLight: {Program._world.locations[x, y].OrangeLight}"
-                );
-
-                //Set to floor (Best guess, should never get here)
-                locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
+                );           
             }
 
-            //Write out icon
-            Console.Write(locIcon);
+            //Write out icon if icon found
+            if(locIcon != null) Console.Write(locIcon);
         }
 
         

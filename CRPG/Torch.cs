@@ -21,7 +21,7 @@ namespace CRPG
 
         public Torch(Point pos) : base(pos) 
         {
-            World._tourches.Add(this);
+            Program._world._tourches.Add(this);
             LightPower = 0;
         }
 

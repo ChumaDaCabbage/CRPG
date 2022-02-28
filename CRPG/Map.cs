@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CRPG
 {
@@ -64,7 +60,7 @@ namespace CRPG
             string locIcon;
 
 
-            if (World.locations[x, y].IfFlare()) //Check for flare
+            if (Program._world.locations[x, y].IfFlare()) //Check for flare
             {
                 locIcon = Lighting.GetFlareColor(x, y).GetFullExtendedColorsString();
             }
@@ -73,25 +69,25 @@ namespace CRPG
                 TileVisuals player = new TileVisuals(new Color(255, 224, 189), "ºº", 120);
                 locIcon = player.GetFullExtendedColorsString();
             }
-            else if (World.locations[x, y].IfWall()) //Check for walls
+            else if (Program._world.locations[x, y].IfWall()) //Check for walls
             {
                 locIcon = Lighting.GetWallTileColor(x, y).GetFullExtendedColorsString();
             }
-            else if (World.locations[x, y].IfTorch()) //Torch
+            else if (Program._world.locations[x, y].IfTorch()) //Torch
             {
                 locIcon = Lighting.GetTorchTileColor(x, y).GetFullExtendedColorsString();
             }
-            else if (World.locations[x, y].IfEnemy()) //Enemy
+            else if (Program._world.locations[x, y].IfEnemy()) //Enemy
             {
                 locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
             else if (x == 57 && y == 27) //If level end
             {
-                locIcon = new TileVisuals(new Color(0, 255, 52)).GetFullExtendedColorsString();
+                locIcon = Lighting.GetExitTileColor(x, y).GetFullExtendedColorsString();
             }
             else //Floor
             {
-                if (((Floor)World.locations[x, y]).HasFlare)
+                if (((Floor)Program._world.locations[x, y]).HasFlare)
                 {
                     locIcon = Lighting.GetFloorTileColor(x, y).GetBackgroundColorString() + Lighting.GetFloorTileColor(x, y).GetForgroundColorString() + "▓\x1b[38;2;" + Lighting.GetFlarePickupColor(x, y).R + ";0;0m║";
                 }

@@ -23,13 +23,13 @@ namespace CRPG
             LightPower = flareLightLevel;
 
             //Setup on info
-            on = World.GetLocationByPos(Pos);
+            on = Program._world.GetLocationByPos(Pos);
 
             //Redraw map at defualt point
             Map.RedrawMapPoint(Pos);
 
             //Set flare pos in Locations[] and update lighting
-            World.SetLocationByPos(Pos, this);
+            Program._world.SetLocationByPos(Pos, this);
             Lighting.LightingUpdate();
         }
 
@@ -111,7 +111,7 @@ namespace CRPG
 
                     //Remove self from list, remove self from world
                     Program._player._flares.RemoveAt(i);
-                    World.SetLocationByPos(Pos, on);
+                    Program._world.SetLocationByPos(Pos, on);
                 }
             }
         }
@@ -119,13 +119,13 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Update location lightSources
-            if (!oldPos.Equals(Program._player.Pos)) World.SetLocationByPos(oldPos, on); //Remove light source
-            else World.SetLocationByPos(oldPos, new LightSource(oldPos, Player.PLAYER_LIGHT_LEVEL)); //Give player light back
+            if (!oldPos.Equals(Program._player.Pos)) Program._world.SetLocationByPos(oldPos, on); //Remove light source
+            else Program._world.SetLocationByPos(oldPos, new LightSource(oldPos, Player.PLAYER_LIGHT_LEVEL)); //Give player light back
 
-            on = World.GetLocationByPos(newPos); //Updates on
+            on = Program._world.GetLocationByPos(newPos); //Updates on
 
             //Set new flare pos in Locations[] and update lighting
-            World.SetLocationByPos(newPos, this);
+            Program._world.SetLocationByPos(newPos, this);
             Lighting.LightingUpdate();
 
             //Redraw new location and old location

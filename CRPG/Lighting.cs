@@ -20,10 +20,10 @@ namespace CRPG
                 for (int y = 0; y < World.MAX_WORLD_Y; y++)
                 {
                     //If lightSource is found
-                    if (World.locations[x, y].IfLightSource())
+                    if (Program._world.locations[x, y].IfLightSource())
                     {
                         //Add lightsource to list
-                        foundLightSources.Add(World.GetLightSourceByPos(new Point(x, y)));
+                        foundLightSources.Add(Program._world.GetLightSourceByPos(new Point(x, y)));
                     }
                 }
             }
@@ -44,7 +44,7 @@ namespace CRPG
                 for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
                 {
                     //Holds if tile is active
-                    bool active = true;//false;
+                    bool active = false;
 
                     //If distance to player is short enough
                     if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
@@ -92,14 +92,14 @@ namespace CRPG
                             if (level > 1)
                             {
                                 //Stop enemy anger feedback loops
-                                if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
+                                if (lightSources[i].IfEnemy() && Program._world.GetLocationByPos(x2, y2).IfEnemy() && level >= 2)
                                 {
                                     //Holds if there is feedback
                                     bool feedback = false;
                                     foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy) //Go through what this light is being lit by
                                     {
                                         //If one of those is current tile
-                                        if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
+                                        if (((Enemy)Program._world.GetLocationByPos(x2, y2)) == currentEnemy)
                                         {
                                             //Toggle feedback
                                             feedback = true;
@@ -110,7 +110,7 @@ namespace CRPG
                                     if (feedback)
                                     {
                                         //Turn on overrideLight and stop current loop
-                                        if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                        if (!((Enemy)Program._world.GetLocationByPos(x2, y2)).fleeing) ((Enemy)Program._world.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                                         continue;
                                     }
                                 }
@@ -119,13 +119,13 @@ namespace CRPG
                                 if (lightSources[i].IfEnemy() && lightSources[i].Pos.Equals(new Point(x2, y2))) //Make sure enemy cant anger itself with light
                                 {
                                     //Turn on overrideLight and stop current loop
-                                    if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                    if (!((Enemy)Program._world.GetLocationByPos(x2, y2)).fleeing) ((Enemy)Program._world.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                                     continue;
                                 }
-                                if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && !((Enemy)lightSources[i]).lit) //Make that enemys fading out dont anger other enemies
+                                if (lightSources[i].IfEnemy() && Program._world.GetLocationByPos(x2, y2).IfEnemy() && !((Enemy)lightSources[i]).lit) //Make that enemys fading out dont anger other enemies
                                 {
                                     //Turn on overrideLight and stop current loop
-                                    if (!((Enemy)World.GetLocationByPos(x2, y2)).fleeing) ((Enemy)World.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
+                                    if (!((Enemy)Program._world.GetLocationByPos(x2, y2)).fleeing) ((Enemy)Program._world.GetLocationByPos(x2, y2)).OverrideLightLevel = 2;
                                     continue;
                                 }
                                 else if (level > greatestLightLevel && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))   //If new lightsource is giving better light
@@ -136,15 +136,15 @@ namespace CRPG
 
 
                                 //Get if enemy is lighting enemy
-                                if (lightSources[i].IfEnemy() && World.GetLocationByPos(x2, y2).IfEnemy() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
+                                if (lightSources[i].IfEnemy() && Program._world.GetLocationByPos(x2, y2).IfEnemy() && level >= 2 && !LineFinder.BlockedCheck(x2, y2, lightSources[i].Pos))
                                 {
                                     //If neither enemy is fleeing
-                                    if (!((Enemy)lightSources[i]).fleeing && !((Enemy)World.GetLocationByPos(x2, y2)).fleeing)
+                                    if (!((Enemy)lightSources[i]).fleeing && !((Enemy)Program._world.GetLocationByPos(x2, y2)).fleeing)
                                     {
                                         //If lightsource enemy is awake, anger the enemy at x2,y2
                                         if (((Enemy)lightSources[i]).AgitationLevel == 5)
                                         {
-                                            ((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)World.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0, 5);
+                                            ((Enemy)Program._world.GetLocationByPos(x2, y2)).AgitationLevel = Math.Clamp(((Enemy)Program._world.GetLocationByPos(x2, y2)).AgitationLevel + 1, 0, 5);
                                         }
                                     }
 
@@ -152,7 +152,7 @@ namespace CRPG
                                     bool notRepeat = true;
 
                                     //Check all lit by lists
-                                    foreach (Enemy currentEnemy in ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy)
+                                    foreach (Enemy currentEnemy in ((Enemy)Program._world.GetLocationByPos(x2, y2)).beingLitBy)
                                     {
                                         if (((Enemy)lightSources[i]) == currentEnemy)
                                         {
@@ -161,7 +161,7 @@ namespace CRPG
                                     }
                                     foreach (Enemy currentEnemy in ((Enemy)lightSources[i]).beingLitBy)
                                     {
-                                        if (((Enemy)World.GetLocationByPos(x2, y2)) == currentEnemy)
+                                        if (((Enemy)Program._world.GetLocationByPos(x2, y2)) == currentEnemy)
                                         {
                                             notRepeat = false;
                                         }
@@ -171,7 +171,7 @@ namespace CRPG
                                     if (notRepeat)
                                     {
                                         //Log light
-                                        ((Enemy)World.GetLocationByPos(x2, y2)).beingLitBy.Add((Enemy)lightSources[i]);
+                                        ((Enemy)Program._world.GetLocationByPos(x2, y2)).beingLitBy.Add((Enemy)lightSources[i]);
                                     }
                                 }
 
@@ -190,7 +190,7 @@ namespace CRPG
                         }
 
                         //Sets up light level info
-                        SetLightLevel(x2, y2, /*greatestLightLevel*/ 5, isRedLight, isYellowLight);
+                        SetLightLevel(x2, y2, greatestLightLevel, isRedLight, isYellowLight);
                     }
                 }
             }
@@ -199,12 +199,12 @@ namespace CRPG
         private static void SetLightLevel(int x, int y, int level, bool newRedLight, bool newYellowLight)
         {
             //If light level is a new value
-            if (World.locations[x, y].CurrentLightLevel != level || World.locations[x, y].RedLight != newRedLight || World.locations[x, y].RedLight != newYellowLight)
+            if (Program._world.locations[x, y].CurrentLightLevel != level || Program._world.locations[x, y].RedLight != newRedLight || Program._world.locations[x, y].RedLight != newYellowLight)
             {
                 //Update lightlevel and redLight
-                World.locations[x, y].CurrentLightLevel = level;
-                World.locations[x, y].RedLight = newRedLight;
-                World.locations[x, y].OrangeLight = newYellowLight;
+                Program._world.locations[x, y].CurrentLightLevel = level;
+                Program._world.locations[x, y].RedLight = newRedLight;
+                Program._world.locations[x, y].OrangeLight = newYellowLight;
 
                 //Redraw map point
                 Map.RedrawMapPoint(x, y);
@@ -214,14 +214,14 @@ namespace CRPG
         private static TileVisuals ColorBoosts(int x, int y, TileVisuals currentColor)
         {
             //Adds colorboosts if needed
-            if (World.locations[x, y].RedLight)
+            if (Program._world.locations[x, y].RedLight)
             {
-                currentColor.BackgroundColor.R += RED_BOOST_AMOUNT * (World.locations[x, y].CurrentLightLevel - 1);
+                currentColor.BackgroundColor.R += RED_BOOST_AMOUNT * (Program._world.locations[x, y].CurrentLightLevel - 1);
             }
-            else if (World.locations[x, y].OrangeLight)
+            else if (Program._world.locations[x, y].OrangeLight)
             {
-                currentColor.BackgroundColor.R += ORANGE_BOOST_AMOUNT * (World.locations[x, y].CurrentLightLevel - 1);
-                currentColor.BackgroundColor.G += (ORANGE_BOOST_AMOUNT / 3) * (World.locations[x, y].CurrentLightLevel - 1);
+                currentColor.BackgroundColor.R += ORANGE_BOOST_AMOUNT * (Program._world.locations[x, y].CurrentLightLevel - 1);
+                currentColor.BackgroundColor.G += (ORANGE_BOOST_AMOUNT / 3) * (Program._world.locations[x, y].CurrentLightLevel - 1);
             }
 
             return currentColor;
@@ -239,7 +239,7 @@ namespace CRPG
             TileVisuals flareColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].CurrentLightLevel)
+            switch (Program._world.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     flareColor = new TileVisuals(new Color(0, 0, 0));
@@ -288,7 +288,7 @@ namespace CRPG
             Color flareColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].CurrentLightLevel)
+            switch (Program._world.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     flareColor = new Color(0, 0, 0);
@@ -337,7 +337,7 @@ namespace CRPG
             TileVisuals wallColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].CurrentLightLevel)
+            switch (Program._world.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     wallColor = new TileVisuals(new Color(0, 0, 0), "░░", new Color(0, 0, 0));
@@ -385,11 +385,11 @@ namespace CRPG
         /// <returns></returns>
         public static TileVisuals GetFloorTileColor(int x, int y)
         {
-            //Holds color for wall
+            //Holds color for floor
             TileVisuals floorColor;
 
             //Gets color based off of light level
-            switch (World.locations[x, y].CurrentLightLevel)
+            switch (Program._world.locations[x, y].CurrentLightLevel)
             {
                 case 1:
                     floorColor = new TileVisuals(new Color(0, 0, 0), "▓▓", 9);
@@ -440,14 +440,14 @@ namespace CRPG
             //Holds color for wall
             TileVisuals torchColor;
 
-            if (((Torch)World.GetLightSourceByPos(new Point(x, y))).on)
+            if (((Torch)Program._world.GetLightSourceByPos(new Point(x, y))).on)
             {
-                torchColor = ((Torch)World.locations[x, y]).GetCurrentTorchColor();
+                torchColor = ((Torch)Program._world.locations[x, y]).GetCurrentTorchColor();
             }
             else
             {
                 //Gets color based off of light level
-                switch (World.locations[x, y].CurrentLightLevel)
+                switch (Program._world.locations[x, y].CurrentLightLevel)
                 {
                     case 1:
                         torchColor = new TileVisuals(new Color(0, 0, 0));
@@ -496,42 +496,42 @@ namespace CRPG
             //Holds color for wall
             TileVisuals floorColor;
 
-            int level = World.locations[x, y].CurrentLightLevel;
+            int level = Program._world.locations[x, y].CurrentLightLevel;
 
-            if (((Enemy)World.locations[x, y]).OverrideLightLevel > level)
+            if (((Enemy)Program._world.locations[x, y]).OverrideLightLevel > level)
             {
-                level = ((Enemy)World.locations[x, y]).OverrideLightLevel;
+                level = ((Enemy)Program._world.locations[x, y]).OverrideLightLevel;
             }
 
             //Gets color based off of light level
             switch (level)
             {
                 case 1:
-                    floorColor = new TileVisuals(new Color(0, 0, 0), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(0, 0, 0), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 2:
-                    floorColor = new TileVisuals(new Color(58, 16, 5), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(58, 16, 5), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 3:
-                    floorColor = new TileVisuals(new Color(114, 46, 31), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(114, 46, 31), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 4:
-                    floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 5:
-                    floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 6:
-                    floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 7:
-                    floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 8:
-                    floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 case 9:
-                    floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((Enemy)World.locations[x, y]).GetBackColor());
+                    floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
                     break;
                 default:
                     return null;
@@ -542,6 +542,58 @@ namespace CRPG
 
             //Returns wallColor
             return floorColor;
+        }
+
+        /// <summary>
+        /// Returns exit color to be used based off light level
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static TileVisuals GetExitTileColor(int x, int y)
+        {
+            //Holds color for exit
+            TileVisuals exitColor;
+
+            //Gets color based off of light level
+            switch (Program._world.locations[x, y].CurrentLightLevel)
+            {
+                case 1:
+                    exitColor = new TileVisuals(new Color(0, 0, 0));
+                    break;
+                case 2:
+                    exitColor = new TileVisuals(new Color(0, 54, 0));
+                    break;
+                case 3:
+                    exitColor = new TileVisuals(new Color(0, 117, 12));
+                    break;
+                case 4:
+                    exitColor = new TileVisuals(new Color(0, 181, 32));
+                    break;
+                case 5:
+                    exitColor = new TileVisuals(new Color(0, 245, 52));
+                    break;
+                case 6:
+                    exitColor = new TileVisuals(new Color(0, 255, 52));
+                    break;
+                case 7:
+                    exitColor = new TileVisuals(new Color(0, 255, 52));
+                    break;
+                case 8:
+                    exitColor = new TileVisuals(new Color(0, 255, 52));
+                    break;
+                case 9:
+                    exitColor = new TileVisuals(new Color(0, 255, 52));
+                    break;
+                default:
+                    return null;
+            }
+
+            //Adds color boosts
+            exitColor = ColorBoosts(x, y, exitColor);
+
+            //Returns exitColor
+            return exitColor;
         }
     }
 }

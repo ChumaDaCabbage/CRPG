@@ -126,12 +126,12 @@ namespace CRPG
 
                     //Done check
                     //If at dark tile and not in red light
-                    if (World.GetLocationByPos(checkTile.Pos).CurrentLightLevel == 1 && !World.GetLocationByPos(checkTile.Pos).RedLight)
+                    if (Program._world.GetLocationByPos(checkTile.Pos).CurrentLightLevel == 1 && !Program._world.GetLocationByPos(checkTile.Pos).RedLight)
                     {
                         bool bunchedUp = false; //Will hold if enemies are too close to each other
 
                         //Goes through all enemies
-                        foreach (Enemy enemy in World._enemies)
+                        foreach (Enemy enemy in Program._world._enemies)
                         {
                             if (!start.Pos.Equals(enemy.Pos)) //If not this enemy
                             {
@@ -165,7 +165,7 @@ namespace CRPG
                             for (int i = 0; i < 3; i++)
                             {
                                 //If another step exists and is dark
-                                if (currentTileChecking.Parent != null && World.GetLocationByPos(currentTileChecking.Pos).CurrentLightLevel == 1)
+                                if (currentTileChecking.Parent != null && Program._world.GetLocationByPos(currentTileChecking.Pos).CurrentLightLevel == 1)
                                 {
                                     //Set new tile to check as tile one step back
                                     currentTileChecking = currentTileChecking.Parent;
@@ -265,10 +265,10 @@ namespace CRPG
                 if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
                     (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
                     possibleTiles[i].Cost <= 20 && //Cost not too high
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
                 {
                     //Skip this tile
                     continue;
@@ -315,7 +315,7 @@ namespace CRPG
                 for (int i = 0; i < possibleTiles.Count; i++)
                 {
                     //Get if this tile is not lit
-                    if (World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel < 5)
+                    if (Program._world.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel < 5)
                     {
                         //Sets all lit to false
                         allLit = false;
@@ -332,7 +332,7 @@ namespace CRPG
             for (int i = 0; i < possibleTiles.Count; i++)
             {
                 //Add extra cost for walkthing through redlight
-                if (World.GetLocationByPos(possibleTiles[i].Pos).RedLight)
+                if (Program._world.GetLocationByPos(possibleTiles[i].Pos).RedLight)
                 {
                     possibleTiles[i].Cost += 2;
                 }
@@ -343,10 +343,10 @@ namespace CRPG
                     //Do normal checks
                     if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
                         (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
-                        (World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel < 5) &&
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
+                        (Program._world.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel < 5) &&
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
                     {
                         //Keep this tile
                         continue;
@@ -363,10 +363,10 @@ namespace CRPG
                     //Do checks without light check
                     if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
                         (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy 
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
-                        (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy 
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
+                        (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
                     {
                         //Skip this tile
                         continue;
@@ -407,23 +407,23 @@ namespace CRPG
             for (int i = 0; i < possibleTiles.Count; i++)
             {
                 //Add extra cost for walkthing through light
-                if (World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel > 1)
+                if (Program._world.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel > 1)
                 {
-                    if (World.GetLocationByPos(possibleTiles[i].Pos).RedLight)
+                    if (Program._world.GetLocationByPos(possibleTiles[i].Pos).RedLight)
                     {
                         possibleTiles[i].Cost += 2;
                     }
 
-                    possibleTiles[i].Cost += World.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel - 1;
+                    possibleTiles[i].Cost += Program._world.GetLocationByPos(possibleTiles[i].Pos).CurrentLightLevel - 1;
                 }
 
                 //Do checks
                 if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
                     (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
-                    (!World.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch
+                    (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfFlare())) //If not flare
                 {
                     //Keep this tile
                     continue;

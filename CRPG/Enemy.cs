@@ -47,7 +47,7 @@ namespace CRPG
             LightPower = 0;
             on = new Floor();
 
-            World._enemies.Add(this);
+            Program._world._enemies.Add(this);
         }
 
         public void EnemyUpdate()
@@ -219,29 +219,26 @@ namespace CRPG
                 if (nextMove.Pos.X == Program._player.Pos.X && nextMove.Pos.Y == Program._player.Pos.Y)
                 {
                     //If player is in light when about to kill them
-                    if (World.GetLocationByPos(Program._player.Pos).CurrentLightLevel >= 5 && fleeDelay == DateTime.MinValue)
+                    if (Program._world.GetLocationByPos(Program._player.Pos).CurrentLightLevel >= 5 && fleeDelay == DateTime.MinValue)
                     {
                         //Starts fleeDelay
                         fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(2);
                     }
-                    else if (World.GetLocationByPos(Program._player.Pos).RedLight && fleeDelay == DateTime.MinValue) //If player is in redlight when about to kill them
+                    else if (Program._world.GetLocationByPos(Program._player.Pos).RedLight && fleeDelay == DateTime.MinValue) //If player is in redlight when about to kill them
                     {
                         //Starts fleeDelay
                         fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(0);
                     }
-                    else if (World.GetLocationByPos(Program._player.Pos).CurrentLightLevel < 5 && !World.GetLocationByPos(Program._player.Pos).RedLight) //If player is in darkness too
+                    else if (Program._world.GetLocationByPos(Program._player.Pos).CurrentLightLevel < 5 && !Program._world.GetLocationByPos(Program._player.Pos).RedLight) //If player is in darkness too
                     {
-                        //End game
-                        while (true)
-                        {
-                            Console.ReadKey();
-                        }
+                        //Kill player
+                        Program._player.Death();
                     }
                 }
-                else if (!World.GetLocationByPos(nextMove.Pos).IfEnemy()) //If not moving into enemy
+                else if (!Program._world.GetLocationByPos(nextMove.Pos).IfEnemy()) //If not moving into enemy
                 {
                     //If not about to move into light
-                    if (World.GetLocationByPos(nextMove.Pos).CurrentLightLevel < 5)
+                    if (Program._world.GetLocationByPos(nextMove.Pos).CurrentLightLevel < 5)
                     {
                         //Move enemy
                         MovementUpdate(Pos, nextMove.Pos);
@@ -249,7 +246,7 @@ namespace CRPG
                     else if(fleeDelay == DateTime.MinValue)
                     {
                         //If redlight
-                        if (World.GetLocationByPos(nextMove.Pos).RedLight)
+                        if (Program._world.GetLocationByPos(nextMove.Pos).RedLight)
                         {
                             //Starts fleeDelay
                             fleeDelay = Program.CurrentTimeThisFrame.AddSeconds(0);
@@ -285,7 +282,7 @@ namespace CRPG
                     nextMove = nextMove.Parent;
                 }
 
-                if (!World.GetLocationByPos(nextMove.Pos).IfEnemy()) //If not moving into enemy
+                if (!Program._world.GetLocationByPos(nextMove.Pos).IfEnemy()) //If not moving into enemy
                 {
                     //Move enemy
                     MovementUpdate(Pos, nextMove.Pos);
@@ -343,7 +340,7 @@ namespace CRPG
         private void AllFleeing()
         {
             //Go through all enemies
-            foreach (Enemy enemy in World._enemies)
+            foreach (Enemy enemy in Program._world._enemies)
             {
                 if (enemy.AgitationLevel == 5)
                 {
@@ -372,12 +369,12 @@ namespace CRPG
             Pos = newPos;
 
             //Update location lightSources
-            World.SetLocationByPos(oldPos, on); //Remove light source
+            Program._world.SetLocationByPos(oldPos, on); //Remove light source
 
-            on = World.GetLocationByPos(newPos); //Updates on
+            on = Program._world.GetLocationByPos(newPos); //Updates on
 
             //Set new enemy pos in Locations[] and update lighting
-            World.SetLocationByPos(newPos, this);
+            Program._world.SetLocationByPos(newPos, this);
             Lighting.LightingUpdate();
 
             //Redraw new location and old location

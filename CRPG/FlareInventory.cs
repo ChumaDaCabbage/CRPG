@@ -10,6 +10,13 @@ namespace CRPG
         public static int FlareCount = 5;
         static readonly Point barPos = new Point(82, World.MAX_WORLD_Y + 2);
 
+        //Sets up inventory on game startup
+        public static void InventorySetup()
+        {
+            FlareCount = 5;
+            DrawFlareBar();
+        }
+
         public static void DrawFlareBar()
         {
             Console.Write(flareColor);

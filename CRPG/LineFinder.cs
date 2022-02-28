@@ -76,7 +76,7 @@ namespace CRPG
             bool blocked = false;
             for (int i = 1; i < possibleBlockers.Count; i++)
             {
-                if (World.GetLocationByPos(possibleBlockers[i]).IfWall())
+                if (Program._world.GetLocationByPos(possibleBlockers[i]).IfWall())
                 {
                     blocked = true;
                 }
@@ -91,7 +91,7 @@ namespace CRPG
             bool blocked = false;
             for (int i = 1; i < possibleBlockers.Count; i++)
             {
-                if (!World.GetLocationByPos(possibleBlockers[i]).IfFloor())
+                if (!Program._world.GetLocationByPos(possibleBlockers[i]).IfFloor())
                 {
                     blocked = true;
                 }

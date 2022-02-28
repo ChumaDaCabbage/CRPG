@@ -8,10 +8,11 @@ namespace CRPG
 {
     class Program
     {
-        public static Player _player = new Player();
+        public static Player _player;
+        public static World _world = new World();
 
         //Holds datatime for this update
-        public static DateTime CurrentTimeThisFrame;
+        public static DateTime CurrentTimeThisFrame = DateTime.Now;
 
         private static ConsoleKey userInput = ConsoleKey.F12; //Holds user input
 
@@ -20,34 +21,49 @@ namespace CRPG
             //Start Game engine
             GameEngine.Initialize();
 
-            //Setup default map
-            Map.DrawMap();
+            //Start game
+            GameLoop();
+        }
 
-            //Set player start point
-            _player.MoveTo(new Point(1, 1));
+        private static void GameLoop()
+        {
+            //Setup
+            _player = new Player(); //Creates new player
+            _world = new World(); //Creates new world    
+            _world.WorldSetup(); //Sets up world
+            Map.DrawMap(); //Draws default map
+            _player.MoveTo(new Point(1, 1)); //Set player start point
+            Lighting.LightingUpdate(); //Starts lighting
+            FlareInventory.InventorySetup(); //Sets up flare inventory
+            SetupWritingLine(); //Sets up line for player input
 
-            //Starts lighting
-            Lighting.LightingUpdate();
-
-            //Sets up line for player input
-            SetupWritingLine();
-
-            //Starts thread
+            //Starts input thread
             Thread inputThread = new Thread(new ThreadStart(GetInput));
             inputThread.Start();
 
+            //Game loop
             while (true)
             {
+                //Update currentTime
+                CurrentTimeThisFrame = DateTime.Now;
+
                 //Update world
                 WorldUpdate();
 
+                //If user input does not equal defualt value
                 if (userInput != ConsoleKey.F12)
                 {
                     SetupWritingLine(); //Starts setup writing line
                     ParseInput(userInput); //Starts ParseInput and gives it the user input
                     userInput = ConsoleKey.F12;
                 }
+
+                //If player dead leave loop
+                if (_player.Dead) break;
             }
+
+            //Restart game
+            GameLoop();
         }
 
         //Gets input in different thread to use in main thread
@@ -118,9 +134,6 @@ namespace CRPG
 
         private static void WorldUpdate()
         {
-            //Update currentTime
-            CurrentTimeThisFrame = DateTime.Now;
-
             //Update all flares
             for (int i = 0; i < _player._flares.Count; i++)
             {
@@ -128,9 +141,9 @@ namespace CRPG
             }
 
             //Update all Enemies
-            for (int i = 0; i < World._enemies.Count; i++)
+            for (int i = 0; i < Program._world._enemies.Count; i++)
             {
-                World._enemies[i].EnemyUpdate();
+                Program._world._enemies[i].EnemyUpdate();
             }
         }
 

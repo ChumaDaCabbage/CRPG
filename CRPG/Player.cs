@@ -14,7 +14,10 @@ namespace CRPG
 
         public Location on; //Holds what the player was standing on
 
-        private DateTime LastShotTime = DateTime.Now; //Holds last time shot
+        //Holds if this player is dead
+        public bool Dead = false;
+
+        private DateTime LastShotTime = Program.CurrentTimeThisFrame; //Holds last time shot
 
         //Teleports player to passed point and updates map
         public void MoveTo(Point newPos)
@@ -24,7 +27,7 @@ namespace CRPG
             Pos.X = newPos.X;
             Pos.Y = newPos.Y;
 
-            on = World.GetLocationByPos(Pos);
+            on = Program._world.GetLocationByPos(Pos);
 
             MovementUpdate(oldPos, new Point(Pos.X, Pos.Y));
         }
@@ -32,7 +35,7 @@ namespace CRPG
         public void MoveSouth()
         {
             //If wanted location is available
-            if (Pos.Y + 1 < World.MAX_WORLD_Y && World.GetLocationByPos(Pos.X, Pos.Y + 1).IfFloor())
+            if (Pos.Y + 1 < World.MAX_WORLD_Y && Program._world.GetLocationByPos(Pos.X, Pos.Y + 1).IfFloor())
             {
                 //Move player
                 Pos.Y++;
@@ -50,7 +53,7 @@ namespace CRPG
         public void MoveEast()
         {
             //If wanted location is available
-            if (Pos.X + 1 < World.MAX_WORLD_X && World.GetLocationByPos(Pos.X + 1, Pos.Y).IfFloor())
+            if (Pos.X + 1 < World.MAX_WORLD_X && Program._world.GetLocationByPos(Pos.X + 1, Pos.Y).IfFloor())
             {
                 //Move player
                 Pos.X++;
@@ -68,7 +71,7 @@ namespace CRPG
         public void MoveNorth()
         {
             //If wanted location is available
-            if (Pos.Y - 1 >= 0 && World.GetLocationByPos(Pos.X, Pos.Y - 1).IfFloor())
+            if (Pos.Y - 1 >= 0 && Program._world.GetLocationByPos(Pos.X, Pos.Y - 1).IfFloor())
             {
                 //Move player
                 Pos.Y--;
@@ -86,7 +89,7 @@ namespace CRPG
         public void MoveWest()
         {
             //If wanted location is available
-            if (Pos.X - 1 >= 0 && World.GetLocationByPos(Pos.X - 1, Pos.Y).IfFloor())
+            if (Pos.X - 1 >= 0 && Program._world.GetLocationByPos(Pos.X - 1, Pos.Y).IfFloor())
             {
                 //Move player
                 Pos.X--;
@@ -109,11 +112,11 @@ namespace CRPG
                 for (int y = 0; y < World.MAX_WORLD_Y; y++)
                 {
                     //Gets points inside lighting distance
-                    if (World.GetLocationByPos(new Point(x, y)).IfTorch() && MathF.Sqrt(MathF.Pow(x - Pos.X, 2) + MathF.Pow(y - Pos.Y, 2)) < 1.5)
+                    if (Program._world.GetLocationByPos(new Point(x, y)).IfTorch() && MathF.Sqrt(MathF.Pow(x - Pos.X, 2) + MathF.Pow(y - Pos.Y, 2)) < 1.5)
                     {
-                        if (!((Torch)World.GetLightSourceByPos(new Point(x, y))).on)
+                        if (!((Torch)Program._world.GetLightSourceByPos(new Point(x, y))).on)
                         {
-                            ((Torch)World.GetLightSourceByPos(new Point(x, y))).TurnOnTorch();
+                            ((Torch)Program._world.GetLightSourceByPos(new Point(x, y))).TurnOnTorch();
                             return;
                         }
                     }
@@ -128,17 +131,20 @@ namespace CRPG
         public void Shoot(Point direction, Point point)
         {
             //If flare are owned
-            if (FlareInventory.FlareCount > 0 && DateTime.Now >= LastShotTime.AddSeconds(0.5))
+            if (FlareInventory.FlareCount > 0)
             {
-                //Add to flare list
-                Program._player._flares.Add(new Flare(direction, new Point(point.X, point.Y)));
+                if (Program.CurrentTimeThisFrame >= LastShotTime.AddSeconds(0.5))
+                {
+                    //Add to flare list
+                    Program._player._flares.Add(new Flare(direction, new Point(point.X, point.Y)));
 
-                //Reset time
-                LastShotTime = DateTime.Now;
+                    //Reset time
+                    LastShotTime = Program.CurrentTimeThisFrame;
 
-                //Remove flare from inventory and redraw bar
-                FlareInventory.FlareCount--;
-                FlareInventory.DrawFlareBar();
+                    //Remove flare from inventory and redraw bar
+                    FlareInventory.FlareCount--;
+                    FlareInventory.DrawFlareBar();
+                }
             }
             else
             {
@@ -150,18 +156,18 @@ namespace CRPG
         private void MovementUpdate(Point oldPos, Point newPos)
         {
             //Updates oldPos
-            if(!World.GetLocationByPos(oldPos).IfFlare())
+            if(!Program._world.GetLocationByPos(oldPos).IfFlare())
             {
-                World.SetLocationByPos(oldPos, on);
+                Program._world.SetLocationByPos(oldPos, on);
             }
 
             //Start flare ground check
             GroundFlareCheck(newPos);
 
-            on = World.GetLocationByPos(newPos); //Updates on
+            on = Program._world.GetLocationByPos(newPos); //Updates on
 
             //Update new location
-            World.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
+            Program._world.SetLocationByPos(newPos, new LightSource(newPos, PLAYER_LIGHT_LEVEL));
 
             Lighting.LightingUpdate(); //Updates lighting
 
@@ -170,14 +176,19 @@ namespace CRPG
             Map.RedrawMapPoint(newPos);
         }
 
+        public void Death()
+        {
+            Dead = true;
+        }
+
         //Check for flare pickups
         private void GroundFlareCheck(Point worldPoint)
         {
-            if (World.GetLocationByPos(worldPoint).IfFloor() && ((Floor)World.GetLocationByPos(worldPoint)).HasFlare && FlareInventory.FlareCount < 5)
+            if (Program._world.GetLocationByPos(worldPoint).IfFloor() && ((Floor)Program._world.GetLocationByPos(worldPoint)).HasFlare && FlareInventory.FlareCount < 5)
             {
                 //Updates flare info
                 FlareInventory.FlareCount++;
-                ((Floor)World.GetLocationByPos(worldPoint)).HasFlare = false;
+                ((Floor)Program._world.GetLocationByPos(worldPoint)).HasFlare = false;
                 FlareInventory.DrawFlareBar();
             }
         }

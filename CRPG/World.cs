@@ -6,25 +6,17 @@ namespace CRPG
 {
     public class World
     {
-        public static Location[,] locations;
-        public static List<Torch> _tourches = new List<Torch>();
-        public static List<Enemy> _enemies = new List<Enemy>();
+        public Location[,] locations = new Location[MAX_WORLD_X, MAX_WORLD_Y];
+        public List<Torch> _tourches = new List<Torch>();
+        public List<Enemy> _enemies = new List<Enemy>();
 
         //Setup max world sizes
         public const int MAX_WORLD_X = 60;
         public const int MAX_WORLD_Y = 30;
 
         //Constructor
-        static World()
+        public World()
         {
-            WorldSetup();
-        }
-
-        private static void WorldSetup()
-        {
-            //Creates empty array of wanted size
-            locations = new Location[MAX_WORLD_X, MAX_WORLD_Y];
-
             //Goes through all locations
             for (int x = 0; x < MAX_WORLD_X; x++)
             {
@@ -41,7 +33,10 @@ namespace CRPG
                     }
                 }
             }
+        }
 
+        public void WorldSetup()
+        {
             //Draw custom world
             DrawAllWalls();
             DrawAllTorches();
@@ -49,7 +44,7 @@ namespace CRPG
             DrawAllPickups();
         }
 
-        private static void DrawAllWalls()
+        private void DrawAllWalls()
         {
             # region Manual wall setup 
             //(Lines put together are touching on the map):
@@ -242,7 +237,7 @@ namespace CRPG
             #endregion
         }
 
-        private static void DrawAllTorches()
+        private void DrawAllTorches()
         {
             //Manual torch setup:
             locations[4, 6] = new Torch(new Point(4, 6));
@@ -260,20 +255,20 @@ namespace CRPG
             locations[51, 9] = new Torch(new Point(51, 9));
         }
 
-        private static void DrawAllPickups()
+        private void DrawAllPickups()
         {
-            ((Floor)World.locations[10, 8]).HasFlare = true;
-            ((Floor)World.locations[8, 22]).HasFlare = true;
-            ((Floor)World.locations[17, 24]).HasFlare = true;
+            ((Floor)locations[10, 8]).HasFlare = true;
+            ((Floor)locations[8, 22]).HasFlare = true;
+            ((Floor)locations[17, 24]).HasFlare = true;
 
-            ((Floor)World.locations[37, 13]).HasFlare = true;
-            ((Floor)World.locations[41, 14]).HasFlare = true;
-            ((Floor)World.locations[41, 27]).HasFlare = true;
-            ((Floor)World.locations[42, 28]).HasFlare = true;
-            ((Floor)World.locations[48, 3]).HasFlare = true;
+            ((Floor)locations[37, 13]).HasFlare = true;
+            ((Floor)locations[41, 14]).HasFlare = true;
+            ((Floor)locations[41, 27]).HasFlare = true;
+            ((Floor)locations[42, 28]).HasFlare = true;
+            ((Floor)locations[48, 3]).HasFlare = true;
         }
 
-        private static void DrawAllEnemies()
+        private void DrawAllEnemies()
         {
             //Seperated into rooms
             locations[5, 11] = new Enemy(new Point(5, 11));
@@ -336,7 +331,7 @@ namespace CRPG
         /// <param name="xPos"></param>
         /// <param name="yPos"></param>
         /// <returns></returns>
-        public static Location GetLocationByPos(int xPos, int yPos)
+        public Location GetLocationByPos(int xPos, int yPos)
         {
             return locations[xPos, yPos];
         }
@@ -346,7 +341,7 @@ namespace CRPG
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static Location GetLocationByPos(Point pos)
+        public Location GetLocationByPos(Point pos)
         {
             return locations[pos.X, pos.Y];
         }
@@ -356,7 +351,7 @@ namespace CRPG
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static LightSource GetLightSourceByPos(Point pos)
+        public LightSource GetLightSourceByPos(Point pos)
         {
             if (GetLocationByPos(pos).IfLightSource())
             {
@@ -372,7 +367,7 @@ namespace CRPG
         /// Sets location object at position in locations array using a point
         /// </summary>
         /// <param name="pos"></param>
-        public static void SetLocationByPos(Point pos, Location newLoc)
+        public void SetLocationByPos(Point pos, Location newLoc)
         {
            locations[pos.X, pos.Y] = newLoc;
         }
@@ -382,7 +377,7 @@ namespace CRPG
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        private static void DrawWall(Point start, Point end)
+        private void DrawWall(Point start, Point end)
         {
             //Get all points on line
             List<Point> walls = LineFinder.GetLinePoints(start, end);

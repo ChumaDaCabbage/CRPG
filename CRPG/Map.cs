@@ -74,7 +74,8 @@ namespace CRPG
             {
                 //Log error message
                 System.Diagnostics.Debug.Fail($"Unknown Tile at [{x},{y}]", $"\tTile:        [{x},{y}]" +
-                                                                            $"\n\tType:        {Program._world.locations[x, y]} " +
+                                                                            $"\n\tThis:        {Program._world.locations[x, y]} " +
+                                                                            $"\n\tType:        {((LightSource)Program._world.locations[x, y]).lightType()} " +
                                                                             $"\n\tLight Level: {Program._world.locations[x, y].CurrentLightLevel} " +
                                                                             $"\n\tRedLight:    {Program._world.locations[x, y].RedLight}" +
                                                                             $"\n\tOrangeLight: {Program._world.locations[x, y].OrangeLight}"

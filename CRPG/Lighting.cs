@@ -62,36 +62,8 @@ namespace CRPG
             {
                 for (int y2 = 0; y2 < World.MAX_WORLD_Y; y2++)
                 {
-                    //Holds if tile is active
-                    bool active = false;
-
-                    //If distance to player is short enough
-                    if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
-                    {
-                        //Set active to true
-                        active = true;
-                    }
-                    else //If player to far
-                    {
-                        //If there are active flares
-                        if (Program._player._flares.Count > 0)
-                        {
-                            //Go through all flares
-                            foreach (Flare flare in Program._player._flares)
-                            {
-                                //If distance to flare is short enough
-                                if (MathF.Sqrt(MathF.Pow(x2 - flare.Pos.X, 2) + MathF.Pow(y2 - flare.Pos.Y, 2)) < 12.3f)
-                                {
-                                    //Set active to true
-                                    active = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
                     //If active, run lighting
-                    if (active)
+                    if (ActiveCheck(x2, y2))
                     {
 
                         int greatestLightLevel = 1; //Holds greatest lightlevel found
@@ -213,6 +185,36 @@ namespace CRPG
                     }
                 }
             }
+        }
+
+        private static bool ActiveCheck(int x2, int y2)
+        {
+            //If distance to player is short enough
+            if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
+            {
+                //Return true
+                return true;
+            }
+            else //If player to far
+            {
+                //If there are active flares
+                if (Program._player._flares.Count > 0)
+                {
+                    //Go through all flares
+                    foreach (Flare flare in Program._player._flares)
+                    {
+                        //If distance to flare is short enough
+                        if (MathF.Sqrt(MathF.Pow(x2 - flare.Pos.X, 2) + MathF.Pow(y2 - flare.Pos.Y, 2)) < 12.3f)
+                        {
+                            //Return true
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            //Return false otherwise
+            return false;
         }
 
         private static void SetLightLevel(int x, int y, int level, bool newRedLight, bool newYellowLight)
@@ -517,7 +519,8 @@ namespace CRPG
 
             int level = Program._world.locations[x, y].CurrentLightLevel;
 
-            if (((Enemy)Program._world.locations[x, y]).OverrideLightLevel > level)
+            //If overrideLight is more powerful and this tile is active
+            if ((((Enemy)Program._world.locations[x, y]).OverrideLightLevel > level) && ActiveCheck(x, y))
             {
                 level = ((Enemy)Program._world.locations[x, y]).OverrideLightLevel;
             }

@@ -264,7 +264,7 @@ namespace CRPG
             {
                 if ((possibleTiles[i].Pos.X >= 0 && possibleTiles[i].Pos.X <= World.MAX_WORLD_X) && //If in X bountds
                     (possibleTiles[i].Pos.Y >= 0 && possibleTiles[i].Pos.Y <= World.MAX_WORLD_Y) && //If in y bounds
-                    possibleTiles[i].Cost <= 20 && //Cost not too high
+                     possibleTiles[i].Cost <= 20 && //Cost not too high
                     (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfWall()) && //If not wall
                     (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfEnemy()) && //If not enemy
                     (!Program._world.GetLocationByPos(possibleTiles[i].Pos).IfTorch()) && //If not torch

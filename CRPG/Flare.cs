@@ -137,5 +137,11 @@ namespace CRPG
         {
             return true;
         }
+
+        //Returns type of lightsource
+        public new string lightType()
+        {
+            return "Flare";
+        }
     }
 }

@@ -63,6 +63,9 @@ namespace CRPG
                 if (_player.Dead) break;
             }
 
+            //Death effects
+            Map.DrawDeathMap();
+
             //Restart game
             GameLoop();
         }
@@ -78,7 +81,7 @@ namespace CRPG
                 {
                     userInput = Console.ReadKey(true).Key; //Get input
                     ClearKeyBuffer(); //Start clearKeyBuffer
-                    Thread.Sleep(TimeSpan.FromSeconds(0.15));
+                    Thread.Sleep(TimeSpan.FromSeconds(0.15)); //Wait
                 }
             }
         }

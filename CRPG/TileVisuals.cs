@@ -9,6 +9,9 @@ namespace CRPG
         public Color BackgroundColor;
         private Color ForgroundColor = null;
 
+        //Holds pos (used in animations)
+        public Point Pos;
+
         //Holds foroground tile info
         public string ForGroundTile = "  ";
         public int ForgroundShift = 0;
@@ -82,6 +85,21 @@ namespace CRPG
 
             //Return ForgroundColor string
             return extendedForground;
+        }
+
+
+        public Color GetForgroundColor()
+        {
+            if (ForgroundColor == null) //If no forground color
+            {
+                //Uses forgroundShift to make froground color
+                return new Color(Math.Clamp((BackgroundColor.R - ForgroundShift), 0, 255),  Math.Clamp((BackgroundColor.G - ForgroundShift), 0, 255), Math.Clamp((BackgroundColor.B - ForgroundShift), 0, 255));
+            }
+            else
+            {
+                //Sets forground to forground color
+                return new Color(Math.Clamp(ForgroundColor.R, 0, 255), Math.Clamp(ForgroundColor.G, 0, 255), Math.Clamp(ForgroundColor.B, 0, 255));
+            }
         }
     }
 }

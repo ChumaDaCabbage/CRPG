@@ -21,6 +21,9 @@ namespace CRPG
             //Start Game engine
             GameEngine.Initialize();
 
+            //Start Tutorial
+            //Tutorial.StartTutorial();
+
             //Start game
             GameLoop();
         }

@@ -35,6 +35,16 @@ namespace CRPG
             }
         }
 
+        public void TutorialWorldSetup()
+        {
+            //Draw custom world
+            DrawWall(new Point(4, 1), new Point(10, 1));
+            DrawWall(new Point(10, 2), new Point(10, 7));
+            DrawWall(new Point(4, 2), new Point(4, 7));
+            DrawWall(new Point(5, 7), new Point(9, 7));
+
+        }
+
         public void WorldSetup()
         {
             //Draw custom world

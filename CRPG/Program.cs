@@ -61,6 +61,18 @@ namespace CRPG
 
                 //If player dead leave loop
                 if (_player.Dead) break;
+
+                //If player at exit
+                if (_player.Pos.Equals(new Point(57, 27)))
+                {
+                    //Play victory animation
+                    Map.DrawVictoryMap();
+
+                    //Reset cursor and end game
+                    Console.SetCursorPosition(0, 34);
+                    Console.ResetColor();
+                    Environment.Exit(0);
+                }
             }
 
             //Death effects

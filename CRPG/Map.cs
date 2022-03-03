@@ -159,7 +159,7 @@ namespace CRPG
                 for (int y = 0; y <= i; y++)
                 {
                     //Goes through all x positions (tiles are 2x wide)
-                    for (int x = 0; x < World.MAX_WORLD_X * 2; x++)
+                    for (int x = 0; x < (World.MAX_WORLD_X * 2) - 1; x++)
                     {
                         //Holds if this tile needs to be drawn
                         bool draw = false;
@@ -222,19 +222,89 @@ namespace CRPG
                 DrawDelay = DateTime.Now;
             }
 
-            //Fix cursor pos
-            Console.SetCursorPosition(0, 30);
+            //Reset forbidden tiles list
+            forbiddenTiles = new List<TileVisuals>();
+        }
+
+        public static void DrawVictoryMap()
+        {
+            Console.ResetColor(); //Reset color
+            DateTime DrawDelay = DateTime.Now; //Will hold delay for drawing lines
+
+            StringPointFinder("   ▄████████    ▄████████   ▄████████    ▄████████    ▄███████▄    ▄████████  ████████▄  ", 16, 11);
+            StringPointFinder("  ███    ███   ███    ███  ███    ███   ███    ███   ███    ███   ███    ███  ███   ▀███ ", 16, 12);
+            StringPointFinder("  ███    █▀    ███    █▀   ███    █▀    ███    ███   ███    ███   ███    █▀   ███    ███ ", 16, 13);
+            StringPointFinder(" ▄███▄▄▄       ███         ███          ███    ███   ███    ███  ▄███▄▄▄      ███    ███ ", 16, 14);
+            StringPointFinder("▀▀███▀▀▀     ▀███████████  ███        ▀███████████ ▀█████████▀  ▀▀███▀▀▀      ███    ███ ", 16, 15);
+            StringPointFinder("  ███    █▄           ███  ███    █▄    ███    ███   ███          ███    █▄   ███    ███ ", 16, 16);
+            StringPointFinder("  ███    ███    ▄█    ███  ███    ███   ███    ███   ███          ███    ███  ███   ▄███ ", 16, 17);
+            StringPointFinder("  ██████████  ▄████████▀   ████████▀    ███    █▀   ▄████▀        ██████████  ████████▀  ", 16, 18);
+
+            for (float i = 0; i < World.MAX_WORLD_X * 1.25f; i += 0.5f)
+            {
+                //wait  
+                while (DateTime.Now < DrawDelay.AddSeconds(0.0025)) { }
+
+                for (int x = 0; x < (World.MAX_WORLD_X * 2) - 1; x++)
+                {
+                    for (int y = 0; y < World.MAX_WORLD_Y; y++)
+                    {
+                        //Gets distance from center of screen to point (with warped y to make circle on rectangle screen)
+                        float newDist = MathF.Sqrt(MathF.Pow(x - World.MAX_WORLD_X, 2) + MathF.Pow((y * 2) - (World.MAX_WORLD_Y), 2));
+
+                        //If inside circle
+                        if (newDist < i)
+                        {
+                            //Holds if this tile is forbidden
+                            bool forbidden = false;
+
+                            //Goes through all forbidden tiles
+                            foreach (TileVisuals tile in forbiddenTiles)
+                            {
+                                //If tile pos equals current pos
+                                if (tile.Pos.Equals(new Point(x, y)))
+                                {
+                                    forbidden = true; //Set forbidden to true
+                                    Console.SetCursorPosition(tile.Pos.X, tile.Pos.Y); //Set cursor to current pos
+                                    Console.Write(new TileVisuals(new Color(0, 245, 52)).GetFullExtendedColorsString()); //Draw forbidden tile
+                                    break; //Stop loop
+                                }
+                            }
+
+                            //If on edge of circle
+                            if (newDist > i / 1.01f)
+                            {
+                                //If not forbidden
+                                if (!forbidden)
+                                {
+                                    Console.SetCursorPosition(x, y); //Go to currnet point
+                                    Console.Write(new TileVisuals(new Color(100, 100, 100)).GetFullExtendedColorsString()); //Draw square
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Get new delay
+                DrawDelay = DateTime.Now;
+            }
+
+            //Reset forbidden tiles list
+            forbiddenTiles = new List<TileVisuals>();
         }
 
         private static void StringPointFinder(string toDraw, int xStart, int y)
         {
+            //Goes through string
             for (int i = 0; i < toDraw.Length; i++)
             {
+                //If current char not a space
                 if (toDraw[i] != ' ')
                 {
+                    //Log this char as a tile and get color of this tile in worldspace
                     TileVisuals tile = new TileVisuals(new Color(209, 56, 56), toDraw[i].ToString(), GetTileVisuals((xStart + i) / 2, y).GetForgroundColor());
-                    tile.Pos = new Point(xStart + i, y);
-                    forbiddenTiles.Add(tile);
+                    tile.Pos = new Point(xStart + i, y); //Save position
+                    forbiddenTiles.Add(tile); //Add this tile to forbidden tiles
                 }
             }
         }

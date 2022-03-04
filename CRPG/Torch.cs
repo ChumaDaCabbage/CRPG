@@ -78,15 +78,21 @@ namespace CRPG
             Map.RedrawMapPoint(Pos);
         }
 
+        public void TurnOffTorch()
+        {
+            //Turn off lights
+            LightPower = 1;
+            CurrentColor = new TileVisuals(new Color(176, 40, 12));
+            on = false;
+
+            //Update lighting and map pos
+            Lighting.LightingUpdate();
+            Map.RedrawMapPoint(Pos);
+        }
+
         public override bool IfTorch()
         {
             return true;
-        }
-
-        //Returns type of lightsource
-        public new string lightType()
-        {
-            return "Torch";
         }
     }
 }

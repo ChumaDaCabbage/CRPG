@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CRPG
 {
-    public class Wall : Location 
+    public class Wall : Location
     {
         public override bool IfWall()
         {
@@ -37,6 +37,16 @@ namespace CRPG
         }
 
         public override bool IfPlayer()
+        {
+            return false;
+        }
+
+        public override bool IfTutorialPlayer()
+        {
+            return false;
+        }
+
+        public override bool IfTutorialEnemy()
         {
             return false;
         }

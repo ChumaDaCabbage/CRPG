@@ -21,12 +21,6 @@ namespace CRPG
             Pos = pos;
         }
 
-        //Returns type of lightsource
-        public string lightType()
-        {
-            return "LightSource";
-        }
-
         public override bool IfWall()
         {
             return false;
@@ -58,6 +52,15 @@ namespace CRPG
         }
 
         public override bool IfPlayer()
+        {
+            return false;
+        }
+
+        public override bool IfTutorialPlayer()
+        {
+            return false;
+        }
+        public override bool IfTutorialEnemy()
         {
             return false;
         }

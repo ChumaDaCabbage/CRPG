@@ -41,5 +41,15 @@ namespace CRPG
         {
             return false;
         }
+
+        public override bool IfTutorialPlayer()
+        {
+            return false;
+        }
+
+        public override bool IfTutorialEnemy()
+        {
+            return false;
+        }
     }
 }

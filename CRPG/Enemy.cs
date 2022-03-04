@@ -11,7 +11,7 @@ namespace CRPG
 
         //Sleeping info
         public int AgitationLevel = 0; //Holds how angry the enemy is
-        private int AgitationLastUpdate = 0; //Holds how angry the enemy is last update
+        public int AgitationLastUpdate = 0; //Holds how angry the enemy is last update
         DateTime LastAgitatiedTime = Program.CurrentTimeThisFrame; //Holds last time agitatied
         DateTime LastBlinkedTime = Program.CurrentTimeThisFrame; //Holds last time blinked
         public int blinkStatus = 0; //Holds if back should be yellow currently
@@ -385,12 +385,6 @@ namespace CRPG
         public override bool IfEnemy()
         {
             return true;
-        }
-
-        //Returns type of lightsource
-        public new string lightType()
-        {
-            return "Enemy";
         }
     }
 }

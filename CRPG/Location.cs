@@ -24,5 +24,9 @@ namespace CRPG
         public abstract bool IfEnemy();
 
         public abstract bool IfPlayer();
+
+        public abstract bool IfTutorialPlayer();
+
+        public abstract bool IfTutorialEnemy();
     }
 }

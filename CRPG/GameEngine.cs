@@ -7,7 +7,7 @@ namespace CRPG
 {
     public static class GameEngine
     {
-        public static string Version = "0.2.1";
+        public static string Version = "0.2.5";
 
         public static void Initialize()
         {
@@ -39,11 +39,35 @@ namespace CRPG
             Console.WriteLine("  ███    ███    ▄█    ███ ███    ███   ███    ███   ███          ███    ███ ");
             Console.SetCursorPosition(22, 10);
             Console.WriteLine("  ██████████  ▄████████▀  ████████▀    ███    █▀   ▄████▀        ██████████ ");
+            Console.SetCursorPosition(51, 12);
+            Console.WriteLine("Made by Evan Gray"); //Write text
 
-            Console.SetCursorPosition(48, 13);
-            Console.WriteLine("Press any Key to begin!");
+            DateTime delayTime = DateTime.Now; //Holds delay between text changes
+            bool visable = true; //Holds if text is visable
+
+            //While no player input
+            while (!Console.KeyAvailable)
+            {
+                if (delayTime <= DateTime.Now && visable)  //If delay is over and text is visable
+                {
+                    Console.SetCursorPosition(48, 16); //Set curser pos
+                    Console.WriteLine("Press any Key to begin!"); //Write text
+                    delayTime = DateTime.Now.AddSeconds(0.75f); //Get new delay
+                    visable = !visable; //Flip visable
+                }
+                else if(delayTime <= DateTime.Now && !visable) //If delay is over and text is not visable
+                {
+                    Console.SetCursorPosition(48, 16); //Set curser pos
+                    Console.WriteLine("                       "); //Remove text
+                    delayTime = DateTime.Now.AddSeconds(0.75f); //Get new delay
+                    visable = !visable; //Flip visable
+                }
+            }
+
+            //Read key and clear console
             Console.ReadKey();
             Console.Clear();
+            
         }
     }
 }

@@ -8,19 +8,27 @@ namespace CRPG
     {
         private const string flareColor = "\x1b[38;2;255;0;0m";
         public static int FlareCount = 5;
-        static readonly Point barPos = new Point(82, World.MAX_WORLD_Y + 2);
+        public static readonly Point barPos = new Point(82, World.MAX_WORLD_Y + 2);
+        public static readonly Point tutorialBarPos = new Point(95, World.MAX_WORLD_Y/2);
 
         //Sets up inventory on game startup
         public static void InventorySetup()
         {
             FlareCount = 5;
-            DrawFlareBar();
+            if (!Tutorial.tutorial)
+            {
+                DrawFlareBar(barPos);
+            }
+            else
+            {
+                DrawFlareBar(tutorialBarPos);
+            }
         }
 
-        public static void DrawFlareBar()
+        public static void DrawFlareBar(Point pos)
         {
             Console.Write(flareColor);
-            Console.SetCursorPosition(barPos.X, barPos.Y - 1);
+            Console.SetCursorPosition(pos.X, pos.Y - 1);
             Console.WriteLine("╔═══════════════════╗");
 
             string currentFlareReadout = "║ ";
@@ -40,10 +48,10 @@ namespace CRPG
             }
             currentFlareReadout += "║";
 
-            Console.SetCursorPosition(barPos.X, barPos.Y);
+            Console.SetCursorPosition(pos.X, pos.Y);
             Console.WriteLine(currentFlareReadout);
 
-            Console.SetCursorPosition(barPos.X, barPos.Y + 1);
+            Console.SetCursorPosition(pos.X, pos.Y + 1);
             Console.WriteLine("╚═══════════════════╝");
 
             Program.ResetCursor();

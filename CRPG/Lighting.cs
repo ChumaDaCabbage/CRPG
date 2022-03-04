@@ -189,6 +189,9 @@ namespace CRPG
 
         private static bool ActiveCheck(int x2, int y2)
         {
+            //If in tutorial all tiles are active
+            if (Tutorial.tutorial) return true;
+
             //If distance to player is short enough
             if (MathF.Sqrt(MathF.Pow(x2 - Program._player.Pos.X, 2) + MathF.Pow(y2 - Program._player.Pos.Y, 2)) < 8.3f)
             {
@@ -209,6 +212,17 @@ namespace CRPG
                             //Return true
                             return true;
                         }
+                    }
+                }
+
+                //Go through all enemies
+                foreach (Enemy enemy in Program._world._enemies)
+                {
+                    //If enemy light is about to turn on or was just on and close enough to this tile
+                    if ((enemy.AgitationLevel >= 2 || enemy.AgitationLastUpdate >= 2) && MathF.Sqrt(MathF.Pow(x2 - enemy.Pos.X, 2) + MathF.Pow(y2 - enemy.Pos.Y, 2)) < 3f)
+                    {
+                        //Return true
+                        return true;
                     }
                 }
             }
@@ -520,44 +534,84 @@ namespace CRPG
             int level = Program._world.locations[x, y].CurrentLightLevel;
 
             //If overrideLight is more powerful and this tile is active
-            if ((((Enemy)Program._world.locations[x, y]).OverrideLightLevel > level) && ActiveCheck(x, y))
+            if (!Tutorial.tutorial && (((Enemy)Program._world.locations[x, y]).OverrideLightLevel > level) && ActiveCheck(x, y))
             {
                 level = ((Enemy)Program._world.locations[x, y]).OverrideLightLevel;
             }
 
-            //Gets color based off of light level
-            switch (level)
+            //Normal enemies
+            if (!Tutorial.tutorial)
             {
-                case 1:
-                    floorColor = new TileVisuals(new Color(0, 0, 0), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 2:
-                    floorColor = new TileVisuals(new Color(58, 16, 5), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 3:
-                    floorColor = new TileVisuals(new Color(114, 46, 31), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 4:
-                    floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 5:
-                    floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 6:
-                    floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 7:
-                    floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 8:
-                    floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                case 9:
-                    floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
-                    break;
-                default:
-                    return null;
+                //Gets color based off of light level
+                switch (level)
+                {
+                    case 1:
+                        floorColor = new TileVisuals(new Color(0, 0, 0), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 2:
+                        floorColor = new TileVisuals(new Color(58, 16, 5), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 3:
+                        floorColor = new TileVisuals(new Color(114, 46, 31), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 4:
+                        floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 5:
+                        floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 6:
+                        floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 7:
+                        floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 8:
+                        floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 9:
+                        floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((Enemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    default:
+                        return null;
+                }
             }
+            else //Tutorial enemies
+            {            //Gets color based off of light level
+                switch (level)
+                {
+                    case 1:
+                        floorColor = new TileVisuals(new Color(0, 0, 0), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 2:
+                        floorColor = new TileVisuals(new Color(58, 16, 5), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 3:
+                        floorColor = new TileVisuals(new Color(114, 46, 31), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 4:
+                        floorColor = new TileVisuals(new Color(170, 96, 79), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 5:
+                        floorColor = new TileVisuals(new Color(190, 116, 99), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 6:
+                        floorColor = new TileVisuals(new Color(210, 136, 119), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 7:
+                        floorColor = new TileVisuals(new Color(230, 156, 139), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 8:
+                        floorColor = new TileVisuals(new Color(250, 176, 169), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    case 9:
+                        floorColor = new TileVisuals(new Color(255, 196, 189), "■■", ((TutorialEnemy)Program._world.locations[x, y]).GetBackColor());
+                        break;
+                    default:
+                        return null;
+                }
+            }
+
 
             //Adds color boosts
             floorColor = ColorBoosts(x, y, floorColor);

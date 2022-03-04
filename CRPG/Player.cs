@@ -136,14 +136,21 @@ namespace CRPG
                 if (Program.CurrentTimeThisFrame >= LastShotTime.AddSeconds(0.5))
                 {
                     //Add to flare list
-                    Program._player._flares.Add(new Flare(direction, new Point(point.X, point.Y)));
+                    this._flares.Add(new Flare(direction, new Point(point.X, point.Y)));
 
                     //Reset time
                     LastShotTime = Program.CurrentTimeThisFrame;
 
                     //Remove flare from inventory and redraw bar
                     FlareInventory.FlareCount--;
-                    FlareInventory.DrawFlareBar();
+                    if (!Tutorial.tutorial)
+                    {
+                        FlareInventory.DrawFlareBar(FlareInventory.barPos);
+                    }
+                    else
+                    {
+                        FlareInventory.DrawFlareBar(FlareInventory.tutorialBarPos);
+                    }
                 }
             }
             else
@@ -189,7 +196,14 @@ namespace CRPG
                 //Updates flare info
                 FlareInventory.FlareCount++;
                 ((Floor)Program._world.GetLocationByPos(worldPoint)).HasFlare = false;
-                FlareInventory.DrawFlareBar();
+                if (!Tutorial.tutorial)
+                {
+                    FlareInventory.DrawFlareBar(FlareInventory.barPos);
+                }
+                else
+                {
+                    FlareInventory.DrawFlareBar(FlareInventory.tutorialBarPos);
+                }
             }
         }
     }

@@ -58,7 +58,11 @@ namespace CRPG
             {
                 locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
-            else if (x == 57 && y == 27) //If level end
+            else if (x == 57 && y == 27) //Level end
+            {
+                locIcon = Lighting.GetExitTileColor(x, y).GetFullExtendedColorsString();
+            }
+            else if (Tutorial.tutorial && x == 7 && y == 25) //Tutorial level end
             {
                 locIcon = Lighting.GetExitTileColor(x, y).GetFullExtendedColorsString();
             }
@@ -72,6 +76,15 @@ namespace CRPG
                 {
                     locIcon = Lighting.GetFloorTileColor(x, y).GetFullExtendedColorsString();
                 }
+            }
+            else if (Tutorial.tutorial && Program._world.locations[x, y].IfTutorialPlayer()) //Tutorial Player
+            {
+                TileVisuals player = new TileVisuals(new Color(255, 224, 189), "ºº", 120);
+                locIcon = player.GetFullExtendedColorsString();
+            }
+            else if (Tutorial.tutorial && Program._world.locations[x, y].IfTutorialEnemy())
+            {
+                locIcon = Lighting.GetEnemyTileColor(x, y).GetFullExtendedColorsString();
             }
             else //If all checks fail (unknown tile)
             {
@@ -134,10 +147,10 @@ namespace CRPG
         {
             Console.ResetColor(); //Reset color
             DateTime DrawDelay = DateTime.Now; //Will hold delay for drawing lines
-            Random r = new Random(); 
+            Random r = new Random();
 
             //Fill out forbiddenTiles
-
+            //Credits to https://patorjk.com/software/taag/ for the awesome ascii art
             StringPointFinder("▓██   ██▓ ▒█████   █    ██    ▓█████▄  ██▓▓█████ ▓█████▄ ", 31, 10);
             StringPointFinder(" ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▒██▀ ██▌▓██▒▓█   ▀ ▒██▀ ██▌", 31, 11);
             StringPointFinder("  ▒██ ██░▒██░  ██▒▓██  ▒██░   ░██   █▌▒██▒▒███   ░██   █▌", 31, 12);
@@ -230,7 +243,7 @@ namespace CRPG
         {
             Console.ResetColor(); //Reset color
             DateTime DrawDelay = DateTime.Now; //Will hold delay for drawing lines
-
+            //Credits to https://patorjk.com/software/taag/ for the awesome ascii art
             StringPointFinder("   ▄████████    ▄████████   ▄████████    ▄████████    ▄███████▄    ▄████████  ████████▄  ", 16, 11);
             StringPointFinder("  ███    ███   ███    ███  ███    ███   ███    ███   ███    ███   ███    ███  ███   ▀███ ", 16, 12);
             StringPointFinder("  ███    █▀    ███    █▀   ███    █▀    ███    ███   ███    ███   ███    █▀   ███    ███ ", 16, 13);

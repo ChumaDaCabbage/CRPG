@@ -33,7 +33,7 @@ namespace CRPG
             Lighting.LightingUpdate();
         }
 
-        public void FlareUpdate()
+        public void FlareUpdate(Player player)
         {
             if (Moving && Program.CurrentTimeThisFrame >= LastMovedTime.AddSeconds(0.05f)) //If moving and wait time is over 0.05
             {
@@ -54,7 +54,7 @@ namespace CRPG
                 }
                 else //Destroy self when light is off
                 {
-                    DestroySelf();
+                    DestroySelf(player);
                 }
 
                 //Get new time
@@ -91,7 +91,7 @@ namespace CRPG
             }
         }
 
-        private void DestroySelf()
+        private void DestroySelf(Player player)
         {
             //If never moved
             if (neverMoved)
@@ -101,17 +101,22 @@ namespace CRPG
             }
 
             //Find self, destroy self, update map
-            for (int i = 0; i < Program._player._flares.Count; i++)
+            for (int i = 0; i < player._flares.Count; i++)
             {
-                if (Program._player._flares[i] == this)
+                if (player._flares[i] == this)
                 {
-                    //Turn of light and update lighting
+                    //Turn off light
                     LightPower = 0;
+
+                    //Remove self from world
+                    Program._world.SetLocationByPos(Pos, on);
+                    Map.RedrawMapPoint(Pos);
+
+                    //Update lighting
                     Lighting.LightingUpdate();
 
-                    //Remove self from list, remove self from world
-                    Program._player._flares.RemoveAt(i);
-                    Program._world.SetLocationByPos(Pos, on);
+                    //Remove self from list
+                    player._flares.RemoveAt(i);
                 }
             }
         }
@@ -136,12 +141,6 @@ namespace CRPG
         public override bool IfFlare()
         {
             return true;
-        }
-
-        //Returns type of lightsource
-        public new string lightType()
-        {
-            return "Flare";
         }
     }
 }

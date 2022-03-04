@@ -22,7 +22,7 @@ namespace CRPG
             GameEngine.Initialize();
 
             //Start Tutorial
-            //Tutorial.StartTutorial();
+            Tutorial.StartTutorial();
 
             //Start game
             GameLoop();
@@ -156,7 +156,7 @@ namespace CRPG
             //Update all flares
             for (int i = 0; i < _player._flares.Count; i++)
             {
-                _player._flares[i].FlareUpdate();
+                _player._flares[i].FlareUpdate(_player);
             }
 
             //Update all Enemies
@@ -182,7 +182,7 @@ namespace CRPG
             Console.SetCursorPosition(0, World.MAX_WORLD_Y + 2);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(40, World.MAX_WORLD_Y + 2);
-            FlareInventory.DrawFlareBar();
+            FlareInventory.DrawFlareBar(FlareInventory.barPos);
             Console.WriteLine("> ");
             Console.SetCursorPosition(42, World.MAX_WORLD_Y + 2);
         }

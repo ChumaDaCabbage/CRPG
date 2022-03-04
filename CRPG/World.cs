@@ -43,6 +43,46 @@ namespace CRPG
             DrawWall(new Point(4, 2), new Point(4, 7));
             DrawWall(new Point(5, 7), new Point(9, 7));
 
+            DrawWall(new Point(4, 11), new Point(10, 11));
+            DrawWall(new Point(10, 12), new Point(10, 18));
+            DrawWall(new Point(4, 12), new Point(4, 18));
+            DrawWall(new Point(5, 18), new Point(9, 18));
+            locations[7, 15] = new Torch(new Point(7, 15));
+            Tutorial.tutorialTorch = ((Torch)locations[7, 15]);
+
+            DrawWall(new Point(4, 22), new Point(10, 22));
+            DrawWall(new Point(10, 23), new Point(10, 28));
+            DrawWall(new Point(4, 23), new Point(4, 28));
+            DrawWall(new Point(5, 28), new Point(9, 28));
+
+            DrawWall(new Point(49, 1), new Point(55, 1));
+            DrawWall(new Point(55, 2), new Point(55, 7));
+            DrawWall(new Point(49, 2), new Point(49, 7));
+            DrawWall(new Point(50, 7), new Point(54, 7));
+
+            DrawWall(new Point(49, 22), new Point(55, 22));
+            DrawWall(new Point(55, 23), new Point(55, 28));
+            DrawWall(new Point(49, 23), new Point(49, 28));
+            DrawWall(new Point(50, 28), new Point(54, 28));
+            ((Floor)locations[53, 25]).HasFlare = true;
+
+            DrawWall(new Point(19, 15), new Point(25, 15));
+            DrawWall(new Point(19, 15), new Point(19, 25));
+            DrawWall(new Point(20, 25), new Point(24, 25));
+            DrawWall(new Point(25, 15), new Point(25, 25));
+            DrawWall(new Point(23, 19), new Point(24, 19));
+            locations[22, 24] = new TutorialEnemy(new Point(22, 24), 2);
+            Tutorial.tEnemies[0] = ((TutorialEnemy)locations[22, 24]);
+
+            DrawWall(new Point(34, 15), new Point(40, 15));
+            DrawWall(new Point(34, 15), new Point(34, 25));
+            DrawWall(new Point(35, 25), new Point(39, 25));
+            DrawWall(new Point(40, 15), new Point(40, 25));
+            DrawWall(new Point(38, 19), new Point(39, 19));
+            locations[36, 22] = new TutorialEnemy(new Point(36, 22), 5);
+            Tutorial.tEnemies[1] = ((TutorialEnemy)locations[36, 22]);
+            locations[35, 19] = new Torch(new Point(35, 19));
+            ((Torch)locations[35, 19]).TurnOnTorch();
         }
 
         public void WorldSetup()

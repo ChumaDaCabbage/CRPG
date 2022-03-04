@@ -57,10 +57,10 @@ namespace CRPG
             //Writes tutorial text over world
             Console.SetCursorPosition(6, 8);
             Console.WriteLine("WASD to move player");
-            Console.SetCursorPosition(1, 19);
-            Console.WriteLine("Space to light adjacent torches");
-            Console.SetCursorPosition(1, 20);
-            Console.WriteLine("Space to light adjacent torches");
+            Console.SetCursorPosition(8, 19);
+            Console.WriteLine("Space to light");
+            Console.SetCursorPosition(7, 20);
+            Console.WriteLine("adjacent torches");
             Console.SetCursorPosition(5, 29);
             Console.WriteLine("Find the green square");
             Console.SetCursorPosition(8, 30);

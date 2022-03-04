@@ -59,6 +59,8 @@ namespace CRPG
             Console.WriteLine("WASD to move player");
             Console.SetCursorPosition(1, 19);
             Console.WriteLine("Space to light adjacent torches");
+            Console.SetCursorPosition(1, 20);
+            Console.WriteLine("Space to light adjacent torches");
             Console.SetCursorPosition(5, 29);
             Console.WriteLine("Find the green square");
             Console.SetCursorPosition(8, 30);

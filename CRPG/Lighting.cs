@@ -219,7 +219,7 @@ namespace CRPG
                 foreach (Enemy enemy in Program._world._enemies)
                 {
                     //If enemy light is about to turn on or was just on and close enough to this tile
-                    if ((enemy.AgitationLevel >= 2 || enemy.AgitationLastUpdate >= 2) && MathF.Sqrt(MathF.Pow(x2 - enemy.Pos.X, 2) + MathF.Pow(y2 - enemy.Pos.Y, 2)) < 3f)
+                    if ((!enemy.sleeping || enemy.AgitationLastUpdate >= 2) && MathF.Sqrt(MathF.Pow(x2 - enemy.Pos.X, 2) + MathF.Pow(y2 - enemy.Pos.Y, 2)) < 8.3f)
                     {
                         //Return true
                         return true;

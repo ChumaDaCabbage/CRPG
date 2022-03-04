@@ -10,6 +10,7 @@ namespace CRPG
         const float MOVE_DELAY = 0.17f;
 
         //Sleeping info
+        public bool sleeping = true;
         public int AgitationLevel = 0; //Holds how angry the enemy is
         public int AgitationLastUpdate = 0; //Holds how angry the enemy is last update
         DateTime LastAgitatiedTime = Program.CurrentTimeThisFrame; //Holds last time agitatied
@@ -57,6 +58,9 @@ namespace CRPG
             {
                 if (fleeing) //Fleeing back to darkness
                 {
+                    //Set not sleeping
+                    sleeping = false;
+
                     //If move wait time is up
                     if (Program.CurrentTimeThisFrame >= LastMovedTime.AddSeconds(MOVE_DELAY))
                     {
@@ -72,6 +76,9 @@ namespace CRPG
                 }
                 else if (AgitationLevel == 5) //Chasing
                 {
+                    //Set not sleeping
+                    sleeping = false;
+
                     //If too bright
                     if ((CurrentLightLevel >= 5 || RedLight) && fleeDelay == DateTime.MinValue)
                     {
@@ -98,6 +105,9 @@ namespace CRPG
                 }
                 else //Sleeping
                 {
+                    //Set sleeping
+                    sleeping = true;
+
                     //Empty path if sleeping
                     path = null;
 

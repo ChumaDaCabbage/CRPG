@@ -2,12 +2,26 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 //Evan Gray :D 2022
 namespace CRPG
 {
     class Program
     {
+        #region Custom color setup 1
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleMode(IntPtr handle, out int mode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr GetStdHandle(int handle);
+        #endregion
+
         public static Player _player;
         public static World _world = new World();
 
@@ -18,6 +32,13 @@ namespace CRPG
 
         static void Main(string[] args)
         {
+            #region Custom color setup 2
+            var handle = GetStdHandle(-11);
+            int mode;
+            GetConsoleMode(handle, out mode);
+            SetConsoleMode(handle, mode | 0x4);
+            #endregion
+
             //Start Game engine
             GameEngine.Initialize();
 
